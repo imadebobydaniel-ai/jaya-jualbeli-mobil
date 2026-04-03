@@ -8,7 +8,6 @@
     <style> 
         /* RESET & BASE STYLES */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
-
         body {
             height: 100vh; width: 100vw;
             display: flex; justify-content: center; align-items: center;
@@ -17,56 +16,26 @@
                         url('poster_papua.jpg') no-repeat center center fixed;
             background-size: cover; color: white;
         }
-
         body::before {
             content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(to bottom, rgba(15, 23, 42, 0.4) 0%, rgba(15, 23, 42, 0.2) 50%, rgba(15, 23, 42, 0.7) 100%);
             z-index: 0;
         }
-
         #top-bar-info, .navigasi-wrapper, .main-container { position: relative; z-index: 10; }
-
-        /* LOGIN OVERLAY */
-        #login-overlay { 
-            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.95); 
-            display: flex; justify-content: center; align-items: center; z-index: 100000; 
-        }
-
-        .login-card { 
-            background: rgba(255, 255, 255, 0.1); padding: 40px; border-radius: 15px; 
-            border: 1px solid rgba(255, 255, 255, 0.2); width: 100%; max-width: 400px; 
-            text-align: center; backdrop-filter: blur(10px); 
-        }
-
-        .login-card input, .form-group input, .form-group select { 
-            width: 100%; padding: 12px; margin-top: 5px; margin-bottom: 15px; 
-            border-radius: 8px; background: white; color: #1e293b; border: 2px solid #ffc107; 
-        }
-
-        /* TOP BAR */
-        #top-bar-info { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 80px; 
-            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(15px); 
-            display: flex; align-items: center; justify-content: space-between; 
-            padding: 0 30px; border-bottom: 2px solid #ffc107; 
-        }
-
-        /* NAVIGATION */
+        #login-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.95); display: flex; justify-content: center; align-items: center; z-index: 100000; }
+        .login-card { background: rgba(255, 255, 255, 0.1); padding: 40px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.2); width: 100%; max-width: 400px; text-align: center; backdrop-filter: blur(10px); }
+        .login-card input, .form-group input, .form-group select { width: 100%; padding: 12px; margin-top: 5px; margin-bottom: 15px; border-radius: 8px; background: white; color: #1e293b; border: 2px solid #ffc107; }
+        #top-bar-info { position: fixed; top: 0; left: 0; width: 100%; height: 80px; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(15px); display: flex; align-items: center; justify-content: space-between; padding: 0 30px; border-bottom: 2px solid #ffc107; }
         .navigasi-wrapper { position: fixed; top: 100px; left: 30px; z-index: 10006; }
         .navigasi-header { background: #ffc107; color: black; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
         .menu-content { list-style: none; display: none; background: rgba(0, 0, 0, 0.9); padding: 15px; border-radius: 10px; margin-top: 10px; }
         .menu-content.active { display: flex; flex-direction: column; gap: 10px; }
         .menu-content a { color: white; text-decoration: none; font-size: 14px; }
         .menu-content a:hover { color: #ffc107; }
-
-        /* MAIN CONTAINER */
         .main-container { position: fixed; top: 80px; width: 100%; height: calc(100% - 80px); padding: 40px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; }
         .hidden { display: none !important; }
-        
-        /* FORM STYLES */
         .card-form { background: rgba(0, 0, 0, 0.6); padding: 30px; border-radius: 15px; width: 100%; max-width: 600px; border: 1px solid #ffc107; }
         .form-group { text-align: left; margin-bottom: 10px; }
-        
         .btn-masuk, .btn-submit { background: #2563eb; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
         .btn-batal { background: #e11d48; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; }
         .status-msg { margin-top: 10px; font-size: 0.9rem; }
@@ -97,13 +66,13 @@
     </div>
 
     <div class="navigasi-wrapper">
-        <div class="navigasi-header" onclick="toggleMenu()">NAVIGASI PORTAL ▼</div>
+        <div class="navigasi-header" id="nav-header">NAVIGASI PORTAL ▼</div>
         <ul id="menu-list" class="menu-content">
-            <li><a href="#" onclick="tampilkanView('welcome-view')">Beranda</a></li>
-            <li><a href="#" onclick="tampilkanView('database-view')">Database Jemaat</a></li>
-            <li><a href="#" onclick="tampilkanView('input-view')">Input Data Jemaat</a></li>
+            <li><a href="#" id="menu-beranda">Beranda</a></li>
+            <li><a href="#" id="menu-database">Database Jemaat</a></li>
+            <li><a href="#" id="menu-input">Input Data Jemaat</a></li>
             <li><hr style="border-color: #333;"></li>
-            <li><a href="#" onclick="prosesLogout()">Keluar Sistem</a></li>
+            <li><a href="#" id="menu-logout">Keluar Sistem</a></li>
         </ul>
     </div>
 
@@ -136,7 +105,7 @@
                     <label>Foto Jemaat</label>
                     <input type="file" id="foto_input" accept="image/*">
                 </div>
-                <button class="btn-submit" onclick="simpanDataJemaat()">SIMPAN DATA</button>
+                <button class="btn-submit" id="btn-simpan">SIMPAN DATA</button>
                 <div id="upload-status" class="status-msg"></div>
             </div>
         </div>
@@ -144,19 +113,46 @@
         <div id="database-view" class="hidden"><h2>Database Jemaat (Segera Hadir)</h2></div>
     </div>
 
-    <script src="auth.js"></script>
-    <script>
-        function toggleMenu() { document.getElementById('menu-list').classList.toggle('active'); }
-        
-        function tampilkanView(viewId) {
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // CONFIG FIREBASE ANDA (Pastikan ini sudah sesuai dengan milik Anda)
+        const firebaseConfig = {
+            apiKey: "AIzaSy...",
+            authDomain: "pope-apps.firebaseapp.com",
+            projectId: "pope-apps",
+            storageBucket: "pope-apps.appspot.com",
+            messagingSenderId: "...",
+            appId: "..."
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Fungsi Navigasi (Harus di dalam type module agar bisa diakses jika dipicu via ID)
+        window.tampilkanView = (viewId) => {
             const views = ['welcome-view', 'input-view', 'database-view'];
             views.forEach(v => document.getElementById(v).classList.add('hidden'));
             document.getElementById(viewId).classList.remove('hidden');
             document.getElementById('menu-list').classList.remove('active');
-        }
+        };
+
+        window.toggleMenu = () => {
+            document.getElementById('menu-list').classList.toggle('active');
+        };
+
+        // Event Listeners untuk Navigasi
+        document.getElementById('nav-header').onclick = window.toggleMenu;
+        document.getElementById('menu-beranda').onclick = () => window.tampilkanView('welcome-view');
+        document.getElementById('menu-database').onclick = () => window.tampilkanView('database-view');
+        document.getElementById('menu-input').onclick = () => window.tampilkanView('input-view');
+        document.getElementById('btn-simpan').onclick = simpanDataJemaat;
 
         async function simpanDataJemaat() {
             const nama = document.getElementById('nama_jemaat').value;
+            const alamat = document.getElementById('alamat_jemaat').value;
+            const status = document.getElementById('status_jemaat').value;
             const fotoFile = document.getElementById('foto_input').files[0];
             const statusDiv = document.getElementById('upload-status');
 
@@ -165,43 +161,56 @@
                 return;
             }
 
-            // DATA CLOUDINARY ANDA BERDASARKAN GAMBAR
             const CLOUD_NAME = "dxzllsbgi"; 
             const UPLOAD_PRESET = "sidata_upload"; 
 
-            statusDiv.innerText = "Sedang mengunggah foto...";
+            statusDiv.innerText = "Mengunggah foto...";
             
             const formData = new FormData();
             formData.append('file', fotoFile);
             formData.append('upload_preset', UPLOAD_PRESET);
 
             try {
+                // 1. Upload ke Cloudinary
                 const resp = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
-                    method: 'POST', 
-                    body: formData
+                    method: 'POST', body: formData
                 });
-                
-                const data = await resp.json();
+                const cloudinaryData = await resp.json();
 
-                if (data.secure_url) {
-                    statusDiv.innerHTML = `<span style="color: #4ade80;">Berhasil! Foto tersimpan.</span>`;
-                    console.log("URL untuk Firebase:", data.secure_url);
+                if (cloudinaryData.secure_url) {
+                    statusDiv.innerText = "Foto berhasil. Menyimpan data ke Firebase...";
                     
-                    // ALERT UNTUK TES
-                    alert("Berhasil Unggah! Link Foto: " + data.secure_url);
-                } else {
-                    statusDiv.innerText = "Gagal: " + (data.error ? data.error.message : "Terjadi kesalahan");
+                    // 2. Simpan ke Firestore
+                    await addDoc(collection(db, "jemaat"), {
+                        nama_lengkap: nama,
+                        alamat: alamat,
+                        status: status,
+                        foto_url: cloudinaryData.secure_url,
+                        dibuat_pada: serverTimestamp()
+                    });
+
+                    statusDiv.innerHTML = `<span style="color: #4ade80;">Data Jemaat Berhasil Disimpan!</span>`;
+                    
+                    // Reset Form
+                    document.getElementById('nama_jemaat').value = "";
+                    document.getElementById('alamat_jemaat').value = "";
+                    document.getElementById('foto_input').value = "";
                 }
             } catch (err) {
-                statusDiv.innerText = "Gagal menyambung ke server.";
+                statusDiv.innerText = "Terjadi kesalahan saat menyimpan.";
                 console.error(err);
             }
         }
+    </script>
 
+    <script src="auth.js"></script>
+    <script>
         function updateWaktu() {
             const now = new Date();
-            document.getElementById('display-date').innerText = now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-            document.getElementById('display-clock').innerText = now.toLocaleTimeString('id-ID');
+            const tgl = document.getElementById('display-date');
+            const jam = document.getElementById('display-clock');
+            if(tgl) tgl.innerText = now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            if(jam) jam.innerText = now.toLocaleTimeString('id-ID');
         }
         setInterval(updateWaktu, 1000);
         updateWaktu();
