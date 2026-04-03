@@ -25,7 +25,7 @@
         /* CONTAINER UTAMA SIMETRIS */
         .main-container {
             position: fixed;
-            top: 80px;
+            top: 80px; /* Di bawah top-bar */
             width: 100%;
             height: calc(100% - 80px);
             padding: 20px;
@@ -33,7 +33,9 @@
             display: flex;
             flex-direction: column;
             align-items: center; 
-            justify-content: center; 
+            /* Ubah justify-content dari center ke flex-start untuk menaikkan konten */
+            justify-content: flex-start; 
+            padding-top: 60px; /* Jarak tambahan dari atas agar pas di kotak merah */
             z-index: 10;
         }
 
@@ -51,8 +53,16 @@
         .menu-content a { color: white; text-decoration: none; font-size: 14px; }
         .menu-content a:hover { color: #ffc107; }
 
-        /* WELCOME VIEW STYLES */
-        #welcome-view { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
+        /* Penyesuaian khusus untuk Welcome View */
+        #welcome-view {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            /* Memberikan margin atas agar posisi logo pas sesuai keinginan */
+            margin-top: 20px; 
+        }
         #welcome-view h1 { margin: 10px 0; font-size: 2.5rem; }
         #welcome-view h3 { margin: 0; font-weight: 400; letter-spacing: 1px; }
 
@@ -165,10 +175,8 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- REFERENSI KOLEKSI GLOBAL ---
         const koleksiRef = collection(db, "Administrator", "profile biodata", "daftar_anggota");
 
-        // --- NAVIGATION ---
         window.tampilkanView = async (viewId) => {
             const views = ['welcome-view', 'input-view', 'database-view'];
             views.forEach(v => document.getElementById(v)?.classList.add('hidden'));
@@ -179,7 +187,6 @@
 
         window.toggleMenu = () => document.getElementById('menu-list').classList.toggle('active');
 
-        // --- FIREBASE LOGIC ---
         async function simpanDataJemaat() {
             const nama = document.getElementById('nama_jemaat').value;
             const fotoFile = document.getElementById('foto_input').files[0];
@@ -195,7 +202,6 @@
                 const resp = await fetch(`https://api.cloudinary.com/v1_1/dxzllsbgi/image/upload`, { method: 'POST', body: formData });
                 const cloud = await resp.json();
                 if (cloud.secure_url) {
-                    // MENGGUNAKAN JALUR KOLEKSI YANG BARU
                     await addDoc(koleksiRef, {
                         nama_lengkap: nama,
                         alamat: document.getElementById('alamat_jemaat').value,
@@ -215,7 +221,6 @@
             const container = document.getElementById('tabel-container');
             container.innerHTML = "Memuat...";
             try {
-                // MENGGUNAKAN JALUR KOLEKSI YANG BARU
                 const q = query(koleksiRef, orderBy("dibuat_pada", "desc"));
                 const snap = await getDocs(q);
                 let html = `<table><thead><tr><th>Foto</th><th>Nama</th><th>Alamat</th><th>Status</th><th>Aksi</th></tr></thead><tbody>`;
@@ -236,7 +241,6 @@
         window.hapusJemaat = async (id) => {
             if(confirm("Hapus data jemaat?")) {
                 try {
-                    // MENGGUNAKAN JALUR KOLEKSI YANG BARU UNTUK DELETE
                     const docRef = doc(db, "Administrator", "profile biodata", "daftar_anggota", id);
                     await deleteDoc(docRef);
                     muatDatabaseJemaat();
@@ -244,7 +248,6 @@
             }
         };
 
-        // Event Listener Assign
         document.getElementById('nav-header').onclick = window.toggleMenu;
         document.getElementById('menu-beranda').onclick = () => window.tampilkanView('welcome-view');
         document.getElementById('menu-database').onclick = () => window.tampilkanView('database-view');
@@ -253,7 +256,6 @@
     </script>
 
     <script>
-        // AUTH & UI LOGIC
         const USER_AKSES = "admin_papua";
         const PASS_AKSES = "Papua2026!";
 
