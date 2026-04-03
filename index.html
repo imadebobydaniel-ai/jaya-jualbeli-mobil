@@ -33,7 +33,7 @@
             display: flex;
             flex-direction: column;
             align-items: center; 
-            justify-content: center; /* Konten benar-benar di tengah layar */
+            justify-content: center; 
             z-index: 10;
         }
 
@@ -52,22 +52,9 @@
         .menu-content a:hover { color: #ffc107; }
 
         /* WELCOME VIEW STYLES */
-        #welcome-view {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            width: 100%;
-        }
-        #welcome-view h1 {
-            margin: 10px 0;
-            font-size: 2.5rem;
-        }
-        #welcome-view h3 {
-            margin: 0;
-            font-weight: 400;
-            letter-spacing: 1px;
-        }
+        #welcome-view { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
+        #welcome-view h1 { margin: 10px 0; font-size: 2.5rem; }
+        #welcome-view h3 { margin: 0; font-weight: 400; letter-spacing: 1px; }
 
         /* FORM & TABLE */
         .hidden { display: none !important; }
@@ -88,11 +75,8 @@
             <img src="logo_pope.png" style="width: 80px; margin-bottom: 20px;">
             <h2 style="color: #ffc107;">PORTAL LOGIN</h2>
             <p style="font-size: 0.8rem; margin-bottom: 20px;">Pondok Pemulihan Papua</p>
-            
             <form id="loginForm">
-                <div style="position: relative;">
-                    <input type="text" id="username_input" placeholder="Username" required>
-                </div>
+                <input type="text" id="username_input" placeholder="Username" required>
                 <div style="position: relative;">
                     <input type="password" id="password_input" placeholder="Password" required style="padding-right: 40px;">
                     <i class="fas fa-eye" id="togglePassword" style="position: absolute; right: 15px; top: 15px; color: #ffc107; cursor: pointer; z-index: 100;"></i>
@@ -181,26 +165,19 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- NAVIGATION & VIEWS ---
+        // --- REFERENSI KOLEKSI GLOBAL ---
+        const koleksiRef = collection(db, "Administrator", "profile biodata", "daftar_anggota");
+
+        // --- NAVIGATION ---
         window.tampilkanView = async (viewId) => {
             const views = ['welcome-view', 'input-view', 'database-view'];
-            views.forEach(v => {
-                const el = document.getElementById(v);
-                if(el) el.classList.add('hidden');
-            });
+            views.forEach(v => document.getElementById(v)?.classList.add('hidden'));
             document.getElementById(viewId).classList.remove('hidden');
             document.getElementById('menu-list').classList.remove('active');
             if (viewId === 'database-view') await muatDatabaseJemaat();
         };
 
         window.toggleMenu = () => document.getElementById('menu-list').classList.toggle('active');
-
-        // Event Listeners
-        document.getElementById('nav-header').onclick = window.toggleMenu;
-        document.getElementById('menu-beranda').onclick = () => window.tampilkanView('welcome-view');
-        document.getElementById('menu-database').onclick = () => window.tampilkanView('database-view');
-        document.getElementById('menu-input').onclick = () => window.tampilkanView('input-view');
-        document.getElementById('btn-simpan').onclick = simpanDataJemaat;
 
         // --- FIREBASE LOGIC ---
         async function simpanDataJemaat() {
@@ -218,15 +195,17 @@
                 const resp = await fetch(`https://api.cloudinary.com/v1_1/dxzllsbgi/image/upload`, { method: 'POST', body: formData });
                 const cloud = await resp.json();
                 if (cloud.secure_url) {
-                    await addDoc(collection(db, "jemaat"), {
+                    // MENGGUNAKAN JALUR KOLEKSI YANG BARU
+                    await addDoc(koleksiRef, {
                         nama_lengkap: nama,
                         alamat: document.getElementById('alamat_jemaat').value,
                         status: document.getElementById('status_jemaat').value,
                         foto_url: cloud.secure_url,
                         dibuat_pada: serverTimestamp()
                     });
-                    statusDiv.innerHTML = "Berhasil!";
+                    statusDiv.innerHTML = "Data Berhasil Disimpan!";
                     document.getElementById('nama_jemaat').value = "";
+                    document.getElementById('alamat_jemaat').value = "";
                     document.getElementById('foto_input').value = "";
                 }
             } catch (err) { statusDiv.innerText = "Gagal!"; console.error(err); }
@@ -236,7 +215,8 @@
             const container = document.getElementById('tabel-container');
             container.innerHTML = "Memuat...";
             try {
-                const q = query(collection(db, "jemaat"), orderBy("dibuat_pada", "desc"));
+                // MENGGUNAKAN JALUR KOLEKSI YANG BARU
+                const q = query(koleksiRef, orderBy("dibuat_pada", "desc"));
                 const snap = await getDocs(q);
                 let html = `<table><thead><tr><th>Foto</th><th>Nama</th><th>Alamat</th><th>Status</th><th>Aksi</th></tr></thead><tbody>`;
                 snap.forEach(docSnap => {
@@ -250,15 +230,26 @@
                     </tr>`;
                 });
                 container.innerHTML = html + "</tbody></table>";
-            } catch (e) { container.innerHTML = "Gagal memuat."; }
+            } catch (e) { container.innerHTML = "Gagal memuat."; console.error(e); }
         }
 
         window.hapusJemaat = async (id) => {
-            if(confirm("Hapus data?")) {
-                await deleteDoc(doc(db, "jemaat", id));
-                muatDatabaseJemaat();
+            if(confirm("Hapus data jemaat?")) {
+                try {
+                    // MENGGUNAKAN JALUR KOLEKSI YANG BARU UNTUK DELETE
+                    const docRef = doc(db, "Administrator", "profile biodata", "daftar_anggota", id);
+                    await deleteDoc(docRef);
+                    muatDatabaseJemaat();
+                } catch (err) { console.error("Hapus gagal:", err); }
             }
         };
+
+        // Event Listener Assign
+        document.getElementById('nav-header').onclick = window.toggleMenu;
+        document.getElementById('menu-beranda').onclick = () => window.tampilkanView('welcome-view');
+        document.getElementById('menu-database').onclick = () => window.tampilkanView('database-view');
+        document.getElementById('menu-input').onclick = () => window.tampilkanView('input-view');
+        document.getElementById('btn-simpan').onclick = simpanDataJemaat;
     </script>
 
     <script>
@@ -268,8 +259,7 @@
 
         document.getElementById('togglePassword').onclick = function() {
             const passInput = document.getElementById('password_input');
-            const type = passInput.type === 'password' ? 'text' : 'password';
-            passInput.type = type;
+            passInput.type = passInput.type === 'password' ? 'text' : 'password';
             this.classList.toggle('fa-eye-slash');
         };
 
