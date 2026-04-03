@@ -10,80 +10,45 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
 
         body {
-            height: 100vh;
-            width: 100vw;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            position: relative;
-            margin: 0;
-            /* DISESUAIKAN: Menggunakan nama file poster_papua.jpg sesuai repositori GitHub */
+            height: 100vh; width: 100vw;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden; position: relative; margin: 0;
             background: linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.6)), 
                         url('poster_papua.jpg') no-repeat center center fixed;
-            background-size: cover;
-            color: white;
+            background-size: cover; color: white;
         }
 
-        /* Overlay tambahan untuk kontras teks */
         body::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(to bottom, rgba(15, 23, 42, 0.4) 0%, rgba(15, 23, 42, 0.2) 50%, rgba(15, 23, 42, 0.7) 100%);
             z-index: 0;
         }
 
-        #top-bar-info, .navigasi-wrapper, .main-container {
-            position: relative;
-            z-index: 10;
-        }
+        #top-bar-info, .navigasi-wrapper, .main-container { position: relative; z-index: 10; }
 
         /* LOGIN OVERLAY */
         #login-overlay { 
-            position: fixed; 
-            inset: 0; 
-            background: rgba(15, 23, 42, 0.95); 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            z-index: 100000; 
+            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.95); 
+            display: flex; justify-content: center; align-items: center; z-index: 100000; 
         }
 
         .login-card { 
-            background: rgba(255, 255, 255, 0.1); 
-            padding: 40px; 
-            border-radius: 15px; 
-            border: 1px solid rgba(255, 255, 255, 0.2); 
-            width: 100%; 
-            max-width: 400px; 
-            text-align: center; 
-            backdrop-filter: blur(10px); 
+            background: rgba(255, 255, 255, 0.1); padding: 40px; border-radius: 15px; 
+            border: 1px solid rgba(255, 255, 255, 0.2); width: 100%; max-width: 400px; 
+            text-align: center; backdrop-filter: blur(10px); 
         }
 
-        .login-card input { 
-            width: 100%; 
-            padding: 12px; 
-            margin-top: 5px; 
-            margin-bottom: 15px; 
-            border-radius: 8px; 
-            background: white; 
-            color: #1e293b; 
-            border: 2px solid #ffc107; 
+        .login-card input, .form-group input, .form-group select { 
+            width: 100%; padding: 12px; margin-top: 5px; margin-bottom: 15px; 
+            border-radius: 8px; background: white; color: #1e293b; border: 2px solid #ffc107; 
         }
 
         /* TOP BAR */
         #top-bar-info { 
-            position: fixed; 
-            top: 0; left: 0; width: 100%; height: 80px; 
-            background: rgba(0, 0, 0, 0.7); 
-            backdrop-filter: blur(15px); 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            padding: 0 30px; 
-            border-bottom: 2px solid #ffc107; 
+            position: fixed; top: 0; left: 0; width: 100%; height: 80px; 
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(15px); 
+            display: flex; align-items: center; justify-content: space-between; 
+            padding: 0 30px; border-bottom: 2px solid #ffc107; 
         }
 
         /* NAVIGATION */
@@ -94,10 +59,17 @@
         .menu-content a { color: white; text-decoration: none; font-size: 14px; }
         .menu-content a:hover { color: #ffc107; }
 
+        /* MAIN CONTAINER */
         .main-container { position: fixed; top: 80px; width: 100%; height: calc(100% - 80px); padding: 40px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; }
         .hidden { display: none !important; }
-        .btn-masuk { background: #2563eb; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
+        
+        /* FORM STYLES */
+        .card-form { background: rgba(0, 0, 0, 0.6); padding: 30px; border-radius: 15px; width: 100%; max-width: 600px; border: 1px solid #ffc107; }
+        .form-group { text-align: left; margin-bottom: 10px; }
+        
+        .btn-masuk, .btn-submit { background: #2563eb; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
         .btn-batal { background: #e11d48; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; }
+        .status-msg { margin-top: 10px; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -107,14 +79,9 @@
             <img src="logo_pope.png" style="width: 80px; margin-bottom: 20px;">
             <h2 style="color: #ffc107;">PORTAL LOGIN</h2>
             <p style="font-size: 0.8rem; margin-bottom: 20px;">Pondok Pemulihan Papua</p>
-
             <form id="loginForm">
-                <div style="text-align: left;">
-                    <label>Username / Admin Kode</label>
-                    <input type="text" id="username_input" placeholder="Masukkan Akses" required>
-                    <label>Password</label>
-                    <input type="password" id="password_input" placeholder="Masukkan Password" required>
-                </div>
+                <input type="text" id="username_input" placeholder="Username" required>
+                <input type="password" id="password_input" placeholder="Password" required>
                 <button type="submit" class="btn-masuk">MASUK KE SISTEM</button>
             </form>
         </div>
@@ -122,13 +89,11 @@
 
     <div id="top-bar-info">
         <div>
-            <p id="display-date">Memuat Tanggal...</p>
+            <p id="display-date">Memuat...</p>
             <p id="display-clock" style="font-weight: bold; color: #ffc107;">00:00:00</p>
         </div>
         <h3>PONDOK PEMULIHAN PAPUA</h3>
-        <button onclick="prosesLogout()" class="btn-batal">
-            <i class="fas fa-sign-out-alt"></i> LOGOUT
-        </button>
+        <button onclick="prosesLogout()" class="btn-batal"><i class="fas fa-sign-out-alt"></i> LOGOUT</button>
     </div>
 
     <div class="navigasi-wrapper">
@@ -148,23 +113,87 @@
             <h1>SELAMAT DATANG</h1>
             <h3>SISTEM INFORMASI PONDOK PEMULIHAN PAPUA</h3>
         </section>
-        <div id="input-view" class="hidden"><h2>Form Input Jemaat</h2></div>
-        <div id="database-view" class="hidden"><h2>Database Jemaat</h2></div>
+
+        <div id="input-view" class="hidden">
+            <div class="card-form">
+                <h2 style="color: #ffc107; margin-bottom: 20px; text-align: center;">FORM INPUT JEMAAT</h2>
+                <div class="form-group">
+                    <label>Nama Lengkap</label>
+                    <input type="text" id="nama_jemaat" placeholder="Masukkan Nama">
+                </div>
+                <div class="form-group">
+                    <label>Alamat</label>
+                    <input type="text" id="alamat_jemaat" placeholder="Masukkan Alamat">
+                </div>
+                <div class="form-group">
+                    <label>Status Pemulihan</label>
+                    <select id="status_jemaat">
+                        <option value="Aktif">Aktif</option>
+                        <option value="Selesai">Selesai</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Foto Jemaat</label>
+                    <input type="file" id="foto_input" accept="image/*">
+                </div>
+                <button class="btn-submit" onclick="simpanDataJemaat()">SIMPAN DATA</button>
+                <div id="upload-status" class="status-msg"></div>
+            </div>
+        </div>
+
+        <div id="database-view" class="hidden"><h2>Database Jemaat (Segera Hadir)</h2></div>
     </div>
 
     <script src="auth.js"></script>
     <script>
         function toggleMenu() { document.getElementById('menu-list').classList.toggle('active'); }
+        
         function tampilkanView(viewId) {
             const views = ['welcome-view', 'input-view', 'database-view'];
             views.forEach(v => document.getElementById(v).classList.add('hidden'));
             document.getElementById(viewId).classList.remove('hidden');
             document.getElementById('menu-list').classList.remove('active');
         }
+
+        async function simpanDataJemaat() {
+            const nama = document.getElementById('nama_jemaat').value;
+            const fotoFile = document.getElementById('foto_input').files[0];
+            const statusDiv = document.getElementById('upload-status');
+
+            if (!nama || !fotoFile) {
+                alert("Mohon isi Nama dan Pilih Foto!");
+                return;
+            }
+
+            // GANTI INI DENGAN DATA DASHBOARD CLOUDINARY ANDA
+            const CLOUD_NAME = "NAMA_CLOUD_ANDA"; 
+            const UPLOAD_PRESET = "PRESET_ANDA"; 
+
+            statusDiv.innerText = "Sedang mengunggah foto...";
+            
+            const formData = new FormData();
+            formData.append('file', fotoFile);
+            formData.append('upload_preset', UPLOAD_PRESET);
+
+            try {
+                const resp = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+                    method: 'POST', body: formData
+                });
+                const data = await resp.json();
+
+                if (data.secure_url) {
+                    statusDiv.innerHTML = `<span style="color: #4ade80;">Berhasil! Foto tersimpan di: ${data.secure_url}</span>`;
+                    console.log("Simpan URL ini ke Firebase:", data.secure_url);
+                    // Disini nanti kita tambahkan kode Firebase Firestore
+                }
+            } catch (err) {
+                statusDiv.innerText = "Gagal mengunggah foto.";
+            }
+        }
+
         function updateWaktu() {
             const now = new Date();
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('display-date').innerText = now.toLocaleDateString('id-ID', options);
+            document.getElementById('display-date').innerText = now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
             document.getElementById('display-clock').innerText = now.toLocaleTimeString('id-ID');
         }
         setInterval(updateWaktu, 1000);
