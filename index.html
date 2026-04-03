@@ -125,20 +125,21 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // CONFIG FIREBASE (Gunakan punya Anda)
+        // CONFIG FIREBASE BARU (Sesuai data Anda)
         const firebaseConfig = {
-            apiKey: "AIzaSy...", 
-            authDomain: "pope-apps.firebaseapp.com",
-            projectId: "pope-apps",
-            storageBucket: "pope-apps.appspot.com",
-            messagingSenderId: "...",
-            appId: "..."
+          apiKey: "AIzaSyDIZA6rWBJHAjfm_cSoiaZFjc48fSwCQYw",
+          authDomain: "sidata-pondok-pemulihan.firebaseapp.com",
+          projectId: "sidata-pondok-pemulihan",
+          storageBucket: "sidata-pondok-pemulihan.firebasestorage.app",
+          messagingSenderId: "244791653787",
+          appId: "1:244791653787:web:e66ee6ac264dca643d1d3e",
+          measurementId: "G-ZZKNXQZCWJ"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- GLOBAL FUNCTIONS UNTUK AKSES LUAR MODULE ---
+        // --- GLOBAL FUNCTIONS ---
         window.tampilkanView = async (viewId) => {
             const views = ['welcome-view', 'input-view', 'database-view'];
             views.forEach(v => document.getElementById(v).classList.add('hidden'));
@@ -154,16 +155,14 @@
             document.getElementById('menu-list').classList.toggle('active');
         };
 
-        // Fungsi Hapus Jemaat
         window.hapusJemaat = async function(id) {
             if (confirm("Apakah Anda yakin ingin menghapus data jemaat ini?")) {
                 try {
                     await deleteDoc(doc(db, "jemaat", id));
                     alert("Data berhasil dihapus!");
-                    await muatDatabaseJemaat(); // Refresh tabel
+                    await muatDatabaseJemaat();
                 } catch (error) {
                     console.error("Gagal menghapus:", error);
-                    alert("Gagal menghapus data.");
                 }
             }
         };
@@ -175,7 +174,7 @@
         document.getElementById('menu-input').onclick = () => window.tampilkanView('input-view');
         document.getElementById('btn-simpan').onclick = simpanDataJemaat;
 
-        // --- FUNGSI SIMPAN DATA ---
+        // --- FUNGSI SIMPAN DATA (HANYA SATU FUNGSI) ---
         async function simpanDataJemaat() {
             const nama = document.getElementById('nama_jemaat').value;
             const alamat = document.getElementById('alamat_jemaat').value;
@@ -188,6 +187,7 @@
                 return;
             }
 
+            // DATA CLOUDINARY
             const CLOUD_NAME = "dxzllsbgi"; 
             const UPLOAD_PRESET = "sidata_upload"; 
 
@@ -197,6 +197,7 @@
             formData.append('upload_preset', UPLOAD_PRESET);
 
             try {
+                // 1. Upload ke Cloudinary
                 const resp = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
                     method: 'POST', body: formData
                 });
@@ -204,6 +205,7 @@
 
                 if (cloudinaryData.secure_url) {
                     statusDiv.innerText = "Foto berhasil. Menyimpan ke Database...";
+                    // 2. Simpan ke Firestore Project Baru
                     await addDoc(collection(db, "jemaat"), {
                         nama_lengkap: nama,
                         alamat: alamat,
@@ -213,6 +215,7 @@
                     });
 
                     statusDiv.innerHTML = `<span style="color: #4ade80;">Data Berhasil Disimpan!</span>`;
+                    // Reset Form
                     document.getElementById('nama_jemaat').value = "";
                     document.getElementById('alamat_jemaat').value = "";
                     document.getElementById('foto_input').value = "";
@@ -223,7 +226,6 @@
             }
         }
 
-        // --- FUNGSI MUAT DATABASE ---
         async function muatDatabaseJemaat() {
             const container = document.getElementById('tabel-container');
             container.innerHTML = `<p>Sedang mengambil data...</p>`;
@@ -237,17 +239,7 @@
                     return;
                 }
 
-                let html = `<table>
-                    <thead>
-                        <tr>
-                            <th>Foto</th>
-                            <th>Nama</th>
-                            <th>Alamat</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>`;
+                let html = `<table><thead><tr><th>Foto</th><th>Nama</th><th>Alamat</th><th>Status</th><th>Aksi</th></tr></thead><tbody>`;
 
                 querySnapshot.forEach((documentSnap) => {
                     const data = documentSnap.data();
@@ -257,16 +249,8 @@
                             <td><img src="${data.foto_url}" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid #ffc107;"></td>
                             <td>${data.nama_lengkap}</td>
                             <td>${data.alamat}</td>
-                            <td>
-                                <span style="background: ${data.status === 'Aktif' ? '#4ade80' : '#f87171'}; padding: 4px 8px; border-radius: 5px; color: black; font-weight: bold; font-size: 0.75rem;">
-                                    ${data.status}
-                                </span>
-                            </td>
-                            <td>
-                                <button onclick="hapusJemaat('${id}')" style="background: #e11d48; color: white; border: none; padding: 6px 10px; border-radius: 5px; cursor: pointer;">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
+                            <td><span style="background: ${data.status === 'Aktif' ? '#4ade80' : '#f87171'}; padding: 4px 8px; border-radius: 5px; color: black; font-weight: bold; font-size: 0.75rem;">${data.status}</span></td>
+                            <td><button onclick="hapusJemaat('${id}')" style="background: #e11d48; color: white; border: none; padding: 6px 10px; border-radius: 5px; cursor: pointer;"><i class="fas fa-trash"></i></button></td>
                         </tr>`;
                 });
 
