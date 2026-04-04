@@ -53,7 +53,7 @@
 
         /* FORM & TABLE */
         .hidden { display: none !important; }
-        .card-form { background: rgba(0, 0, 0, 0.6); padding: 30px; border-radius: 15px; width: 100%; max-width: 600px; border: 1px solid #ffc107; }
+        .card-form { background: rgba(0, 0, 0, 0.6); padding: 30px; border-radius: 15px; width: 100%; max-width: 800px; border: 1px solid #ffc107; }
         .form-group { text-align: left; margin-bottom: 10px; }
         .btn-masuk, .btn-submit { background: #2563eb; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
         .btn-batal { background: #e11d48; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; }
@@ -104,29 +104,50 @@
         </section>
 
         <div id="input-view" class="hidden">
-            <div class="card-form">
-                <h2 style="color: #ffc107; margin-bottom: 20px; text-align: center;">FORM INPUT JEMAAT</h2>
-                <div class="form-group">
-                    <label>Nama Lengkap</label>
-                    <input type="text" id="nama_jemaat" placeholder="Masukkan Nama">
-                </div>
-                <div class="form-group">
-                    <label>Alamat</label>
-                    <input type="text" id="alamat_jemaat" placeholder="Masukkan Alamat">
-                </div>
-                <div class="form-group">
-                    <label>Status Pemulihan</label>
-                    <select id="status_jemaat">
-                        <option value="Aktif">Aktif</option>
-                        <option value="Selesai">Selesai</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Foto Jemaat</label>
-                    <input type="file" id="foto_input" accept="image/*">
-                </div>
-                <button class="btn-submit" id="btn-simpan">SIMPAN DATA</button>
-                <button onclick="tampilkanView('welcome-view')" style="margin-top:10px; background:none; border:1px solid #ffc107; color:white; padding:5px; cursor:pointer; width:100%; border-radius:8px;">KEMBALI</button>
+            <div style="max-width: 800px; margin: auto; background: #1e293b; padding: 25px; border-radius: 15px; border: 1px solid #ffc107;">
+                <h2 style="color: #ffc107; margin-bottom: 20px; text-align: center;">FORM INPUT DATA JEMAAT</h2>
+                
+                <form id="formJemaat">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                        <div class="form-group">
+                            <label style="display:block; color:#cbd5e1; margin-bottom:5px;">Nama Lengkap (KTP) *</label>
+                            <input type="text" id="nama_lengkap" style="width:100%; padding:10px; border-radius:5px; background:#0f172a; color:white; border:1px solid #475569;" required>
+                        </div>
+                        <div class="form-group">
+                            <label style="display:block; color:#cbd5e1; margin-bottom:5px;">NIK KTP</label>
+                            <input type="number" id="nik_ktp" style="width:100%; padding:10px; border-radius:5px; background:#0f172a; color:white; border:1px solid #475569;">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                        <div class="form-group">
+                            <label style="display:block; color:#cbd5e1; margin-bottom:5px;">Alamat Domisili</label>
+                            <input type="text" id="alamat_domisili" style="width:100%; padding:10px; border-radius:5px; background:#0f172a; color:white; border:1px solid #475569;">
+                        </div>
+                        <div class="form-group">
+                            <label style="display:block; color:#cbd5e1; margin-bottom:5px;">No. WhatsApp *</label>
+                            <input type="tel" id="no_wa" style="width:100%; padding:10px; border-radius:5px; background:#0f172a; color:white; border:1px solid #475569;" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label style="display:block; color:#cbd5e1; margin-bottom:5px;">Pekerjaan *</label>
+                        <select id="pekerjaan" style="width:100%; padding:10px; border-radius:5px; background:#0f172a; color:white; border:1px solid #475569;" required>
+                            <option value="">-- Pilih Pekerjaan --</option>
+                            <option>TNI / POLRI</option>
+                            <option>ASN / P3K</option>
+                            <option>Wiraswasta</option>
+                            <option>Karyawan Swasta</option>
+                            <option>Guru / Dosen</option>
+                            <option>Lainnya</option>
+                        </select>
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit" id="btn-simpan" style="flex:2; background: #ffc107; color: black; font-weight: bold; padding: 12px; border: none; border-radius: 8px; cursor: pointer;">SIMPAN KE DATABASE</button>
+                        <button type="button" onclick="tampilkanView('welcome-view')" style="flex:1; background: #444; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer;">BATAL</button>
+                    </div>
+                </form>
             </div>
         </div>
 
@@ -138,7 +159,6 @@
     </div>
 
     <script type="module">
-        /* LOGIKA FIREBASE */
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
@@ -155,7 +175,6 @@
         const db = getFirestore(app);
         const koleksiRef = collection(db, "Administrator", "profile biodata", "daftar_anggota");
 
-        // FUNGSI PINDAH TAMPILAN TANPA RELOAD
         window.tampilkanView = async (viewId) => {
             const views = ['welcome-view', 'input-view', 'database-view'];
             views.forEach(v => {
@@ -166,14 +185,70 @@
             if (viewId === 'database-view') await muatDatabaseJemaat();
         };
 
-        // ... (Logika muatDatabaseJemaat & simpanDataJemaat tetap di sini) ...
+        // LOGIKA SIMPAN DATA BARU
+        document.getElementById('formJemaat').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-simpan');
+            btn.innerText = "MENGIRIM...";
+            btn.disabled = true;
+
+            try {
+                const payload = {
+                    nama_lengkap: document.getElementById('nama_lengkap').value,
+                    nik_ktp: document.getElementById('nik_ktp').value,
+                    alamat_domisili: document.getElementById('alamat_domisili').value,
+                    wa: document.getElementById('no_wa').value,
+                    pekerjaan: document.getElementById('pekerjaan').value,
+                    timestamp: serverTimestamp()
+                };
+
+                await addDoc(koleksiRef, payload);
+                alert("Data Berhasil Disimpan!");
+                e.target.reset();
+                tampilkanView('welcome-view');
+            } catch (err) {
+                alert("Gagal: " + err.message);
+            } finally {
+                btn.innerText = "SIMPAN KE DATABASE";
+                btn.disabled = false;
+            }
+        };
+
+        async function muatDatabaseJemaat() {
+            const container = document.getElementById('tabel-container');
+            container.innerHTML = "<p>Memuat Data...</p>";
+            try {
+                const q = query(koleksiRef, orderBy("timestamp", "desc"));
+                const snapshot = await getDocs(q);
+                let html = `<table><tr><th>Nama</th><th>WA</th><th>Pekerjaan</th><th>Aksi</th></tr>`;
+                snapshot.forEach(docSnap => {
+                    const d = docSnap.data();
+                    html += `<tr>
+                        <td>${d.nama_lengkap || '-'}</td>
+                        <td>${d.wa || '-'}</td>
+                        <td>${d.pekerjaan || '-'}</td>
+                        <td><button onclick="hapusData('${docSnap.id}')" style="background:red; color:white; border:none; padding:5px; cursor:pointer; border-radius:4px;">Hapus</button></td>
+                    </tr>`;
+                });
+                html += `</table>`;
+                container.innerHTML = html;
+            } catch (err) {
+                container.innerHTML = "Gagal memuat data.";
+            }
+        }
+
+        window.hapusData = async (id) => {
+            if(confirm("Hapus data ini?")) {
+                await deleteDoc(doc(db, "Administrator", "profile biodata", "daftar_anggota", id));
+                muatDatabaseJemaat();
+            }
+        };
     </script>
 
     <script>
         const USER_AKSES = "admin_papua";
         const PASS_AKSES = "Papua2026!";
 
-        // LOGIN: Hanya hilangkan overlay, jangan reload
         document.getElementById('loginForm').onsubmit = function(e) {
             e.preventDefault();
             const user = document.getElementById('username_input').value;
@@ -181,30 +256,25 @@
 
             if (user === USER_AKSES && pass === PASS_AKSES) {
                 document.getElementById('login-overlay').classList.add('hidden');
-                // Reset form login agar bersih saat logout nanti
                 this.reset();
             } else { 
                 alert("Akses Ditolak!"); 
             }
         };
 
-        // LOGOUT: Hanya munculkan overlay kembali, jangan reload
         window.prosesLogout = () => { 
             if(confirm("Keluar dari sistem?")) {
                 document.getElementById('login-overlay').classList.remove('hidden');
-                // Kembalikan ke tampilan beranda secara default
                 tampilkanView('welcome-view');
             } 
         };
 
-        // TOGGLE MATA PASSWORD
         document.getElementById('togglePassword').onclick = function() {
             const passInput = document.getElementById('password_input');
             passInput.type = passInput.type === 'password' ? 'text' : 'password';
             this.classList.toggle('fa-eye-slash');
         };
 
-        // UPDATE WAKTU REAL-TIME
         function updateWaktu() {
             const now = new Date();
             document.getElementById('display-date').innerText = now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
