@@ -3,252 +3,309 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Lengkap Jemaat - Pondok Pemulihan Papua</title>
+    <title>Sistem Informasi Pondok Pemulihan Papua</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary: #ffc107; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --error: #ef4444; --success: #22c55e; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-        body { background-color: var(--bg); color: var(--text); padding-top: 80px; }
+        
+        body { 
+            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), 
+                        url('poster_papua.jpg') no-repeat center center fixed;
+            background-size: cover; color: var(--text); min-height: 100vh;
+        }
+
         .hidden { display: none !important; }
 
+        /* LOGIN OVERLAY */
+        #login-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.98); display: flex; justify-content: center; align-items: center; z-index: 100000; }
+        .login-card { background: var(--card); padding: 40px; border-radius: 15px; border: 1px solid var(--primary); width: 100%; max-width: 400px; text-align: center; }
+        .login-card input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; }
+
+        /* HEADER */
         header { 
-            background: #000; padding: 15px 30px; border-bottom: 3px solid var(--primary); 
+            background: rgba(0,0,0,0.9); padding: 15px 30px; border-bottom: 3px solid var(--primary); 
             display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; width: 100%; z-index: 1000;
         }
 
-        .container { max-width: 1100px; margin: 20px auto; padding: 0 20px; }
+        .container { max-width: 1000px; margin: 100px auto 40px; padding: 0 20px; }
         .form-card { background: var(--card); padding: 30px; border-radius: 15px; border: 1px solid rgba(255,193,7,0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 
-        h2 { color: var(--primary); margin: 30px 0 20px; border-left: 5px solid var(--primary); padding-left: 15px; font-size: 1.5rem; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; color: #cbd5e1; }
+        /* FORM ELEMENTS */
+        h2 { color: var(--primary); margin: 30px 0 15px; border-left: 5px solid var(--primary); padding-left: 15px; font-size: 1.3rem; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: #cbd5e1; }
         input, select, textarea {
-            width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; outline: none;
+            width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; outline: none;
         }
-        input:focus, select:focus { border-color: var(--primary); }
-        input[readonly] { background: #1e293b; color: var(--primary); font-weight: bold; border: 1px dashed var(--primary); }
+        input[readonly] { background: #1e293b; color: var(--primary); border: 1px dashed var(--primary); font-weight: bold; }
 
-        .profile-section { text-align: center; margin-bottom: 40px; }
-        .profile-img { width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--primary); object-fit: cover; margin-bottom: 15px; }
+        .profile-section { text-align: center; margin-bottom: 20px; }
+        .profile-img { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--primary); object-fit: cover; }
+        
         .upload-box { 
-            background: rgba(15, 23, 42, 0.6); border: 2px dashed #475569; padding: 15px; 
-            border-radius: 10px; text-align: center; cursor: pointer; transition: 0.3s; display: block;
+            background: rgba(15, 23, 42, 0.6); border: 2px dashed #475569; padding: 10px; 
+            border-radius: 8px; text-align: center; cursor: pointer; display: block; margin-top: 10px; font-size: 0.8rem;
         }
-        .upload-box.uploaded { border-color: var(--success); background: rgba(34, 197, 94, 0.1); color: var(--success); }
+        .upload-box.uploaded { border-color: var(--success); color: var(--success); }
 
-        .radio-group { display: flex; flex-wrap: wrap; gap: 15px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; }
-        .radio-group label { display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 0; }
-        .radio-group input[type="radio"] { width: auto; }
-
-        .btn-action { 
-            background: var(--primary); color: #000; border: none; padding: 18px; border-radius: 8px; 
-            font-weight: bold; cursor: pointer; width: 100%; font-size: 1.1rem; margin-top: 40px;
-            transition: 0.3s;
+        .radio-group { display: flex; flex-wrap: wrap; gap: 10px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; }
+        
+        .btn-submit { 
+            background: var(--primary); color: #000; border: none; padding: 15px; border-radius: 8px; 
+            font-weight: bold; cursor: pointer; width: 100%; font-size: 1rem; margin-top: 30px;
         }
-        .btn-action:disabled { background: #475569; cursor: not-allowed; opacity: 0.6; }
+        .btn-submit:disabled { background: #475569; cursor: not-allowed; }
 
-        .sub-group { background: rgba(255, 193, 7, 0.05); padding: 20px; border-radius: 10px; margin-top: 10px; border: 1px solid rgba(255, 193, 7, 0.1); }
-        .mandatory { color: var(--error); }
+        .sub-group { background: rgba(255, 193, 7, 0.05); padding: 15px; border-radius: 10px; border: 1px solid rgba(255,193,7,0.1); }
+        
+        /* TABLE STYLES */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: rgba(0,0,0,0.3); }
+        th { background: var(--primary); color: black; padding: 10px; }
+        td { padding: 10px; border-bottom: 1px solid #475569; text-align: center; font-size: 0.85rem; }
     </style>
 </head>
 <body>
 
-<header>
-    <div style="display:flex; align-items:center; gap:15px;">
-        <img src="logo_pope.png" alt="Logo" style="height: 45px;">
-        <h4 style="color: var(--primary); letter-spacing: 1px;">PONDOK PEMULIHAN PAPUA</h4>
-    </div>
-    <button onclick="window.location.reload()" style="background:var(--error); color:white; border:none; padding:8px 15px; border-radius:5px; font-weight:bold;">LOGOUT</button>
-</header>
-
-<div class="container">
-    <div class="form-card">
-        <form id="mainForm">
-            <div class="profile-section">
-                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" id="p-preview" class="profile-img">
-                <div style="max-width: 200px; margin: 0 auto;">
-                    <label class="upload-box" id="box-foto">
-                        <i class="fas fa-camera"></i> Foto Profil
-                        <input type="file" accept="image/*" class="hidden" onchange="handleFile(this, 'p-preview', 'box-foto')">
-                    </label>
-                </div>
-            </div>
-
-            <h2><i class="fas fa-id-badge"></i> Registrasi Sistem</h2>
-            <div class="form-group">
-                <label>Nomor Induk Jemaat (Otomatis)</label>
-                <input type="text" id="nij_display" name="nij" readonly>
-            </div>
-
-            <h2><i class="fas fa-address-card"></i> Identitas Pribadi</h2>
-            <div class="form-group">
-                <label>Nama Lengkap <span class="mandatory">*</span></label>
-                <input type="text" name="nama" required placeholder="Masukkan Nama Lengkap Sesuai KTP">
-            </div>
-
-            <div class="grid-2">
-                <div class="form-group"><label>Alamat KTP</label><textarea name="alt_ktp" rows="2"></textarea></div>
-                <div class="form-group"><label>Alamat Domisili</label><textarea name="alt_dom" rows="2"></textarea></div>
-            </div>
-
-            <div class="form-group">
-                <label>Status Pernikahan <span class="mandatory">*</span></label>
-                <div class="radio-group">
-                    <label><input type="radio" name="st_nikah" value="Single" onclick="toggleMarriage(false)" required> Single</label>
-                    <label><input type="radio" name="st_nikah" value="Menikah" onclick="toggleMarriage(true)"> Menikah</label>
-                    <label><input type="radio" name="st_nikah" value="Duda_Mati" onclick="toggleMarriage(false)"> Duda (Cerai Mati)</label>
-                    <label><input type="radio" name="st_nikah" value="Janda_Mati" onclick="toggleMarriage(false)"> Janda (Cerai Mati)</label>
-                </div>
-            </div>
-
-            <div id="form-pasangan" class="sub-group hidden">
-                <label>Data Pasangan</label>
-                <div class="grid-2">
-                    <select id="pilih_p"><option value="Suami">Suami</option><option value="Istri">Istri</option></select>
-                    <input type="text" id="nama_p" placeholder="Nama Pasangan">
-                </div>
-            </div>
-
-            <div class="grid-2">
-                <div class="form-group"><label>NIK KTP</label><input type="number" name="nik"></div>
-                <div class="form-group"><label>NIK KK</label><input type="number" name="kk"></div>
-            </div>
-
-            <div class="form-group">
-                <label>Pekerjaan <span class="mandatory">*</span></label>
-                <select required id="pekerjaan">
-                    <option value="">-- Pilih Pekerjaan --</option>
-                    <option>TNI</option><option>Polri</option><option>ASN</option><option>Swasta</option><option>Wiraswasta</option>
-                    <option>Profesional</option><option>Guru/Dosen</option><option>Pejabat Publik</option><option>Kerohaniaan</option>
-                </select>
-            </div>
-
-            <div class="grid-2">
-                <div class="form-group"><label>Jumlah Anak</label><input type="number" id="jml_anak" min="0" oninput="genAnak(this.value)"></div>
-                <div class="form-group"><label>Golongan Darah</label>
-                    <select><option>O</option><option>A</option><option>B</option><option>AB</option></select>
-                </div>
-            </div>
-            <div id="list-anak" class="form-group"></div>
-
-            <div class="grid-2">
-                <div class="form-group"><label>No. WA</label><input type="text" placeholder="0812..."></div>
-                <div class="form-group"><label>Email</label><input type="email"></div>
-            </div>
-
-            <h2><i class="fas fa-church"></i> Data Gerejawi</h2>
-            
-            <div class="form-group">
-                <label>Status Keanggotaan Jemaat <span class="mandatory">*</span></label>
-                <div class="radio-group">
-                    <label><input type="radio" name="st_anggota" value="Aktif" required> Anggota Jemaat Aktif</label>
-                    <label><input type="radio" name="st_anggota" value="Tidak_Aktif"> Anggota Jemaat Tidak Aktif</label>
-                </div>
-            </div>
-
-            <div class="grid-2">
-                <div class="form-group">
-                    <label>Lokasi Berjemaat</label>
-                    <select>
-                        <option>Pondok Pemulihan Abepura</option><option>Pondok Pemulihan Sentani</option>
-                        <option>Pondok Pemulihan Doyo</option><option>Pondok Pemulihan Arso</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Aktif dalam Komsel</label>
-                    <select>
-                        <option>Komsel Lansia</option><option>Komsel Bapak</option><option>Komsel Ibu</option>
-                        <option>Komsel Profesi</option><option>Komsel Mahasiswa</option><option>Komsel Pelajar</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Jabatan Pelayanan Utama</label>
-                <select id="jabatan" onchange="handlePelayanan(this.value)">
-                    <option value="Jemaat">Jemaat Ordinari</option>
-                    <option value="Gembala">Gembala Sidang</option>
-                    <option value="Wakil Gembala">Wakil Gembala Sidang</option>
-                    <option value="Sekertaris">Sekertaris Gereja</option>
-                    <option value="Bendahara">Bendahara Gereja</option>
-                    <option value="Koordinator">Koordinator / Pemimpin</option>
-                    <option value="PKS">PKS Komsel</option>
-                    <option value="Doa">Pendoa Syafaat</option>
-                    <option value="Penatua">Penatua / Diaken</option>
-                    <option value="Musik">Pelayanan Musik Spesifik</option>
-                    <option value="Vocal">Vocal & Singers Spesifik</option>
-                    <option value="Multimedia">Multimedia Spesifik</option>
-                    <option value="Sound">Sound & Elektrikal Spesifik</option>
-                    <option value="Tamborin">Tamborin & Flags Spesifik</option>
-                    <option value="User">User Spesifik</option>
-                    <option value="Misi">Bidang Misi Spesifik</option>
-                    <option value="Keamanan">Perparkiran & Keamanan Spesifik</option>
-                </select>
-            </div>
-
-            <div id="sub-box" class="sub-group hidden">
-                <label id="sub-label">Detail Bidang</label>
-                <select id="sub-select"></select>
-            </div>
-
-            <h2><i class="fas fa-file-upload"></i> Dokumen <small class="mandatory">(Wajib)</small></h2>
-            <div class="grid-2">
-                <label class="upload-box" id="box-ktp-file">Upload KTP <input type="file" class="hidden" required onchange="handleFile(this, null, 'box-ktp-file')"></label>
-                <label class="upload-box" id="box-kk-file">Upload KK <input type="file" class="hidden" required onchange="handleFile(this, null, 'box-kk-file')"></label>
-                <label class="upload-box" id="box-akta-file">Akta Lahir <input type="file" class="hidden" required onchange="handleFile(this, null, 'box-akta-file')"></label>
-                <label class="upload-box" id="box-baptis-file">Surat Baptis <input type="file" class="hidden" required onchange="handleFile(this, null, 'box-baptis-file')"></label>
-            </div>
-
-            <button type="submit" id="btnSubmit" class="btn-action" disabled>SIMPAN DATA JEMAAT</button>
+<div id="login-overlay">
+    <div class="login-card">
+        <img src="logo_pope.png" style="width: 70px; margin-bottom: 15px;">
+        <h2 style="margin:0; border:none; padding:0;">PORTAL LOGIN</h2>
+        <p style="font-size: 0.8rem; color: var(--primary); margin-bottom: 20px;">Pondok Pemulihan Papua</p>
+        <form id="loginForm">
+            <input type="text" id="username_input" placeholder="Username" required>
+            <input type="password" id="password_input" placeholder="Password" required>
+            <button type="submit" class="btn-submit">MASUK KE SISTEM</button>
         </form>
     </div>
 </div>
 
-<script>
-    let jumlahPendaftarDiDatabase = 0; 
+<header>
+    <div style="display:flex; align-items:center; gap:12px;">
+        <img src="logo_pope.png" alt="Logo" style="height: 40px; cursor:pointer;" onclick="tampilkanView('welcome-view')">
+        <div>
+            <h5 style="color: var(--primary); margin:0;">PONDOK PEMULIHAN PAPUA</h5>
+            <small id="display-clock" style="font-size: 0.7rem;">00:00:00</small>
+        </div>
+    </div>
+    <button onclick="prosesLogout()" style="background:var(--error); color:white; border:none; padding:6px 12px; border-radius:5px; font-weight:bold; cursor:pointer;">LOGOUT</button>
+</header>
 
-    window.onload = function() {
-        generateNIJ();
+<div class="container">
+    
+    <section id="welcome-view" style="text-align:center;">
+        <h1 style="font-size: 2.5rem; margin-bottom: 10px;">Selamat Datang</h1>
+        <p style="color: var(--primary); margin-bottom: 40px;">Silahkan pilih menu navigasi di bawah ini</p>
+        <div class="grid-2">
+            <button onclick="tampilkanView('input-view')" class="btn-submit" style="margin:0;">INPUT DATA JEMAAT</button>
+            <button onclick="tampilkanView('database-view')" class="btn-submit" style="margin:0; background:white;">LIHAT DATABASE</button>
+        </div>
+    </section>
+
+    <section id="input-view" class="hidden">
+        <div class="form-card">
+            <form id="mainForm">
+                <div class="profile-section">
+                    <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" id="p-preview" class="profile-img">
+                    <div style="max-width: 150px; margin: 0 auto;">
+                        <label class="upload-box" id="box-foto">
+                            <i class="fas fa-camera"></i> Foto Profil
+                            <input type="file" id="f_profil" accept="image/*" class="hidden" onchange="handleFile(this, 'p-preview', 'box-foto')">
+                        </label>
+                    </div>
+                </div>
+
+                <h2>Registrasi</h2>
+                <div class="form-group">
+                    <label>Nomor Induk Jemaat (Otomatis)</label>
+                    <input type="text" id="nij_display" readonly>
+                </div>
+
+                <h2>Identitas Pribadi</h2>
+                <div class="form-group">
+                    <label>Nama Lengkap (Sesuai KTP) *</label>
+                    <input type="text" id="f_nama" required>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group"><label>NIK KTP</label><input type="number" id="f_nik"></div>
+                    <div class="form-group"><label>No. WhatsApp *</label><input type="tel" id="f_wa" required></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Status Pernikahan *</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="st_nikah" value="Single" onclick="toggleMarriage(false)" required> Single</label>
+                        <label><input type="radio" name="st_nikah" value="Menikah" onclick="toggleMarriage(true)"> Menikah</label>
+                        <label><input type="radio" name="st_nikah" value="Lainnya" onclick="toggleMarriage(false)"> Duda/Janda</label>
+                    </div>
+                </div>
+
+                <div id="form-pasangan" class="sub-group hidden">
+                    <div class="grid-2">
+                        <div class="form-group"><label>Pasangan</label><select id="f_jenis_p"><option>Suami</option><option>Istri</option></select></div>
+                        <div class="form-group"><label>Nama Pasangan</label><input type="text" id="f_nama_p"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Pekerjaan</label>
+                    <select id="f_kerja">
+                        <option>TNI/Polri</option><option>ASN</option><option>Wiraswasta</option><option>Swasta</option><option>Mahasiswa</option><option>Lainnya</option>
+                    </select>
+                </div>
+
+                <h2>Data Gerejawi</h2>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Lokasi Berjemaat</label>
+                        <select id="f_lokasi">
+                            <option>Abepura</option><option>Sentani</option><option>Doyo</option><option>Arso</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Jabatan Utama</label>
+                        <select id="f_jabatan" onchange="handlePelayanan(this.value)">
+                            <option value="Jemaat">Jemaat</option>
+                            <option value="PKS">PKS Komsel</option>
+                            <option value="Musik">Musik</option>
+                            <option value="Vocal">Vocal/Singer</option>
+                            <option value="Multimedia">Multimedia</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="sub-box" class="sub-group hidden">
+                    <label id="sub-label">Detail Bidang</label>
+                    <select id="sub-select"></select>
+                </div>
+
+                <h2>Dokumen (Upload)</h2>
+                <div class="grid-2">
+                    <label class="upload-box" id="box-ktp">KTP <input type="file" class="hidden" onchange="handleFile(this, null, 'box-ktp')"></label>
+                    <label class="upload-box" id="box-kk">KK <input type="file" class="hidden" onchange="handleFile(this, null, 'box-kk')"></label>
+                </div>
+
+                <button type="submit" id="btnSubmit" class="btn-submit">SIMPAN DATA JEMAAT</button>
+                <button type="button" onclick="tampilkanView('welcome-view')" style="background:none; border:1px solid white; color:white;" class="btn-submit">KEMBALI</button>
+            </form>
+        </div>
+    </section>
+
+    <section id="database-view" class="hidden">
+        <h2 style="color:var(--primary); border:none;">DATABASE JEMAAT</h2>
+        <div id="tabel-container" style="overflow-x: auto;"></div>
+        <button onclick="tampilkanView('welcome-view')" class="btn-submit" style="width:200px;">KEMBALI</button>
+    </section>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDIZA6rWBJHAjfm_cSoiaZFjc48fSwCQYw",
+        authDomain: "sidata-pondok-pemulihan.firebaseapp.com",
+        projectId: "sidata-pondok-pemulihan",
+        storageBucket: "sidata-pondok-pemulihan.firebasestorage.app",
+        messagingSenderId: "244791653787",
+        appId: "1:244791653787:web:e66ee6ac264dca643d1d3e"
     };
 
-    function generateNIJ() {
-        let urutanBaru = jumlahPendaftarDiDatabase + 1; 
-        const formattedNum = String(urutanBaru).padStart(2, '0'); 
-        document.getElementById('nij_display').value = `NIJ-PPP-${formattedNum}-2026`;
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const koleksiRef = collection(db, "Administrator", "profile biodata", "daftar_anggota");
+
+    // NAVIGASI VIEW
+    window.tampilkanView = async (id) => {
+        ['welcome-view', 'input-view', 'database-view'].forEach(v => document.getElementById(v).classList.add('hidden'));
+        document.getElementById(id).classList.remove('hidden');
+        if(id === 'input-view') generateNIJ();
+        if(id === 'database-view') muatData();
+    };
+
+    // GENERATE NIJ OTOMATIS
+    async function generateNIJ() {
+        const snap = await getDocs(koleksiRef);
+        let urutan = snap.size + 1;
+        document.getElementById('nij_display').value = `NIJ-PPP-${String(urutan).padStart(3, '0')}-2026`;
     }
 
+    // SIMPAN DATA
+    document.getElementById('mainForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('btnSubmit');
+        btn.disabled = true; btn.innerText = "MENYIMPAN...";
+
+        try {
+            const data = {
+                nij: document.getElementById('nij_display').value,
+                nama: document.getElementById('f_nama').value,
+                nik: document.getElementById('f_nik').value,
+                wa: document.getElementById('f_wa').value,
+                st_nikah: document.querySelector('input[name="st_nikah"]:checked').value,
+                pekerjaan: document.getElementById('f_kerja').value,
+                lokasi: document.getElementById('f_lokasi').value,
+                jabatan: document.getElementById('f_jabatan').value,
+                bidang_detail: document.getElementById('sub-select').value || "None",
+                timestamp: serverTimestamp()
+            };
+
+            await addDoc(koleksiRef, data);
+            alert("Berhasil! Data Jemaat Tersimpan.");
+            e.target.reset();
+            tampilkanView('welcome-view');
+        } catch (err) {
+            alert("Error: " + err.message);
+        } finally {
+            btn.disabled = false; btn.innerText = "SIMPAN DATA JEMAAT";
+        }
+    };
+
+    // MUAT DATA DATABASE
+    async function muatData() {
+        const cont = document.getElementById('tabel-container');
+        cont.innerHTML = "<p>Memuat...</p>";
+        const q = query(koleksiRef, orderBy("timestamp", "desc"));
+        const snap = await getDocs(q);
+        
+        let table = `<table><tr><th>NIJ</th><th>Nama</th><th>Jabatan</th><th>Aksi</th></tr>`;
+        snap.forEach(d => {
+            const item = d.data();
+            table += `<tr>
+                <td>${item.nij}</td>
+                <td>${item.nama}</td>
+                <td>${item.jabatan}</td>
+                <td><button onclick="hapusData('${d.id}')" style="background:red; color:white; border:none; padding:4px; border-radius:3px; cursor:pointer;">Hapus</button></td>
+            </tr>`;
+        });
+        cont.innerHTML = table + `</table>`;
+    }
+
+    window.hapusData = async (id) => {
+        if(confirm("Hapus data jemaat ini?")) {
+            await deleteDoc(doc(db, "Administrator", "profile biodata", "daftar_anggota", id));
+            muatData();
+        }
+    };
+</script>
+
+<script>
     const subData = {
-        "Koordinator": [
-            "Koordinator Lansia", "Koordinator Bapak", "Koordinator Ibu", "Koordinator profesi", 
-            "Koordinator Mahasiswa", "Koordinator Pelajar", "koordinator Remaja", "Koordinator Sekolah Minggu",
-            "Koordinator Bidang Pujian penyembahan", "koordinator Musik", "Koordinator Vocal dan Singer", 
-            "Koordinator tamborin", "Koordinator Flag", "koordinator Multimedia", "Koordinator Sound and Electrikal", 
-            "koordinator User", "Koordinator Event Organizer", "koordinator Perpakiran dan keamanan", "General Affairs"
-        ],
-        "Musik": [
-            "drumer Player", "Lead Gitar player", "guitar rhythm palyer", "Bass Guitar player", 
-            "Lead Piano player", "Keyboard player", "Saxophone player", "Ketipung player", 
-            "violine player", "flute player", "cielo player", "brasso player", "french horn player", "trombon player"
-        ],
-        "Vocal": ["Vocal Coach", "Worship leader", "singers", "Choirs Team"],
-        "Multimedia": ["Director Media", "Campers", "Floor Direct", "Floor Crew", "Easy Worship Operator", "Pro Presenter Operator", "Video Stream Operator", "Video Switching Operator"],
-        "Sound": ["Director Sound", "Audio Mixer Operator", "Periperhal Electrikal", "periperhal Perlatan Musik", "Sound engineering", "Elektrical engineering"],
-        "Tamborin": ["Tamborin coach", "Flag Coach", "tamborin player", "Flag Player"],
-        "User": ["front desk user", "user direct", "general affairs"],
-        "Misi": ["Bidang R & D (Research and Development)", "Humas", "Fundrising", "Pemetaan dan Roadmap"],
-        "Keamanan": ["Park Chief", "Park Crew", "security Crew"]
+        "PKS": ["Fulltimer", "PKS Lansia", "PKS Bapak", "PKS Ibu", "PKS Mahasiswa"],
+        "Musik": ["Drum", "Guitar", "Bass", "Keyboard", "Saxophone"],
+        "Multimedia": ["Camera", "Switcher", "EasyWorship", "Streaming"],
+        "Vocal": ["Worship Leader", "Singer", "Choir"]
     };
 
     function handlePelayanan(val) {
         const box = document.getElementById('sub-box');
         const sel = document.getElementById('sub-select');
-        const label = document.getElementById('sub-label');
-        
         if(subData[val]) {
             box.classList.remove('hidden');
-            label.innerText = "Pilih Bidang Spesifik " + val + ":";
             sel.innerHTML = subData[val].map(i => `<option value="${i}">${i}</option>`).join("");
         } else {
             box.classList.add('hidden');
@@ -264,37 +321,28 @@
                 reader.readAsDataURL(input.files[0]);
             }
             box.classList.add('uploaded');
-            box.innerHTML = `<i class="fas fa-check-circle"></i> File Terupload`;
-            checkForm();
+            box.innerHTML = `<i class="fas fa-check"></i> Terpilih`;
         }
     }
 
-    function toggleMarriage(isMarried) {
-        document.getElementById('form-pasangan').classList.toggle('hidden', !isMarried);
-        checkForm();
-    }
+    function toggleMarriage(is) { document.getElementById('form-pasangan').classList.toggle('hidden', !is); }
 
-    function genAnak(num) {
-        const container = document.getElementById('list-anak');
-        container.innerHTML = num > 0 ? `<label>Nama Anak-anak:</label>` : "";
-        for(let i=1; i<=num; i++) {
-            container.innerHTML += `<input type="text" placeholder="Nama Anak ke-${i}" style="margin-bottom:10px;">`;
-        }
-    }
-
-    function checkForm() {
-        const form = document.getElementById('mainForm');
-        document.getElementById('btnSubmit').disabled = !form.checkValidity();
-    }
-
-    document.getElementById('mainForm').addEventListener('input', checkForm);
-    document.getElementById('mainForm').onsubmit = (e) => {
+    // LOGIN & CLOCK
+    document.getElementById('loginForm').onsubmit = (e) => {
         e.preventDefault();
-        const currentNIJ = document.getElementById('nij_display').value;
-        alert("Data Berhasil Disimpan dengan Nomor: " + currentNIJ);
-        jumlahPendaftarDiDatabase++; 
-        generateNIJ(); 
+        if(document.getElementById('username_input').value === "admin_papua" && 
+           document.getElementById('password_input').value === "Papua2026!") {
+            document.getElementById('login-overlay').classList.add('hidden');
+        } else { alert("Akses Ditolak!"); }
     };
+
+    function prosesLogout() { if(confirm("Keluar?")) location.reload(); }
+
+    setInterval(() => {
+        const now = new Date();
+        document.getElementById('display-clock').innerText = now.toLocaleDateString('id-ID') + " | " + now.toLocaleTimeString('id-ID');
+    }, 1000);
 </script>
+
 </body>
 </html>
