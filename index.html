@@ -18,39 +18,46 @@
             background-size: cover; color: white;
         }
 
+        /* Overlay Login */
+        #login-overlay { 
+            position: fixed; inset: 0; 
+            background: rgba(15, 23, 42, 0.98); 
+            display: flex; justify-content: center; align-items: center; 
+            z-index: 100000; 
+        }
+        
+        .login-card { 
+            background: rgba(255, 255, 255, 0.05); padding: 40px; 
+            border-radius: 15px; border: 1px solid var(--primary); 
+            width: 100%; max-width: 400px; text-align: center; 
+            backdrop-filter: blur(10px); 
+        }
+
         .main-container {
             position: fixed; top: 80px; width: 100%; height: calc(100% - 80px);
             padding: 20px; overflow-y: auto; display: flex; flex-direction: column;
             align-items: center; z-index: 10;
         }
 
-        #login-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.98); display: flex; justify-content: center; align-items: center; z-index: 100000; }
-        .login-card { background: rgba(255, 255, 255, 0.05); padding: 40px; border-radius: 15px; border: 1px solid var(--primary); width: 100%; max-width: 400px; text-align: center; backdrop-filter: blur(10px); }
-        .login-card input { width: 100%; padding: 12px; margin-top: 5px; margin-bottom: 15px; border-radius: 8px; background: white; color: #1e293b; border: 2px solid var(--primary); }
-        
-        #top-bar-info { position: fixed; top: 0; left: 0; width: 100%; height: 80px; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(15px); display: flex; align-items: center; justify-content: space-between; padding: 0 30px; border-bottom: 2px solid var(--primary); z-index: 100; }
+        #top-bar-info { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 80px; 
+            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(15px); 
+            display: flex; align-items: center; justify-content: space-between; 
+            padding: 0 30px; border-bottom: 2px solid var(--primary); z-index: 100; 
+        }
 
         .hidden { display: none !important; }
-        #welcome-view { text-align: center; margin-top: 50px; }
         
+        /* Form & Cards */
         .card-form { background: var(--card); padding: 30px; border-radius: 15px; width: 100%; max-width: 900px; border: 1px solid var(--primary); margin-bottom: 50px; }
-        .section-title { color: var(--primary); font-weight: bold; margin: 25px 0 10px; border-bottom: 1px solid #444; padding-bottom: 5px; text-align: left; text-transform: uppercase; letter-spacing: 1px; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: left; }
+        .section-title { color: var(--primary); font-weight: bold; margin: 25px 0 10px; border-bottom: 1px solid #444; padding-bottom: 5px; text-align: left; text-transform: uppercase; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .form-group { margin-bottom: 15px; display: flex; flex-direction: column; text-align: left; }
-        label { font-size: 0.85rem; color: #cbd5e1; margin-bottom: 5px; }
-        input, select { padding: 10px; border-radius: 5px; border: 1px solid #475569; background: #0f172a; color: white; width: 100%; }
         
-        /* Style khusus upload */
-        input[type="file"] { background: #1e293b; border: 1px dashed var(--primary); padding: 5px; cursor: pointer; font-size: 0.8rem; }
+        input, select { padding: 10px; border-radius: 5px; border: 1px solid #475569; background: #0f172a; color: white; }
+        input[type="file"] { border: 1px dashed var(--primary); cursor: pointer; }
 
-        .radio-group { display: flex; flex-wrap: wrap; gap: 10px; background: #0f172a; padding: 10px; border-radius: 5px; margin-top: 5px; }
-        .radio-item { display: flex; align-items: center; gap: 5px; font-size: 0.85rem; cursor: pointer; }
-
-        table { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.6); margin-top: 20px; font-size: 0.85rem; }
-        th { background: var(--primary); color: black; padding: 12px; }
-        td { padding: 10px; border-bottom: 1px solid #333; text-align: center; }
-
-        .btn-masuk, .btn-submit { background: var(--primary); color: black; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .btn-masuk, .btn-submit { background: var(--primary); color: black; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; }
         .btn-batal { background: #e11d48; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; }
     </style>
 </head>
@@ -60,27 +67,28 @@
         <div class="login-card">
             <img src="logo_pope.png" style="width: 80px; margin-bottom: 20px;">
             <h2 style="color: var(--primary);">ADMIN PORTAL</h2>
+            <p style="font-size: 0.8rem; margin-bottom: 20px; color: #ccc;">Silahkan masuk untuk akses database</p>
             <form id="loginForm">
-                <input type="text" id="username_input" placeholder="Username" required>
-                <input type="password" id="password_input" placeholder="Password" required>
-                <button type="submit" class="btn-masuk" style="width:100%">LOGIN SISTEM</button>
+                <input type="text" id="username_input" placeholder="Username" required style="width:100%; margin-bottom:10px; padding:12px; border-radius:8px;">
+                <input type="password" id="password_input" placeholder="Password" required style="width:100%; margin-bottom:20px; padding:12px; border-radius:8px;">
+                <button type="submit" class="btn-masuk" style="width:100%">MASUK SISTEM</button>
             </form>
         </div>
     </div>
 
-    <div id="top-bar-info">
+    <div id="top-bar-info" class="hidden">
         <div>
-            <p id="display-date">Memuat...</p>
+            <p id="display-date" style="font-size: 0.8rem;">Memuat...</p>
             <p id="display-clock" style="font-weight: bold; color: var(--primary);">00:00:00</p>
         </div>
         <h3 style="cursor:pointer;" onclick="tampilkanView('welcome-view')">PONDOK PEMULIHAN PAPUA</h3>
         <button onclick="prosesLogout()" class="btn-batal"><i class="fas fa-sign-out-alt"></i> LOGOUT</button>
     </div>
 
-    <div class="main-container">
+    <div class="main-container hidden" id="content-app">
         
         <section id="welcome-view">
-            <img src="logo_pope.png" style="width: 150px; margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(255,193,7,0.3));">
+            <img src="logo_pope.png" style="width: 150px; margin-bottom: 20px;">
             <h1 style="font-size: 2.5rem;">SELAMAT DATANG</h1>
             <h3 style="color: var(--primary); letter-spacing: 2px;">SISTEM INFORMASI DATA JEMAAT</h3>
             <div style="margin-top: 30px; display: flex; gap: 15px; justify-content: center;">
@@ -93,128 +101,26 @@
             <div class="card-form">
                 <h2 style="text-align:center; color:var(--primary); margin-bottom:20px;">FORM PENDAFTARAN JEMAAT</h2>
                 <form id="formJemaat">
-                    
                     <div class="section-title">A. IDENTITAS PRIBADI</div>
-                    <div class="form-group">
-                        <label>Nama Lengkap (Sesuai KTP) *</label>
-                        <input type="text" id="nama_lengkap" required>
-                    </div>
+                    <div class="form-group"><label>Nama Lengkap *</label><input type="text" id="nama_lengkap" required></div>
                     <div class="form-grid">
-                        <div class="form-group"><label>Alamat Sesuai KTP</label><input type="text" id="alamat_ktp"></div>
-                        <div class="form-group"><label>Alamat Domisili Sekarang</label><input type="text" id="alamat_domisili"></div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Status Pernikahan</label>
-                        <div class="radio-group">
-                            <label class="radio-item"><input type="radio" name="st_nikah" value="Menikah"> Menikah</label>
-                            <label class="radio-item"><input type="radio" name="st_nikah" value="Duda (Mati)"> Duda (Mati)</label>
-                            <label class="radio-item"><input type="radio" name="st_nikah" value="Duda (Hidup)"> Duda (Hidup)</label>
-                            <label class="radio-item"><input type="radio" name="st_nikah" value="Janda (Mati)"> Janda (Mati)</label>
-                            <label class="radio-item"><input type="radio" name="st_nikah" value="Relationship"> Relationship</label>
-                            <label class="radio-item"><input type="radio" name="st_nikah" value="Single"> Single</label>
-                        </div>
-                    </div>
-
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Pasangan</label>
-                            <select id="tipe_pasangan">
-                                <option value="">-- Pilih --</option>
-                                <option value="Suami">Suami</option>
-                                <option value="Istri">Istri</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Nama Suami / Istri</label>
-                            <input type="text" id="nama_pasangan">
-                        </div>
-                    </div>
-
-                    <div class="section-title">B. DATA LEGAL & PEKERJAAN</div>
-                    <div class="form-grid">
-                        <div class="form-group"><label>NIK KTP</label><input type="number" id="nik_ktp"></div>
-                        <div class="form-group"><label>NIK KK</label><input type="number" id="nik_kk"></div>
-                        <div class="form-group"><label>Provinsi Lahir</label><input type="text" id="prov_lahir"></div>
-                        <div class="form-group"><label>Kota Lahir</label><input type="text" id="kota_lahir"></div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Pekerjaan (Wajib Diisi) *</label>
-                        <select id="pekerjaan" required>
-                            <option value="">-- Pilih Pekerjaan --</option>
-                            <option>TNI</option><option>Polri</option><option>ASN</option><option>P3K</option>
-                            <option>Honorer</option><option>Swasta</option><option>Wiraswasta</option>
-                            <option>Profesional</option><option>Guru</option><option>Dosen</option>
-                            <option>Pejabat Publik</option><option>Pejabat Eksekutif</option><option>Bidang Kerohaniaan</option>
-                        </select>
-                    </div>
-
-                    <div class="section-title">C. DATA KELUARGA & KESEHATAN</div>
-                    <div class="form-grid">
-                        <div class="form-group"><label>Jumlah Anak</label><input type="number" id="jml_anak" min="0" value="0" onchange="generateAnak(this.value)"></div>
-                        <div class="form-group"><label>Total Tinggal Serumah</label><input type="number" id="total_serumah"></div>
-                    </div>
-                    <div id="anak_container" class="form-grid"></div>
-
-                    <div class="form-group" style="margin-top:10px;">
-                        <label>Golongan Darah</label>
-                        <select id="gol_darah">
-                            <option>O</option><option>A</option><option>B</option><option>AB</option><option>AB+</option>
-                        </select>
-                    </div>
-
-                    <div class="section-title">D. KONTAK & PELAYANAN</div>
-                    <div class="form-grid">
+                        <div class="form-group"><label>Alamat Domisili</label><input type="text" id="alamat_domisili"></div>
                         <div class="form-group"><label>No. WhatsApp *</label><input type="tel" id="no_wa" required></div>
-                        <div class="form-group"><label>Email</label><input type="email" id="email"></div>
                     </div>
 
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Jabatan Pelayanan</label>
-                            <select id="jabatan" onchange="updateSub(this.value)">
-                                <option value="Jemaat ordinari">Jemaat Ordinari</option>
-                                <option value="Gembala Sidang">Gembala Sidang</option>
-                                <option value="PKS Komsel">PKS Komsel</option>
-                                <option value="Musik">Musik</option>
-                                <option value="Multimedia">Multimedia</option>
-                                <option value="User">User</option>
-                            </select>
-                        </div>
-                        <div id="sub_div" class="form-group hidden">
-                            <label>Sub Bidang</label>
-                            <select id="sub_pelayanan"></select>
-                        </div>
-                    </div>
-
-                    <div class="section-title">E. UNGGAH DOKUMEN PENDUKUNG</div>
+                    <div class="section-title">B. UNGGAH DOKUMEN</div>
                     <div class="form-group">
-                        <label><i class="fas fa-image"></i> Foto Profil (JPG/PNG)</label>
-                        <input type="file" id="up_foto" accept="image/jpeg, image/png">
+                        <label>Foto Profil (JPG/PNG)</label>
+                        <input type="file" id="up_foto" accept="image/*">
                     </div>
                     <div class="form-grid">
-                        <div class="form-group">
-                            <label><i class="fas fa-file-pdf"></i> Scan KTP (PDF)</label>
-                            <input type="file" id="up_ktp" accept=".pdf">
-                        </div>
-                        <div class="form-group">
-                            <label><i class="fas fa-file-pdf"></i> Scan KK (PDF)</label>
-                            <input type="file" id="up_kk" accept=".pdf">
-                        </div>
-                        <div class="form-group">
-                            <label><i class="fas fa-file-pdf"></i> Surat Nikah (PDF)</label>
-                            <input type="file" id="up_nikah" accept=".pdf">
-                        </div>
-                        <div class="form-group">
-                            <label><i class="fas fa-file-pdf"></i> Surat Baptis (PDF)</label>
-                            <input type="file" id="up_baptis" accept=".pdf">
-                        </div>
+                        <div class="form-group"><label>KTP (PDF)</label><input type="file" id="up_ktp" accept=".pdf"></div>
+                        <div class="form-group"><label>KK (PDF)</label><input type="file" id="up_kk" accept=".pdf"></div>
                     </div>
 
                     <div style="display: flex; gap: 10px; margin-top: 30px;">
-                        <button type="submit" id="btn-simpan" class="btn-submit" style="flex:2">SIMPAN DATA LENGKAP</button>
-                        <button type="button" onclick="tampilkanView('welcome-view')" style="flex:1; background:#444; color:white; border:none; border-radius:8px; cursor:pointer;">BATAL</button>
+                        <button type="submit" id="btn-simpan" class="btn-submit" style="flex:2">SIMPAN DATA</button>
+                        <button type="button" onclick="tampilkanView('welcome-view')" style="flex:1; background:#444; color:white; border:none; border-radius:8px;">BATAL</button>
                     </div>
                 </form>
             </div>
@@ -225,26 +131,62 @@
                 <h2 style="color: var(--primary);">DATABASE JEMAAT</h2>
                 <button onclick="tampilkanView('welcome-view')" class="btn-submit">KEMBALI</button>
             </div>
-            <div id="tabel-container" style="overflow-x: auto;"></div>
+            <div id="tabel-container"></div>
         </div>
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        // --- LOGIC LOGIN & AUTO-LOGIN ---
+        const overlay = document.getElementById('login-overlay');
+        const topBar = document.getElementById('top-bar-info');
+        const appContent = document.getElementById('content-app');
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDIZA6rWBJHAjfm_cSoiaZFjc48fSwCQYw",
-            authDomain: "sidata-pondok-pemulihan.firebaseapp.com",
-            projectId: "sidata-pondok-pemulihan",
-            storageBucket: "sidata-pondok-pemulihan.firebasestorage.app",
-            messagingSenderId: "244791653787",
-            appId: "1:244791653787:web:e66ee6ac264dca643d1d3e"
+        // Cek apakah user sudah pernah login sebelumnya
+        window.addEventListener('load', () => {
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                showDashboard();
+            }
+        });
+
+        document.getElementById('loginForm').onsubmit = (e) => {
+            e.preventDefault();
+            const user = document.getElementById('username_input').value;
+            const pass = document.getElementById('password_input').value;
+
+            // Ganti ini dengan Username & Password Mas
+            if (user === "admin" && pass === "papua123") {
+                localStorage.setItem('isLoggedIn', 'true'); // Simpan status
+                showDashboard();
+            } else {
+                alert("Username atau Password Salah!");
+            }
         };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const koleksiRef = collection(db, "Administrator", "profile biodata", "daftar_anggota");
+        window.prosesLogout = () => {
+            localStorage.removeItem('isLoggedIn'); // Hapus ingatan login
+            location.reload(); // Refresh balik ke halaman login
+        };
 
-        window.tampilkanView = async (viewId) => {
-            document.querySelectorAll('.main-container > section, .main-container > div').forEach(el => el.classList.add('hidden'));
+        function showDashboard() {
+            overlay.classList.add('hidden');
+            topBar.classList.remove('hidden');
+            appContent.classList.remove('hidden');
+        }
+
+        // --- NAVIGATION LOGIC ---
+        window.tampilkanView = (viewId) => {
+            document.getElementById('welcome-view').classList.add('hidden');
+            document.getElementById('input-view').classList.add('hidden');
+            document.getElementById('database-view').classList.add('hidden');
+            document.getElementById(viewId).classList.remove('hidden');
+        };
+
+        // --- CLOCK LOGIC ---
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('display-clock').innerText = now.toLocaleTimeString('id-ID');
+            document.getElementById('display-date').innerText = now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        }, 1000);
+    </script>
+</body>
+</html>
