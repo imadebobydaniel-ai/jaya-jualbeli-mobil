@@ -29,15 +29,13 @@
         }
         input:focus, select:focus { border-color: var(--primary); }
 
-        /* Profile & Doc Upload Styles */
         .profile-section { text-align: center; margin-bottom: 40px; }
         .profile-img { width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--primary); object-fit: cover; margin-bottom: 15px; }
         .upload-box { 
             background: rgba(15, 23, 42, 0.6); border: 2px dashed #475569; padding: 15px; 
-            border-radius: 10px; text-align: center; cursor: pointer; transition: 0.3s;
+            border-radius: 10px; text-align: center; cursor: pointer; transition: 0.3s; display: block;
         }
         .upload-box.uploaded { border-color: var(--success); background: rgba(34, 197, 94, 0.1); color: var(--success); }
-        .upload-box.required-empty { border-color: var(--error); }
 
         .btn-action { 
             background: var(--primary); color: #000; border: none; padding: 18px; border-radius: 8px; 
@@ -46,7 +44,7 @@
         }
         .btn-action:disabled { background: #475569; cursor: not-allowed; opacity: 0.6; }
 
-        .sub-group { background: rgba(255, 193, 7, 0.05); padding: 20px; border-radius: 10px; margin-top: 10px; }
+        .sub-group { background: rgba(255, 193, 7, 0.05); padding: 20px; border-radius: 10px; margin-top: 10px; border: 1px solid rgba(255,193,7,0.1); }
         .mandatory { color: var(--error); }
     </style>
 </head>
@@ -67,7 +65,7 @@
                 <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" id="p-preview" class="profile-img">
                 <div style="max-width: 200px; margin: 0 auto;">
                     <label class="upload-box" id="box-foto">
-                        <i class="fas fa-camera"></i> Foto Profil (HP/Galeri)
+                        <i class="fas fa-camera"></i> Foto Profil
                         <input type="file" accept="image/*" class="hidden" onchange="handleFile(this, 'p-preview', 'box-foto')">
                     </label>
                 </div>
@@ -97,7 +95,7 @@
             </div>
 
             <div id="form-pasangan" class="sub-group hidden">
-                <label>Pilih Pasangan</label>
+                <label>Detail Pasangan</label>
                 <div class="grid-2">
                     <select id="pilih_p" onchange="updatePasanganLabel()">
                         <option value="Suami">Suami</option>
@@ -113,13 +111,8 @@
                 <div class="form-group"><label>NIK KK</label><input type="number" name="kk"></div>
             </div>
 
-            <div class="grid-2">
-                <div class="form-group"><label>Provinsi Tempat Lahir</label><input type="text" placeholder="API Otomatis"></div>
-                <div class="form-group"><label>Kota Tempat Lahir</label><input type="text" placeholder="API Otomatis"></div>
-            </div>
-
             <div class="form-group">
-                <label>Pekerjaan <span class="mandatory">* (Wajib diisi untuk melanjutkan)</span></label>
+                <label>Pekerjaan <span class="mandatory">*</span></label>
                 <select required id="pekerjaan">
                     <option value="">-- Pilih Pekerjaan --</option>
                     <option>TNI</option><option>Polri</option><option>ASN</option><option>P3K</option><option>Honorer</option>
@@ -137,14 +130,9 @@
             <div class="grid-2">
                 <div class="form-group">
                     <label>Golongan Darah</label>
-                    <select><option>O</option><option>A</option><option>B</option><option>AB</option><option>AB+</option></select>
+                    <select><option>O</option><option>A</option><option>B</option><option>AB</option></select>
                 </div>
                 <div class="form-group"><label>No. WA</label><input type="text"></div>
-            </div>
-
-            <div class="grid-2">
-                <div class="form-group"><label>Email</label><input type="email"></div>
-                <div class="form-group"><label>No Darurat (Keluarga Inti/Jauh)</label><input type="text"></div>
             </div>
 
             <h2><i class="fas fa-church"></i> Data Gerejawi</h2>
@@ -152,7 +140,7 @@
                 <div class="form-group">
                     <label>Lokasi Berjemaat</label>
                     <select>
-                        <option>Pondok pemulihan Abepura</option><option>Pondok pemulihsan Sentani</option>
+                        <option>Pondok pemulihan Abepura</option><option>Pondok pemulihan Sentani</option>
                         <option>Pondok pemulihan Doyo</option><option>Pondok pemulihan Arso 1</option><option>Pondok pemulihan Arso 2</option>
                     </select>
                 </div>
@@ -160,29 +148,22 @@
                     <label>Aktif dalam Komsel</label>
                     <select>
                         <option>Komsel lansia</option><option>Komsel bapak</option><option>Komsel ibu</option>
-                        <option>Komsel profesi</option><option>Komsel mahasiswa</option><option>Komsel pelajar</option><option>Komsel Sekolah Minggu</option>
+                        <option>Komsel profesi</option><option>Komsel mahasiswa</option><option>Komsel pelajar</option>
                     </select>
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Status Keanggotaan Jemaat</label>
-                <div style="display:flex; gap:20px;">
-                    <label><input type="radio" name="st_jemaat"> Anggota Jemaat Aktif</label>
-                    <label><input type="radio" name="st_jemaat"> Anggota Jemaat Tidak Aktif</label>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Jabatan Pelayanan Gereja</label>
+                <label>Jabatan Pelayanan Utama</label>
                 <select id="jabatan" onchange="handlePelayanan(this.value)">
                     <option value="Jemaat">Jemaat Ordinari</option>
                     <option value="Gembala">Gembala Sidang / Wakil Gembala Sidang</option>
                     <option value="Sekertaris">Sekertaris Gereja</option>
                     <option value="Bendahara">Bendahara Gereja</option>
                     <option value="Koordinator">Koordinator / Pemimpin</option>
+                    <option value="KoordinatorBidang">Koordinator Bidang</option>
                     <option value="PKS">PKS Komsel</option>
-                    <option value="Pendoa">Pendoa Syafaat</option>
+                    <option value="Pendoa">Pelayanan Doa Syafaat Spesifik</option>
                     <option value="Penatua">Penatua / Diaken</option>
                     <option value="Musik">Pelayanan Musik Spesifik</option>
                     <option value="Vocal">Vocal & Singers Spesifik</option>
@@ -196,17 +177,17 @@
             </div>
 
             <div id="sub-box" class="sub-group hidden">
-                <label id="sub-label">Detail Sub Pelayanan</label>
+                <label id="sub-label" style="color: var(--primary);">Detail Sub Pelayanan</label>
                 <select id="sub-select"></select>
             </div>
 
-            <h2><i class="fas fa-file-upload"></i> Upload Dokumen Pendukung <small class="mandatory">(Wajib Lampirkan)</small></h2>
+            <h2><i class="fas fa-file-upload"></i> Upload Dokumen <small class="mandatory">(Wajib)</small></h2>
             <div class="grid-2">
                 <label class="upload-box" id="box-ktp-file">Upload KTP <input type="file" class="hidden" required onchange="handleFile(this, null, 'box-ktp-file')"></label>
                 <label class="upload-box" id="box-kk-file">Upload KK <input type="file" class="hidden" required onchange="handleFile(this, null, 'box-kk-file')"></label>
                 <label class="upload-box" id="box-akta-file">Akta Lahir <input type="file" class="hidden" required onchange="handleFile(this, null, 'box-akta-file')"></label>
                 <label class="upload-box" id="box-baptis-file">Surat Baptis <input type="file" class="hidden" required onchange="handleFile(this, null, 'box-baptis-file')"></label>
-                <label class="upload-box" id="box-nikah-file">Surat Nikah <input type="file" id="inp-nikah" class="hidden" onchange="handleFile(this, null, 'box-nikah-file')"></label>
+                <label class="upload-box" id="box-nikah-file">Surat Nikah (Opsional) <input type="file" id="inp-nikah" class="hidden" onchange="handleFile(this, null, 'box-nikah-file')"></label>
             </div>
 
             <button type="submit" id="btnSubmit" class="btn-action">SIMPAN DATA JEMAAT</button>
@@ -215,7 +196,6 @@
 </div>
 
 <script>
-    // 1. Logika Upload & Ganti Status Box
     function handleFile(input, previewId, boxId) {
         const box = document.getElementById(boxId);
         if (input.files && input.files[0]) {
@@ -230,19 +210,15 @@
         }
     }
 
-    // 2. Logika Menikah & Nama Pasangan Bold
     function toggleMarriage(isMarried) {
         document.getElementById('form-pasangan').classList.toggle('hidden', !isMarried);
         const nikahInp = document.getElementById('inp-nikah');
         const nikahBox = document.getElementById('box-nikah-file');
-        
         if(isMarried) {
             nikahInp.required = true;
-            nikahBox.style.borderColor = "var(--error)";
             nikahBox.innerHTML = "Surat Nikah *WAJIB";
         } else {
             nikahInp.required = false;
-            nikahBox.style.borderColor = "#475569";
             nikahBox.innerHTML = "Surat Nikah (Opsional)";
         }
         checkForm();
@@ -251,26 +227,24 @@
     function updatePasanganLabel() {
         const p = document.getElementById('pilih_p').value;
         const n = document.getElementById('nama_p').value;
-        const hasil = document.getElementById('hasil-p');
-        hasil.innerHTML = n ? `<strong>Contoh ${p} : ${n}</strong>` : "";
+        document.getElementById('hasil-p').innerHTML = n ? `<strong>${p} : ${n}</strong>` : "";
     }
 
-    // 3. Logika Munculkan Kolom Nama Anak Sesuai Jumlah
     function genAnak(num) {
         const container = document.getElementById('list-anak');
         container.innerHTML = "";
         if(num > 0) {
-            container.innerHTML = `<label>Kolom Nama-nama Anaknya:</label>`;
+            container.innerHTML = `<label>Nama-nama Anak:</label>`;
             for(let i=1; i<=num; i++) {
                 container.innerHTML += `<div class="form-group"><input type="text" placeholder="Nama Anak ke-${i}"></div>`;
             }
         }
     }
 
-    // 4. Data Dropdown Pelayanan (Sesuai List Perintah)
+    // DATA DROPDOWN SESUAI INSTRUKSI BARU
     const subData = {
-        "PKS": ["Fulltimer", "PKS Komsel Lansia", "PKS Komsel Bapak", "PKS Komsel IBU", "PKS Komsel Profesi", "PKS Komsel mahasiswa", "PKS Komsel Pelajar", "PKS Komsel remaja", "PKS Komsel Anak Sekolah Minggu"],
-        "Koordinator": ["Koordinator Lansia", "Koordinator Bapak", "Koordinator Ibu", "Koordinator profesi", "Koordinator Mahasiswa", "Koordinator Pelajar", "koordinator Remaja", "Koordinator Sekolah Minggu", "Koordinator Bidang Pujian penyembahan", "koordinator Musik", "Koordinator Vocal dan Singer", "Koordinator tamborin", "Koordinator Flag", "koordinator Multimedia", "Koordinator Sound and Electrikal", "koordinator User", "Koordinator Event Organizer", "koordinator Perpakiran dan keamanan", "General Affairs"],
+        "Koordinator": ["Koordinator Lansia", "Koordinator Bapak", "Koordinator Ibu", "Koordinator profesi", "Koordinator Mahasiswa", "Koordinator Pelajar", "koordinator Remaja", "Koordinator Sekolah Minggu"],
+        "KoordinatorBidang": ["Koordinator Bidang Pujian penyembahan", "koordinator Musik", "Koordinator Vocal dan Singer", "Koordinator tamborin", "Koordinator Flag", "koordinator Multimedia", "Koordinator Sound and Electrikal", "koordinator User", "Koordinator Event Organizer", "koordinator Perpakiran dan keamanan", "General Affairs"],
         "Musik": ["drumer Player", "Lead Gitar player", "guitar rhythm palyer", "Bass Guitar player", "Lead Piano player", "Keyboard player", "Saxophone player", "Ketipung player", "violine player", "flute player", "cielo player", "brasso player", "french horn player", "trombon player"],
         "Vocal": ["Vocal Coach", "Worship leader", "singers", "Choirs Team"],
         "Multimedia": ["Director Media", "Campers", "Floor Direct", "Floor Crew", "Easy Worship Operator", "Pro Presenter Operator", "Video Stream Operator", "Video Switching Operator"],
@@ -279,7 +253,8 @@
         "User": ["front desk user", "user direct", "general affairs"],
         "Pendoa": ["Penjaga menara Doa", "Pendoa syafaat"],
         "Misi": ["Bidang R & D (Research and Development)", "Humas", "Fundrising", "Pemetaan dan Roadmap"],
-        "Parkir": ["Park Chief", "Park Crew", "security Crew"]
+        "Parkir": ["Park Chief", "Park Crew", "security Crew"],
+        "PKS": ["PKS Komsel Lansia", "PKS Komsel Bapak", "PKS Komsel IBU", "PKS Komsel Profesi", "PKS Komsel mahasiswa", "PKS Komsel Pelajar"]
     };
 
     function handlePelayanan(val) {
@@ -296,19 +271,15 @@
         }
     }
 
-    // 5. Validasi Tombol Simpan
     function checkForm() {
         const form = document.getElementById('mainForm');
-        const btn = document.getElementById('btnSubmit');
-        btn.disabled = !form.checkValidity();
+        document.getElementById('btnSubmit').disabled = !form.checkValidity();
     }
 
-    // Jalankan cek form setiap ada input
     document.getElementById('mainForm').addEventListener('input', checkForm);
-
     document.getElementById('mainForm').onsubmit = (e) => {
         e.preventDefault();
-        alert("Puji Tuhan! Data Jemaat dan Dokumen telah berhasil disimpan ke sistem.");
+        alert("Puji Tuhan! Data Jemaat telah berhasil diperbarui dan disimpan.");
     };
 </script>
 </body>
