@@ -3,64 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pondok Pemulihan Papua</title>
+    <title>Sistem Informasi - Pondok Pemulihan Papua</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style> 
         /* RESET & BASE STYLES */
+        :root { --primary: #ffc107; --bg: #0f172a; --card: #1e293b; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        
         body {
             height: 100vh; width: 100vw;
             display: flex; justify-content: center; align-items: center;
             overflow: hidden; position: relative; margin: 0;
-            background: linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.6)), 
+            background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.7)), 
                         url('poster_papua.jpg') no-repeat center center fixed;
             background-size: cover; color: white;
-        }
-        body::before {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.4) 0%, rgba(15, 23, 42, 0.2) 50%, rgba(15, 23, 42, 0.7) 100%);
-            z-index: 0;
         }
 
         /* CONTAINER UTAMA */
         .main-container {
-            position: fixed;
-            top: 80px; 
-            width: 100%;
-            height: calc(100% - 80px);
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center; 
-            justify-content: flex-start; 
-            padding-top: 60px;
-            z-index: 10;
+            position: fixed; top: 80px; width: 100%; height: calc(100% - 80px);
+            padding: 20px; overflow-y: auto; display: flex; flex-direction: column;
+            align-items: center; z-index: 10;
         }
 
         /* LOGIN STYLES */
-        #login-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.95); display: flex; justify-content: center; align-items: center; z-index: 100000; }
-        .login-card { background: rgba(255, 255, 255, 0.1); padding: 40px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.2); width: 100%; max-width: 400px; text-align: center; backdrop-filter: blur(10px); }
-        .login-card input, .form-group input, .form-group select { width: 100%; padding: 12px; margin-top: 5px; margin-bottom: 15px; border-radius: 8px; background: white; color: #1e293b; border: 2px solid #ffc107; }
+        #login-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.98); display: flex; justify-content: center; align-items: center; z-index: 100000; }
+        .login-card { background: rgba(255, 255, 255, 0.05); padding: 40px; border-radius: 15px; border: 1px solid var(--primary); width: 100%; max-width: 400px; text-align: center; backdrop-filter: blur(10px); }
+        .login-card input { width: 100%; padding: 12px; margin-top: 5px; margin-bottom: 15px; border-radius: 8px; background: white; color: #1e293b; border: 2px solid var(--primary); }
         
         /* TOP BAR */
-        #top-bar-info { position: fixed; top: 0; left: 0; width: 100%; height: 80px; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(15px); display: flex; align-items: center; justify-content: space-between; padding: 0 30px; border-bottom: 2px solid #ffc107; z-index: 100; }
+        #top-bar-info { position: fixed; top: 0; left: 0; width: 100%; height: 80px; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(15px); display: flex; align-items: center; justify-content: space-between; padding: 0 30px; border-bottom: 2px solid var(--primary); z-index: 100; }
 
-        /* WELCOME VIEW */
-        #welcome-view { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; margin-top: 20px; }
-        #welcome-view h1 { margin: 10px 0; font-size: 2.5rem; }
-        #welcome-view h3 { margin: 0; font-weight: 400; letter-spacing: 1px; }
-
-        /* FORM & TABLE */
+        /* VIEWS */
         .hidden { display: none !important; }
-        .card-form { background: rgba(0, 0, 0, 0.6); padding: 30px; border-radius: 15px; width: 100%; max-width: 800px; border: 1px solid #ffc107; }
-        .form-group { text-align: left; margin-bottom: 10px; }
-        .btn-masuk, .btn-submit { background: #2563eb; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
-        .btn-batal { background: #e11d48; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; }
+        #welcome-view { text-align: center; margin-top: 50px; }
         
-        table { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.5); color: white; border-radius: 10px; overflow: hidden; margin-top: 20px; font-size: 0.9rem; }
-        th { background: #ffc107; color: black; padding: 12px; }
-        td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        /* FORM STYLES */
+        .card-form { background: var(--card); padding: 30px; border-radius: 15px; width: 100%; max-width: 900px; border: 1px solid var(--primary); margin-bottom: 50px; }
+        .section-title { color: var(--primary); font-weight: bold; margin: 20px 0 10px; border-bottom: 1px solid #444; padding-bottom: 5px; text-align: left; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: left; }
+        .form-group { margin-bottom: 15px; display: flex; flex-direction: column; text-align: left; }
+        label { font-size: 0.85rem; color: #cbd5e1; margin-bottom: 5px; }
+        input, select { padding: 10px; border-radius: 5px; border: 1px solid #475569; background: #0f172a; color: white; width: 100%; }
+        
+        .radio-group { display: flex; flex-wrap: wrap; gap: 10px; background: #0f172a; padding: 10px; border-radius: 5px; margin-top: 5px; }
+        .radio-item { display: flex; align-items: center; gap: 5px; font-size: 0.85rem; cursor: pointer; }
+
+        /* TABLE STYLES */
+        table { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.6); margin-top: 20px; font-size: 0.85rem; }
+        th { background: var(--primary); color: black; padding: 12px; }
+        td { padding: 10px; border-bottom: 1px solid #333; text-align: center; }
+
+        .btn-masuk, .btn-submit { background: var(--primary); color: black; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .btn-masuk:hover, .btn-submit:hover { background: #eab308; }
+        .btn-batal { background: #e11d48; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -68,15 +64,11 @@
     <div id="login-overlay">
         <div class="login-card">
             <img src="logo_pope.png" style="width: 80px; margin-bottom: 20px;">
-            <h2 style="color: #ffc107;">PORTAL LOGIN</h2>
-            <p style="font-size: 0.8rem; margin-bottom: 20px;">Pondok Pemulihan Papua</p>
+            <h2 style="color: var(--primary);">ADMIN PORTAL</h2>
             <form id="loginForm">
                 <input type="text" id="username_input" placeholder="Username" required>
-                <div style="position: relative;">
-                    <input type="password" id="password_input" placeholder="Password" required style="padding-right: 40px;">
-                    <i class="fas fa-eye" id="togglePassword" style="position: absolute; right: 15px; top: 15px; color: #ffc107; cursor: pointer; z-index: 100;"></i>
-                </div>
-                <button type="submit" class="btn-masuk">MASUK KE SISTEM</button>
+                <input type="password" id="password_input" placeholder="Password" required>
+                <button type="submit" class="btn-masuk" style="width:100%">LOGIN SISTEM</button>
             </form>
         </div>
     </div>
@@ -84,77 +76,156 @@
     <div id="top-bar-info">
         <div>
             <p id="display-date">Memuat...</p>
-            <p id="display-clock" style="font-weight: bold; color: #ffc107;">00:00:00</p>
+            <p id="display-clock" style="font-weight: bold; color: var(--primary);">00:00:00</p>
         </div>
         <h3 style="cursor:pointer;" onclick="tampilkanView('welcome-view')">PONDOK PEMULIHAN PAPUA</h3>
         <button onclick="prosesLogout()" class="btn-batal"><i class="fas fa-sign-out-alt"></i> LOGOUT</button>
     </div>
 
     <div class="main-container">
+        
         <section id="welcome-view">
-            <img src="logo_pope.png" style="width: 150px; height: auto; margin-bottom: 20px; filter: drop-shadow(0 0 15px rgba(255,255,255,0.4));">
-            <div style="border-top: 2px solid #ffc107; border-bottom: 2px solid #ffc107; padding: 15px 0; width: fit-content; min-width: 300px;">
-                <h1 style="color: white; line-height: 1.2;">SELAMAT DATANG</h1>
-                <h3 style="color: #ffc107;">SISTEM INFORMASI PONDOK PEMULIHAN PAPUA</h3>
-            </div>
-            <div style="margin-top: 30px; display: flex; gap: 10px;">
-                <button onclick="tampilkanView('input-view')" style="padding: 10px 20px; background: #ffc107; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">INPUT DATA</button>
-                <button onclick="tampilkanView('database-view')" style="padding: 10px 20px; background: #ffc107; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">LIHAT DATABASE</button>
+            <img src="logo_pope.png" style="width: 150px; margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(255,193,7,0.3));">
+            <h1 style="font-size: 2.5rem;">SELAMAT DATANG</h1>
+            <h3 style="color: var(--primary); letter-spacing: 2px;">SISTEM INFORMASI DATA JEMAAT</h3>
+            <div style="margin-top: 30px; display: flex; gap: 15px; justify-content: center;">
+                <button onclick="tampilkanView('input-view')" style="padding: 15px 30px; background: var(--primary); border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">+ INPUT DATA JEMAAT</button>
+                <button onclick="tampilkanView('database-view')" style="padding: 15px 30px; background: white; color: black; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">LIHAT DATABASE</button>
             </div>
         </section>
 
         <div id="input-view" class="hidden">
-            <div style="max-width: 800px; margin: auto; background: #1e293b; padding: 25px; border-radius: 15px; border: 1px solid #ffc107;">
-                <h2 style="color: #ffc107; margin-bottom: 20px; text-align: center;">FORM INPUT DATA JEMAAT</h2>
-                
+            <div class="card-form">
+                <h2 style="text-align:center; color:var(--primary); margin-bottom:20px;">FORM PENDAFTARAN JEMAAT</h2>
                 <form id="formJemaat">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                        <div class="form-group">
-                            <label style="display:block; color:#cbd5e1; margin-bottom:5px;">Nama Lengkap (KTP) *</label>
-                            <input type="text" id="nama_lengkap" style="width:100%; padding:10px; border-radius:5px; background:#0f172a; color:white; border:1px solid #475569;" required>
-                        </div>
-                        <div class="form-group">
-                            <label style="display:block; color:#cbd5e1; margin-bottom:5px;">NIK KTP</label>
-                            <input type="number" id="nik_ktp" style="width:100%; padding:10px; border-radius:5px; background:#0f172a; color:white; border:1px solid #475569;">
+                    
+                    <div class="section-title">A. IDENTITAS PRIBADI</div>
+                    <div class="form-group">
+                        <label>Nama Lengkap (Sesuai KTP) *</label>
+                        <input type="text" id="nama_lengkap" required>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group"><label>Alamat Sesuai KTP</label><input type="text" id="alamat_ktp"></div>
+                        <div class="form-group"><label>Alamat Domisili Sekarang</label><input type="text" id="alamat_domisili"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Status Pernikahan</label>
+                        <div class="radio-group">
+                            <label class="radio-item"><input type="radio" name="st_nikah" value="Menikah"> Menikah</label>
+                            <label class="radio-item"><input type="radio" name="st_nikah" value="Duda (Cerai Mati)"> Duda (Mati)</label>
+                            <label class="radio-item"><input type="radio" name="st_nikah" value="Duda (Cerai Hidup)"> Duda (Hidup)</label>
+                            <label class="radio-item"><input type="radio" name="st_nikah" value="Janda (Cerai Mati)"> Janda (Mati)</label>
+                            <label class="radio-item"><input type="radio" name="st_nikah" value="Relationship"> Relationship</label>
+                            <label class="radio-item"><input type="radio" name="st_nikah" value="Single"> Single</label>
                         </div>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                    <div class="form-grid">
                         <div class="form-group">
-                            <label style="display:block; color:#cbd5e1; margin-bottom:5px;">Alamat Domisili</label>
-                            <input type="text" id="alamat_domisili" style="width:100%; padding:10px; border-radius:5px; background:#0f172a; color:white; border:1px solid #475569;">
+                            <label>Pasangan</label>
+                            <select id="tipe_pasangan">
+                                <option value="">-- Pilih --</option>
+                                <option value="Suami">Suami</option>
+                                <option value="Istri">Istri</option>
+                            </select>
                         </div>
                         <div class="form-group">
-                            <label style="display:block; color:#cbd5e1; margin-bottom:5px;">No. WhatsApp *</label>
-                            <input type="tel" id="no_wa" style="width:100%; padding:10px; border-radius:5px; background:#0f172a; color:white; border:1px solid #475569;" required>
+                            <label>Nama Suami / Istri</label>
+                            <input type="text" id="nama_pasangan" placeholder="Input Nama...">
                         </div>
                     </div>
 
-                    <div class="form-group" style="margin-bottom: 20px;">
-                        <label style="display:block; color:#cbd5e1; margin-bottom:5px;">Pekerjaan *</label>
-                        <select id="pekerjaan" style="width:100%; padding:10px; border-radius:5px; background:#0f172a; color:white; border:1px solid #475569;" required>
+                    <div class="section-title">B. DATA LEGAL & PEKERJAAN</div>
+                    <div class="form-grid">
+                        <div class="form-group"><label>NIK KTP</label><input type="number" id="nik_ktp"></div>
+                        <div class="form-group"><label>NIK KK</label><input type="number" id="nik_kk"></div>
+                        <div class="form-group"><label>Provinsi Lahir</label><input type="text" id="prov_lahir"></div>
+                        <div class="form-group"><label>Kota Lahir</label><input type="text" id="kota_lahir"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Pekerjaan (Wajib Diisi) *</label>
+                        <select id="pekerjaan" required>
                             <option value="">-- Pilih Pekerjaan --</option>
-                            <option>TNI / POLRI</option>
-                            <option>ASN / P3K</option>
-                            <option>Wiraswasta</option>
-                            <option>Karyawan Swasta</option>
-                            <option>Guru / Dosen</option>
-                            <option>Lainnya</option>
+                            <option>TNI</option><option>Polri</option><option>ASN</option><option>P3K</option>
+                            <option>Honorer</option><option>Swasta</option><option>Wiraswasta</option>
+                            <option>Profesional</option><option>Guru</option><option>Dosen</option>
+                            <option>Pejabat Publik</option><option>Pejabat Eksekutif</option><option>Bidang Kerohaniaan</option>
                         </select>
                     </div>
 
-                    <div style="display: flex; gap: 10px;">
-                        <button type="submit" id="btn-simpan" style="flex:2; background: #ffc107; color: black; font-weight: bold; padding: 12px; border: none; border-radius: 8px; cursor: pointer;">SIMPAN KE DATABASE</button>
-                        <button type="button" onclick="tampilkanView('welcome-view')" style="flex:1; background: #444; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer;">BATAL</button>
+                    <div class="section-title">C. DATA KELUARGA & KESEHATAN</div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Jumlah Anak</label>
+                            <input type="number" id="jml_anak" min="0" value="0" onchange="generateAnak(this.value)">
+                        </div>
+                        <div class="form-group"><label>Total Tinggal Serumah</label><input type="number" id="total_serumah"></div>
+                    </div>
+                    <div id="anak_container" class="form-grid"></div>
+
+                    <div class="form-group" style="margin-top:10px;">
+                        <label>Golongan Darah</label>
+                        <select id="gol_darah">
+                            <option>O</option><option>A</option><option>B</option><option>AB</option><option>AB+</option>
+                        </select>
+                    </div>
+
+                    <div class="section-title">D. KONTAK & PELAYANAN GEREJA</div>
+                    <div class="form-grid">
+                        <div class="form-group"><label>No. WhatsApp *</label><input type="tel" id="no_wa" required></div>
+                        <div class="form-group"><label>Email</label><input type="email" id="email"></div>
+                        <div class="form-group"><label>No. Darurat (Keluarga)</label><input type="tel" id="no_darurat"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Status Keanggotaan</label>
+                        <div class="radio-group">
+                            <label class="radio-item"><input type="radio" name="st_aktif" value="Aktif"> Jemaat Aktif</label>
+                            <label class="radio-item"><input type="radio" name="st_aktif" value="Tidak Aktif"> Tidak Aktif</label>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Jabatan Pelayanan</label>
+                            <select id="jabatan" onchange="updateSub(this.value)">
+                                <option value="Jemaat ordinari">Jemaat Ordinari</option>
+                                <option value="Gembala Sidang">Gembala Sidang</option>
+                                <option value="PKS Komsel">PKS Komsel</option>
+                                <option value="Koordinator / Pemimpin">Koordinator / Pemimpin</option>
+                                <option value="Musik">Musik</option>
+                                <option value="Vocal">Vocal & Singers</option>
+                                <option value="Multimedia">Multimedia</option>
+                                <option value="Sound">Sound & Elektrikal</option>
+                                <option value="Tamborin">Tamborin & Flags</option>
+                                <option value="User">User</option>
+                                <option value="Syafaat">Doa Syafaat</option>
+                                <option value="Misi">Misi</option>
+                                <option value="Parkir">Perparkiran & Keamanan</option>
+                            </select>
+                        </div>
+                        <div id="sub_div" class="form-group hidden">
+                            <label>Sub Bidang / Spesialisasi</label>
+                            <select id="sub_pelayanan"></select>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; margin-top: 30px;">
+                        <button type="submit" id="btn-simpan" class="btn-submit" style="flex:2">SIMPAN DATA JEMAAT</button>
+                        <button type="button" onclick="tampilkanView('welcome-view')" style="flex:1; background:#444; color:white; border:none; border-radius:8px; cursor:pointer;">BATAL</button>
                     </div>
                 </form>
             </div>
         </div>
 
-        <div id="database-view" class="hidden">
-            <h2 style="color: #ffc107; margin-bottom: 20px;">DATABASE JEMAAT</h2>
-            <button onclick="tampilkanView('welcome-view')" style="margin-bottom:15px; background:#ffc107; border:none; padding:8px 15px; border-radius:5px; font-weight:bold; cursor:pointer;">KEMBALI KE BERANDA</button>
-            <div id="tabel-container"></div>
+        <div id="database-view" class="hidden" style="width: 100%; max-width: 1100px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h2 style="color: var(--primary);">DATABASE JEMAAT</h2>
+                <button onclick="tampilkanView('welcome-view')" class="btn-submit">KEMBALI</button>
+            </div>
+            <div id="tabel-container" style="overflow-x: auto;"></div>
         </div>
     </div>
 
@@ -163,42 +234,78 @@
         import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
-          apiKey: "AIzaSyDIZA6rWBJHAjfm_cSoiaZFjc48fSwCQYw",
-          authDomain: "sidata-pondok-pemulihan.firebaseapp.com",
-          projectId: "sidata-pondok-pemulihan",
-          storageBucket: "sidata-pondok-pemulihan.firebasestorage.app",
-          messagingSenderId: "244791653787",
-          appId: "1:244791653787:web:e66ee6ac264dca643d1d3e"
+            apiKey: "AIzaSyDIZA6rWBJHAjfm_cSoiaZFjc48fSwCQYw",
+            authDomain: "sidata-pondok-pemulihan.firebaseapp.com",
+            projectId: "sidata-pondok-pemulihan",
+            storageBucket: "sidata-pondok-pemulihan.firebasestorage.app",
+            messagingSenderId: "244791653787",
+            appId: "1:244791653787:web:e66ee6ac264dca643d1d3e"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const koleksiRef = collection(db, "Administrator", "profile biodata", "daftar_anggota");
 
+        // FUNGSI NAVIGASI
         window.tampilkanView = async (viewId) => {
-            const views = ['welcome-view', 'input-view', 'database-view'];
-            views.forEach(v => {
-                const el = document.getElementById(v);
-                if(el) el.classList.add('hidden');
-            });
+            document.querySelectorAll('.main-container > section, .main-container > div').forEach(el => el.classList.add('hidden'));
             document.getElementById(viewId).classList.remove('hidden');
-            if (viewId === 'database-view') await muatDatabaseJemaat();
+            if (viewId === 'database-view') await muatDatabase();
         };
 
-        // LOGIKA SIMPAN DATA BARU
+        // GENERATE KOLOM ANAK
+        window.generateAnak = (n) => {
+            const container = document.getElementById('anak_container');
+            container.innerHTML = '';
+            for(let i=1; i<=n; i++) {
+                container.innerHTML += `<div class="form-group"><label>Nama Anak ${i}</label><input type="text" class="nama-anak"></div>`;
+            }
+        };
+
+        // DROPDOWN BERTINGKAT
+        window.updateSub = (val) => {
+            const div = document.getElementById('sub_div');
+            const sel = document.getElementById('sub_pelayanan');
+            const data = {
+                "PKS Komsel": ["Fulltimer", "PKS Lansia", "PKS Bapak", "PKS IBU", "PKS Profesi", "PKS Mahasiswa", "PKS Pelajar", "PKS Remaja", "PKS Anak Sekolah Minggu"],
+                "Koordinator / Pemimpin": ["Koordinator Lansia", "Koordinator Bapak", "Koordinator Ibu", "Koordinator Profesi", "Koordinator Mahasiswa", "Koordinator Pelajar", "Koordinator Remaja", "Koordinator Sekolah Minggu"],
+                "Musik": ["Drumer", "Lead Gitar", "Rhythm Gitar", "Bass", "Keyboard", "Saxophone", "Violine", "Trombon"],
+                "Vocal": ["Vocal Coach", "Worship Leader", "Singers", "Choirs"],
+                "Multimedia": ["Director Media", "Campers", "Easy Worship", "Video Stream", "Switching"],
+                "Sound": ["Audio Mixer", "Sound Engineering", "Electrical"],
+                "Tamborin": ["Tamborin Coach", "Flag Coach", "Player"],
+                "User": ["Front Desk", "User Direct", "General Affairs"],
+                "Syafaat": ["Penjaga Menara Doa", "Pendoa Syafaat"],
+                "Misi": ["R & D", "Humas", "Fundraising"],
+                "Parkir": ["Park Chief", "Park Crew", "Security"]
+            };
+
+            if(data[val]) {
+                div.classList.remove('hidden');
+                sel.innerHTML = data[val].map(s => `<option value="${s}">${s}</option>`).join('');
+            } else {
+                div.classList.add('hidden');
+            }
+        };
+
+        // SIMPAN DATA
         document.getElementById('formJemaat').onsubmit = async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-simpan');
-            btn.innerText = "MENGIRIM...";
-            btn.disabled = true;
+            btn.innerText = "MENYIMPAN..."; btn.disabled = true;
 
             try {
+                const anakEls = document.querySelectorAll('.nama-anak');
+                const listAnak = Array.from(anakEls).map(el => el.value);
+
                 const payload = {
                     nama_lengkap: document.getElementById('nama_lengkap').value,
                     nik_ktp: document.getElementById('nik_ktp').value,
-                    alamat_domisili: document.getElementById('alamat_domisili').value,
-                    wa: document.getElementById('no_wa').value,
                     pekerjaan: document.getElementById('pekerjaan').value,
+                    wa: document.getElementById('no_wa').value,
+                    jabatan: document.getElementById('jabatan').value,
+                    sub_bidang: document.getElementById('sub_pelayanan').value || "N/A",
+                    daftar_anak: listAnak,
                     timestamp: serverTimestamp()
                 };
 
@@ -206,82 +313,58 @@
                 alert("Data Berhasil Disimpan!");
                 e.target.reset();
                 tampilkanView('welcome-view');
-            } catch (err) {
-                alert("Gagal: " + err.message);
-            } finally {
-                btn.innerText = "SIMPAN KE DATABASE";
-                btn.disabled = false;
-            }
+            } catch (err) { alert("Gagal: " + err.message); }
+            finally { btn.innerText = "SIMPAN DATA JEMAAT"; btn.disabled = false; }
         };
 
-        async function muatDatabaseJemaat() {
+        // MUAT DATABASE KE TABEL
+        async function muatDatabase() {
             const container = document.getElementById('tabel-container');
-            container.innerHTML = "<p>Memuat Data...</p>";
+            container.innerHTML = "<p>Memuat data...</p>";
             try {
                 const q = query(koleksiRef, orderBy("timestamp", "desc"));
-                const snapshot = await getDocs(q);
-                let html = `<table><tr><th>Nama</th><th>WA</th><th>Pekerjaan</th><th>Aksi</th></tr>`;
-                snapshot.forEach(docSnap => {
+                const snap = await getDocs(q);
+                let html = `<table><tr><th>Nama</th><th>Pekerjaan</th><th>WA</th><th>Pelayanan</th><th>Aksi</th></tr>`;
+                snap.forEach(docSnap => {
                     const d = docSnap.data();
                     html += `<tr>
-                        <td>${d.nama_lengkap || '-'}</td>
-                        <td>${d.wa || '-'}</td>
-                        <td>${d.pekerjaan || '-'}</td>
-                        <td><button onclick="hapusData('${docSnap.id}')" style="background:red; color:white; border:none; padding:5px; cursor:pointer; border-radius:4px;">Hapus</button></td>
+                        <td>${d.nama_lengkap}</td>
+                        <td>${d.pekerjaan}</td>
+                        <td>${d.wa}</td>
+                        <td>${d.jabatan} (${d.sub_bidang})</td>
+                        <td><button onclick="hapusData('${docSnap.id}')" style="background:red; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Hapus</button></td>
                     </tr>`;
                 });
                 html += `</table>`;
                 container.innerHTML = html;
-            } catch (err) {
-                container.innerHTML = "Gagal memuat data.";
-            }
+            } catch (err) { container.innerHTML = "Gagal memuat data."; }
         }
 
         window.hapusData = async (id) => {
-            if(confirm("Hapus data ini?")) {
+            if(confirm("Hapus data jemaat ini?")) {
                 await deleteDoc(doc(db, "Administrator", "profile biodata", "daftar_anggota", id));
-                muatDatabaseJemaat();
+                muatDatabase();
             }
         };
-    </script>
 
-    <script>
-        const USER_AKSES = "admin_papua";
-        const PASS_AKSES = "Papua2026!";
-
-        document.getElementById('loginForm').onsubmit = function(e) {
+        // SISTEM LOGIN
+        const U = "admin_papua"; const P = "Papua2026!";
+        document.getElementById('loginForm').onsubmit = (e) => {
             e.preventDefault();
-            const user = document.getElementById('username_input').value;
-            const pass = document.getElementById('password_input').value;
-
-            if (user === USER_AKSES && pass === PASS_AKSES) {
+            if(document.getElementById('username_input').value === U && document.getElementById('password_input').value === P) {
                 document.getElementById('login-overlay').classList.add('hidden');
-                this.reset();
-            } else { 
-                alert("Akses Ditolak!"); 
-            }
+            } else { alert("User/Pass Salah!"); }
         };
 
-        window.prosesLogout = () => { 
-            if(confirm("Keluar dari sistem?")) {
-                document.getElementById('login-overlay').classList.remove('hidden');
-                tampilkanView('welcome-view');
-            } 
-        };
+        window.prosesLogout = () => { if(confirm("Logout?")) location.reload(); };
 
-        document.getElementById('togglePassword').onclick = function() {
-            const passInput = document.getElementById('password_input');
-            passInput.type = passInput.type === 'password' ? 'text' : 'password';
-            this.classList.toggle('fa-eye-slash');
-        };
-
-        function updateWaktu() {
-            const now = new Date();
-            document.getElementById('display-date').innerText = now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-            document.getElementById('display-clock').innerText = now.toLocaleTimeString('id-ID');
+        // JAM & TANGGAL
+        function clock() {
+            const n = new Date();
+            document.getElementById('display-date').innerText = n.toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+            document.getElementById('display-clock').innerText = n.toLocaleTimeString('id-ID');
         }
-        setInterval(updateWaktu, 1000);
-        updateWaktu();
+        setInterval(clock, 1000); clock();
     </script>
 </body>
 </html>
