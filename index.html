@@ -54,18 +54,24 @@
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .form-group { margin-bottom: 15px; display: flex; flex-direction: column; text-align: left; }
         
-        input, select { padding: 10px; border-radius: 5px; border: 1px solid #475569; background: #0f172a; color: white; }
+        input, select { padding: 10px; border-radius: 5px; border: 1px solid #475569; background: #0f172a; color: white; margin-top: 5px; }
         input[type="file"] { border: 1px dashed var(--primary); cursor: pointer; }
 
-        .btn-masuk, .btn-submit { background: var(--primary); color: black; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .btn-masuk, .btn-submit { background: var(--primary); color: black; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .btn-masuk:hover, .btn-submit:hover { background: #e5ac00; }
         .btn-batal { background: #e11d48; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; }
+        
+        /* Table Style */
+        table { width: 100%; border-collapse: collapse; background: var(--card); margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #444; }
+        th { background: #334155; color: var(--primary); }
     </style>
 </head>
 <body>
 
     <div id="login-overlay">
         <div class="login-card">
-            <img src="logo_pope.png" style="width: 80px; margin-bottom: 20px;">
+            <img src="logo_pope.png" style="width: 80px; margin-bottom: 20px;" alt="Logo">
             <h2 style="color: var(--primary);">ADMIN PORTAL</h2>
             <p style="font-size: 0.8rem; margin-bottom: 20px; color: #ccc;">Silahkan masuk untuk akses database</p>
             <form id="loginForm">
@@ -88,7 +94,7 @@
     <div class="main-container hidden" id="content-app">
         
         <section id="welcome-view">
-            <img src="logo_pope.png" style="width: 150px; margin-bottom: 20px;">
+            <img src="logo_pope.png" style="width: 150px; margin-bottom: 20px;" alt="Logo Large">
             <h1 style="font-size: 2.5rem;">SELAMAT DATANG</h1>
             <h3 style="color: var(--primary); letter-spacing: 2px;">SISTEM INFORMASI DATA JEMAAT</h3>
             <div style="margin-top: 30px; display: flex; gap: 15px; justify-content: center;">
@@ -120,7 +126,7 @@
 
                     <div style="display: flex; gap: 10px; margin-top: 30px;">
                         <button type="submit" id="btn-simpan" class="btn-submit" style="flex:2">SIMPAN DATA</button>
-                        <button type="button" onclick="tampilkanView('welcome-view')" style="flex:1; background:#444; color:white; border:none; border-radius:8px;">BATAL</button>
+                        <button type="button" onclick="tampilkanView('welcome-view')" style="flex:1; background:#444; color:white; border:none; border-radius:8px; cursor:pointer;">BATAL</button>
                     </div>
                 </form>
             </div>
@@ -131,17 +137,44 @@
                 <h2 style="color: var(--primary);">DATABASE JEMAAT</h2>
                 <button onclick="tampilkanView('welcome-view')" class="btn-submit">KEMBALI</button>
             </div>
-            <div id="tabel-container"></div>
+            <div id="tabel-container">
+                <p style="text-align:center; color:#ccc;">Memuat data jemaat...</p>
+            </div>
         </div>
     </div>
 
     <script type="module">
-        // --- LOGIC LOGIN & AUTO-LOGIN ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Konfigurasi Firebase Mas (Sesuai gambar yang dikirim)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDIZA6rWBJHAjfm_cSoiaZFjc48fSwCQYw",
+            authDomain: "sidata-pondok-pemulihan.firebaseapp.com",
+            projectId: "sidata-pondok-pemulihan",
+            storageBucket: "sidata-pondok-pemulihan.appspot.com",
+            messagingSenderId: "244791653787",
+            appId: "1:244791653787:web:e66ee6ac264dca643d1d3e"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // --- NAVIGATION ---
+        window.tampilkanView = (viewId) => {
+            document.getElementById('welcome-view').classList.add('hidden');
+            document.getElementById('input-view').classList.add('hidden');
+            document.getElementById('database-view').classList.add('hidden');
+            document.getElementById(viewId).classList.remove('hidden');
+            
+            if(viewId === 'database-view') muatDataJemaat();
+        };
+
+        // --- LOGIN LOGIC ---
         const overlay = document.getElementById('login-overlay');
         const topBar = document.getElementById('top-bar-info');
         const appContent = document.getElementById('content-app');
 
-        // Cek apakah user sudah pernah login sebelumnya
         window.addEventListener('load', () => {
             if (localStorage.getItem('isLoggedIn') === 'true') {
                 showDashboard();
@@ -153,9 +186,9 @@
             const user = document.getElementById('username_input').value;
             const pass = document.getElementById('password_input').value;
 
-            // Ganti ini dengan Username & Password Mas
-            if (user === "admin" && pass === "papua123") {
-                localStorage.setItem('isLoggedIn', 'true'); // Simpan status
+            // Update: Sesuaikan dengan username di gambar Mas
+            if (user === "admin_papua" && pass === "papua123") {
+                localStorage.setItem('isLoggedIn', 'true');
                 showDashboard();
             } else {
                 alert("Username atau Password Salah!");
@@ -163,8 +196,8 @@
         };
 
         window.prosesLogout = () => {
-            localStorage.removeItem('isLoggedIn'); // Hapus ingatan login
-            location.reload(); // Refresh balik ke halaman login
+            localStorage.removeItem('isLoggedIn');
+            location.reload();
         };
 
         function showDashboard() {
@@ -173,15 +206,58 @@
             appContent.classList.remove('hidden');
         }
 
-        // --- NAVIGATION LOGIC ---
-        window.tampilkanView = (viewId) => {
-            document.getElementById('welcome-view').classList.add('hidden');
-            document.getElementById('input-view').classList.add('hidden');
-            document.getElementById('database-view').classList.add('hidden');
-            document.getElementById(viewId).classList.remove('hidden');
+        // --- SAVE DATA TO FIREBASE ---
+        document.getElementById('formJemaat').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-simpan');
+            btn.innerText = "MENYIMPAN...";
+            btn.disabled = true;
+
+            try {
+                await addDoc(collection(db, "daftar_jemaat"), {
+                    nama: document.getElementById('nama_lengkap').value,
+                    alamat: document.getElementById('alamat_domisili').value,
+                    wa: document.getElementById('no_wa').value,
+                    tanggal_input: new Date().toISOString()
+                });
+                alert("Data Jemaat Berhasil Disimpan!");
+                document.getElementById('formJemaat').reset();
+                tampilkanView('welcome-view');
+            } catch (err) {
+                console.error(err);
+                alert("Gagal simpan: " + err.message);
+            } finally {
+                btn.innerText = "SIMPAN DATA";
+                btn.disabled = false;
+            }
         };
 
-        // --- CLOCK LOGIC ---
+        // --- LOAD DATA FROM FIREBASE ---
+        async function muatDataJemaat() {
+            const container = document.getElementById('tabel-container');
+            try {
+                const q = query(collection(db, "daftar_jemaat"), orderBy("tanggal_input", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                let html = `<table><thead><tr><th>Nama</th><th>Alamat</th><th>WhatsApp</th></tr></thead><tbody>`;
+                
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    html += `<tr>
+                        <td>${data.nama}</td>
+                        <td>${data.alamat || '-'}</td>
+                        <td>${data.wa}</td>
+                    </tr>`;
+                });
+
+                html += `</tbody></table>`;
+                container.innerHTML = querySnapshot.empty ? "<p>Belum ada data jemaat.</p>" : html;
+            } catch (err) {
+                container.innerHTML = "<p style='color:red;'>Gagal memuat data: " + err.message + "</p>";
+            }
+        }
+
+        // --- CLOCK ---
         setInterval(() => {
             const now = new Date();
             document.getElementById('display-clock').innerText = now.toLocaleTimeString('id-ID');
