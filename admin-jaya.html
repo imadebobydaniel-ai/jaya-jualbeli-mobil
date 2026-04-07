@@ -39,19 +39,30 @@
         .stat-card h3 { color: #888; font-size: 0.9rem; text-transform: uppercase; }
         .stat-card p { font-size: 2rem; font-weight: bold; margin: 10px 0 0; color: var(--gold); }
 
-        table { width: 100%; margin-top: 40px; border-collapse: collapse; background: var(--dark-card); border-radius: 12px; overflow: hidden; }
-        th { background: var(--gold); color: black; padding: 18px; text-align: left; }
-        td { padding: 18px; border-bottom: 1px solid #333; }
+        /* Form Styles */
+        .admin-section { margin-top: 50px; background: var(--dark-card); padding: 20px; border-radius: 12px; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; margin-bottom: 5px; color: var(--gold); }
+        .input-group input, .input-group textarea { 
+            width: 100%; padding: 10px; background: #111; border: 1px solid #444; color: white; border-radius: 5px; 
+        }
+
+        table { width: 100%; margin-top: 20px; border-collapse: collapse; background: var(--dark-card); border-radius: 12px; overflow: hidden; }
+        th { background: var(--gold); color: black; padding: 15px; text-align: left; }
+        td { padding: 15px; border-bottom: 1px solid #333; }
+        
         .btn-add { background: #22c55e; color: white; padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .btn-add:hover { background: #16a34a; transform: scale(1.05); }
         .status-badge { background: rgba(34, 197, 94, 0.2); color: #22c55e; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
+        
+        .btn-delete { background: #ef4444; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div id="login-overlay">
     <div class="login-box">
-        <img src="logo-jaya.png" alt="Logo">
+        <img src="logo-jaya.png" alt="Logo" onerror="this.style.display='none'">
         <h2 style="color: var(--gold); margin-bottom: 20px;">JAYA ADMIN</h2>
         <input type="text" id="username" placeholder="Username">
         <input type="password" id="password" placeholder="Password">
@@ -64,7 +75,7 @@
     <div class="dashboard-header">
         <h1><i class="fas fa-chart-line"></i> Dashboard JAYA MOBIL</h1>
         <div style="display: flex; gap: 15px;">
-            <a href="index.html" style="color: var(--gold); text-decoration: none; padding: 10px;"><i class="fas fa-external-link-alt"></i> Lihat Web</a>
+            <a href="index.html" target="_blank" style="color: var(--gold); text-decoration: none; padding: 10px;"><i class="fas fa-external-link-alt"></i> Lihat Web</a>
             <button onclick="logout()" style="background: #ef4444; border:none; color:white; padding: 10px 15px; border-radius: 5px; cursor:pointer;">Keluar</button>
         </div>
     </div>
@@ -75,7 +86,36 @@
         <div class="stat-card"><h3>Total Pengunjung</h3><p>1.284</p></div>
     </div>
 
-    <div style="margin-top: 40px; display: flex; justify-content: space-between; align-items: center;">
+    <div class="admin-section">
+        <h2 style="color: var(--gold);"><i class="fas fa-robot"></i> Manajemen Respon Asisten AI</h2>
+        <p style="font-size: 0.9rem; color: #888; margin-bottom: 20px;">Atur apa yang harus dijawab asisten saat user mengetik kata kunci tertentu.</p>
+        
+        <div style="display: grid; grid-template-columns: 1fr 2fr auto; gap: 10px; align-items: end;">
+            <div class="input-group">
+                <label>Kata Kunci</label>
+                <input type="text" id="bot-keyword" placeholder="Contoh: harga">
+            </div>
+            <div class="input-group">
+                <label>Jawaban Otomatis</label>
+                <input type="text" id="bot-response" placeholder="Contoh: Harga kami mulai dari Rp 150 Juta...">
+            </div>
+            <button class="btn-add" onclick="addBotKnowledge()" style="margin-bottom: 15px;">Simpan</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Kata Kunci</th>
+                    <th>Jawaban Asisten</th>
+                    <th width="100">Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="bot-table-body">
+                </tbody>
+        </table>
+    </div>
+
+    <div style="margin-top: 50px; display: flex; justify-content: space-between; align-items: center;">
         <h2>Manajemen Stok Mobil</h2>
         <button class="btn-add"><i class="fas fa-plus"></i> Tambah Unit Baru</button>
     </div>
@@ -100,7 +140,7 @@
                 <td><span class="status-badge">Available</span></td>
                 <td>
                     <button style="background: #3b82f6; color: white; border:none; padding: 8px 12px; border-radius: 5px; cursor:pointer;"><i class="fas fa-edit"></i></button>
-                    <button style="background: #ef4444; color: white; border:none; padding: 8px 12px; border-radius: 5px; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                    <button class="btn-delete"><i class="fas fa-trash"></i></button>
                 </td>
             </tr>
         </tbody>
@@ -108,16 +148,17 @@
 </div>
 
 <script>
+    // --- LOGIKA LOGIN ---
     function checkLogin() {
         const user = document.getElementById('username').value;
         const pass = document.getElementById('password').value;
         const error = document.getElementById('error-msg');
 
-        // Sesuai permintaan Anda: admin / jaya2026
         if(user === "admin" && pass === "jaya2026") {
             document.getElementById('login-overlay').style.display = 'none';
             document.getElementById('dashboard').classList.add('active');
             sessionStorage.setItem("adminLoggedIn", "true");
+            loadBotKnowledge();
         } else {
             error.style.display = 'block';
         }
@@ -128,11 +169,69 @@
         location.reload();
     }
 
+    // --- LOGIKA MANAJEMEN CHATBOT ---
+    
+    // Simpan pengetahuan baru
+    function addBotKnowledge() {
+        const kw = document.getElementById('bot-keyword').value.toLowerCase().trim();
+        const rs = document.getElementById('bot-response').value.trim();
+
+        if(kw === "" || rs === "") {
+            alert("Harap isi kata kunci dan jawaban!");
+            return;
+        }
+
+        let knowledge = JSON.parse(localStorage.getItem('bot_data')) || [];
+        knowledge.push({ keyword: kw, response: rs });
+        localStorage.setItem('bot_data', JSON.stringify(knowledge));
+
+        // Bersihkan input dan refresh tabel
+        document.getElementById('bot-keyword').value = "";
+        document.getElementById('bot-response').value = "";
+        loadBotKnowledge();
+    }
+
+    // Tampilkan data dari LocalStorage ke tabel
+    function loadBotKnowledge() {
+        const tableBody = document.getElementById('bot-table-body');
+        let knowledge = JSON.parse(localStorage.getItem('bot_data')) || [
+            { keyword: "harga", response: "Harga unit kami sangat bersaing, mulai dari 150 jutaan." },
+            { keyword: "lokasi", response: "Kami berlokasi di Jayapura, Papua." }
+        ];
+
+        tableBody.innerHTML = "";
+        knowledge.forEach((item, index) => {
+            tableBody.innerHTML += `
+                <tr>
+                    <td><strong>${item.keyword}</strong></td>
+                    <td>${item.response}</td>
+                    <td>
+                        <button class="btn-delete" onclick="deleteKnowledge(${index})"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `;
+        });
+        
+        // Update LocalStorage jika masih kosong (inisialisasi default)
+        if(!localStorage.getItem('bot_data')) {
+            localStorage.setItem('bot_data', JSON.stringify(knowledge));
+        }
+    }
+
+    // Hapus pengetahuan
+    function deleteKnowledge(index) {
+        let knowledge = JSON.parse(localStorage.getItem('bot_data'));
+        knowledge.splice(index, 1);
+        localStorage.setItem('bot_data', JSON.stringify(knowledge));
+        loadBotKnowledge();
+    }
+
     // Cek status login saat halaman dibuka
     window.onload = () => {
         if(sessionStorage.getItem("adminLoggedIn") === "true") {
             document.getElementById('login-overlay').style.display = 'none';
             document.getElementById('dashboard').classList.add('active');
+            loadBotKnowledge();
         }
     };
 </script>
