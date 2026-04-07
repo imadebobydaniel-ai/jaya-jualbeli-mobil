@@ -104,7 +104,7 @@
 <div class="sidebar">
     <h3 style="color:var(--gold)">JAYA MOBIL</h3>
     <p style="font-size: 12px; color: #666;">ADMINISTRATOR</p>
-    <hr border="0" style="border-top:1px solid #222; margin: 20px 0;">
+    <hr style="border: 0; border-top: 1px solid #222; margin: 20px 0;">
     <a href="admin-jaya.html" style="color:white; text-decoration:none;"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
 </div>
 
@@ -199,47 +199,51 @@
         selectTahun.appendChild(opt);
     }
 
-    // 3. FUNGSI UPDATE MEREK (API VERSION)
-    async function updateMerek() {
+    // 3. FUNGSI UPDATE MEREK (DATA LOKAL VERSION)
+    function updateMerek() {
         const jenis = document.getElementById('jenisMobil').value;
         const merekSelect = document.getElementById('merekMobil');
         
-        // Reset dan tampilkan status loading
-        merekSelect.innerHTML = '<option value="">-- Meload Data... --</option>';
-        
-        if (!jenis) {
-            merekSelect.disabled = true;
-            merekSelect.innerHTML = '<option value="">-- Pilih Jenis Dahulu --</option>';
-            return;
-        }
+        // Database lokal sederhana
+        const carData = {
+            "Sedan": [
+                {nama: "Honda Civic RS", deskripsi: "Mesin 1.5L VTEC Turbo, 178 PS."},
+                {nama: "Toyota Camry", deskripsi: "Mesin 2.5L, Transmisi Otomatis 8-Speed."}
+            ],
+            "SUV": [
+                {nama: "Pajero Sport", deskripsi: "Mesin 2.4L MIVEC Turbo Diesel."},
+                {nama: "Toyota Fortuner", deskripsi: "Mesin 2.8L Diesel, Power 203 PS."}
+            ],
+            "Sport": [
+                {nama: "Porsche 911 Carrera", deskripsi: "Mesin 3.0L 6-Cylinder Twin-Turbo, 385 PS."},
+                {nama: "Ferrari F8", deskripsi: "Mesin 3.9L V8 Turbo, 720 PS."}
+            ],
+            "MPV": [
+                {nama: "Toyota Avanza", deskripsi: "Mesin 1.5L Dual VVT-i."},
+                {nama: "Mitsubishi Xpander", deskripsi: "Mesin 1.5L MIVEC, FWD."}
+            ]
+        };
 
-        try {
-            // GANTI URL INI dengan endpoint API asli kamu
-            // Contoh: fetch(`https://api.jayamobil.com/merek?jenis=${jenis}`)
-            const response = await fetch(`https://api.jayamobil.com/merek?jenis=${jenis}`);
-            const data = await response.json();
+        merekSelect.innerHTML = '<option value="">-- Pilih Merek --</option>';
 
-            merekSelect.innerHTML = '<option value="">-- Pilih Merek --</option>';
+        if (jenis && carData[jenis]) {
             merekSelect.disabled = false;
-
-            // Pastikan struktur JSON API kamu adalah Array of Objects: [{nama: "Civic", spek: "..."}, ...]
-            data.forEach(merek => {
+            carData[jenis].forEach(merek => {
                 let opt = document.createElement('option');
-                opt.value = merek.nama; 
+                opt.value = merek.nama;
                 opt.innerHTML = merek.nama;
-                // Simpan spek di dataset agar bisa diambil saat updateSpecs()
-                opt.dataset.spec = merek.deskripsi || "Spesifikasi standar tersedia."; 
+                opt.dataset.spec = merek.deskripsi;
                 merekSelect.appendChild(opt);
             });
-        } catch (error) {
-            console.error("Gagal mengambil data API:", error);
-            // Fallback jika API gagal (untuk testing)
-            merekSelect.innerHTML = '<option value="">-- Error Memuat Data --</option>';
-            alert("Gagal memuat daftar merek dari server.");
+        } else {
+            merekSelect.disabled = true;
         }
+        
+        // Reset spesifikasi saat jenis berubah
+        document.getElementById('specsOutput').innerHTML = "Pilih merek untuk melihat spesifikasi standar.";
     }
 
-    // 4. UPDATE SPECS (Diambil dari atribut data di option)
+    // 4. UPDATE SPECS
     function updateSpecs() {
         const merekSelect = document.getElementById('merekMobil');
         const selectedOption = merekSelect.options[merekSelect.selectedIndex];
@@ -272,7 +276,7 @@
         };
 
         if(!unitBaru.name || uploadedImages.length === 0) {
-            alert("Harap pilih merek dan minimal satu foto!");
+            alert("Harap pilih jenis, merek, dan masukkan minimal satu foto!");
             return;
         }
 
