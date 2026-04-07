@@ -124,15 +124,18 @@
                     <label>Jenis Mobil</label>
                     <select id="jenisMobil" onchange="updateMerek()">
                         <option value="">-- Pilih Jenis --</option>
+                        <option value="MPV">MPV (Multi Purpose Vehicle)</option>
+                        <option value="SUV">SUV (Sport Utility Vehicle)</option>
+                        <option value="LCGC">LCGC (Low Cost Green Car)</option>
+                        <option value="City Car">City Car / Hatchback</option>
                         <option value="Sedan">Sedan</option>
-                        <option value="SUV">SUV</option>
-                        <option value="Sport">Sport</option>
-                        <option value="MPV">MPV</option>
+                        <option value="DCab">Double Cabin (DCab)</option>
+                        <option value="EV">Mobil Listrik (EV)</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label>Merek Mobil</label>
+                    <label>Merek/Model Mobil</label>
                     <select id="merekMobil" onchange="updateSpecs()" disabled>
                         <option value="">-- Pilih Merek --</option>
                     </select>
@@ -168,7 +171,6 @@
 <script>
     let uploadedImages = [];
 
-    // 1. PREVIEW MULTI GAMBAR
     function previewImages(event) {
         const previewContainer = document.getElementById('galleryPreview');
         previewContainer.innerHTML = ""; 
@@ -190,7 +192,6 @@
         }
     }
 
-    // 2. GENERATE TAHUN
     const selectTahun = document.getElementById('tahunMobil');
     const currentYear = new Date().getFullYear();
     for (let i = currentYear; i >= currentYear - 20; i--) {
@@ -199,31 +200,49 @@
         selectTahun.appendChild(opt);
     }
 
-    // 3. FUNGSI UPDATE MEREK (DATA LOKAL VERSION)
+    // DATA MOBIL SESUAI PERMINTAAN
+    const carData = {
+        "MPV": [
+            {nama: "Toyota Avanza", deskripsi: "Mesin 1.5L Dual VVT-i, Kapasitas 7 Penumpang."},
+            {nama: "Toyota Innova", deskripsi: "Mesin 2.0L / 2.4L Diesel, Interior Mewah."},
+            {nama: "Daihatsu Xenia", deskripsi: "Mesin 1.3L / 1.5L, Irit bahan bakar."}
+        ],
+        "SUV": [
+            {nama: "Toyota Fortuner", deskripsi: "Mesin 2.8L Diesel, 4x2 / 4x4, Gagah & Tangguh."},
+            {nama: "Mitsubishi Pajero Sport", deskripsi: "Mesin 2.4L MIVEC Turbo Diesel, Fitur Canggih."},
+            {nama: "Honda HR-V", deskripsi: "Mesin 1.5L i-VTEC, Desain Sporty & Compact SUV."}
+        ],
+        "LCGC": [
+            {nama: "Toyota Agya", deskripsi: "Mesin 1.2L, Sangat Irit, Cocok untuk Perkotaan."},
+            {nama: "Daihatsu Ayla", deskripsi: "Mesin 1.0L / 1.2L, Harga Terjangkau."},
+            {nama: "Honda Brio Satya", deskripsi: "Mesin 1.2L i-VTEC, Performa Terbaik di Kelasnya."}
+        ],
+        "City Car": [
+            {nama: "Honda Brio RS", deskripsi: "Mesin 1.2L, Sporty Look, Handling Lincah."},
+            {nama: "Suzuki Ignis", deskripsi: "Urban SUV Style, Irit & Ground Clearance Tinggi."},
+            {nama: "Toyota Yaris", deskripsi: "Mesin 1.5L, Hatchback Premium, Fitur Keamanan Lengkap."},
+            {nama: "Suzuki Baleno", deskripsi: "Liquid Flow Design, Interior Luas & Nyaman."}
+        ],
+        "Sedan": [
+            {nama: "Toyota Camry", deskripsi: "Mesin 2.5L, Sedan Mewah & Elegan."},
+            {nama: "Honda Civic", deskripsi: "Mesin 1.5L VTEC Turbo, Performa Sporty."}
+        ],
+        "DCab": [
+            {nama: "Toyota Hilux", deskripsi: "Pickup Penumpang 4x4, Tangguh untuk Medan Berat."},
+            {nama: "Mitsubishi Triton", deskripsi: "Mesin 2.4L Turbo Diesel, Kombinasi Kerja & Gaya."}
+        ],
+        "EV": [
+            {nama: "Wuling Air EV", deskripsi: "Compact Electric Vehicle, Jarak Tempuh hingga 300km."},
+            {nama: "Hyundai Ioniq 5", deskripsi: "Electric Global Modular Platform (E-GMP), Ultra Fast Charging."},
+            {nama: "MG 4 EV", deskripsi: "Crossover Listrik, Desain Futuristik."},
+            {nama: "Chery Omoda E5", deskripsi: "Intelligent Electric SUV, Fitur ADAS Lengkap."}
+        ]
+    };
+
     function updateMerek() {
         const jenis = document.getElementById('jenisMobil').value;
         const merekSelect = document.getElementById('merekMobil');
         
-        // Database lokal sederhana
-        const carData = {
-            "Sedan": [
-                {nama: "Honda Civic RS", deskripsi: "Mesin 1.5L VTEC Turbo, 178 PS."},
-                {nama: "Toyota Camry", deskripsi: "Mesin 2.5L, Transmisi Otomatis 8-Speed."}
-            ],
-            "SUV": [
-                {nama: "Pajero Sport", deskripsi: "Mesin 2.4L MIVEC Turbo Diesel."},
-                {nama: "Toyota Fortuner", deskripsi: "Mesin 2.8L Diesel, Power 203 PS."}
-            ],
-            "Sport": [
-                {nama: "Porsche 911 Carrera", deskripsi: "Mesin 3.0L 6-Cylinder Twin-Turbo, 385 PS."},
-                {nama: "Ferrari F8", deskripsi: "Mesin 3.9L V8 Turbo, 720 PS."}
-            ],
-            "MPV": [
-                {nama: "Toyota Avanza", deskripsi: "Mesin 1.5L Dual VVT-i."},
-                {nama: "Mitsubishi Xpander", deskripsi: "Mesin 1.5L MIVEC, FWD."}
-            ]
-        };
-
         merekSelect.innerHTML = '<option value="">-- Pilih Merek --</option>';
 
         if (jenis && carData[jenis]) {
@@ -238,12 +257,9 @@
         } else {
             merekSelect.disabled = true;
         }
-        
-        // Reset spesifikasi saat jenis berubah
         document.getElementById('specsOutput').innerHTML = "Pilih merek untuk melihat spesifikasi standar.";
     }
 
-    // 4. UPDATE SPECS
     function updateSpecs() {
         const merekSelect = document.getElementById('merekMobil');
         const selectedOption = merekSelect.options[merekSelect.selectedIndex];
@@ -265,18 +281,18 @@
         document.getElementById('formattedHarga').innerText = formatted;
     }
 
-    // 5. SIMPAN DATA
     function simpanUnit() {
         const unitBaru = {
+            type: document.getElementById('jenisMobil').value,
             name: document.getElementById('merekMobil').value,
-            price: document.getElementById('formattedHarga').innerText.replace("Rp", "").trim(),
+            price: document.getElementById('formattedHarga').innerText,
             images: uploadedImages, 
             year: document.getElementById('tahunMobil').value,
             spec: document.getElementById('spesifikasiHidden').value
         };
 
         if(!unitBaru.name || uploadedImages.length === 0) {
-            alert("Harap pilih jenis, merek, dan masukkan minimal satu foto!");
+            alert("Harap lengkapi data dan pilih minimal satu foto!");
             return;
         }
 
