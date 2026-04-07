@@ -34,7 +34,7 @@
 
         .loader-container {
             position: relative;
-            width: 150px; height: 150px;
+            width: 200px; height: 200px; /* Ukuran container diperbesar */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -49,9 +49,12 @@
             animation: spin-circle 1.5s linear infinite;
         }
 
+        /* LOGO DIPERBESAR DI SINI */
         .loader-logo {
-            width: 80px; height: 80px;
+            width: 120px; 
+            height: 120px;
             object-fit: contain;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5)); /* Efek eksklusif */
             animation: spin-logo 3s ease-in-out infinite;
         }
 
@@ -61,9 +64,9 @@
         }
 
         @keyframes spin-logo {
-            0% { transform: rotate(0deg); }
-            20% { transform: rotate(360deg); }
-            100% { transform: rotate(360deg); }
+            0% { transform: rotate(0deg) scale(1); }
+            20% { transform: rotate(360deg) scale(1.1); } /* Sedikit efek zoom saat berputar */
+            100% { transform: rotate(360deg) scale(1); }
         }
 
         .loader-hidden { opacity: 0; visibility: hidden; }
@@ -201,6 +204,8 @@
         @media (max-width: 600px) {
             .hero h1 { font-size: 2.2rem; }
             .catalog-grid { padding: 10px; }
+            .loader-container { width: 150px; height: 150px; }
+            .loader-logo { width: 90px; height: 90px; }
         }
     </style>
 </head>
@@ -273,53 +278,6 @@
 
 <script>
     let carsData = [];
-    let uploadedImages = []; // Untuk menyimpan hasil kompresi Base64
-
-    // --- FUNGSI KOMPRESI GAMBAR (DITAMBAHKAN) ---
-    function previewImages(event) {
-        const previewContainer = document.getElementById('galleryPreview');
-        if (previewContainer) previewContainer.innerHTML = ""; 
-        uploadedImages = []; 
-        
-        const files = event.target.files;
-        if (files) {
-            Array.from(files).forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const imgElement = new Image();
-                    imgElement.src = e.target.result;
-                    
-                    imgElement.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 800; // Standar agar tidak berat di HP
-                        const scaleSize = MAX_WIDTH / imgElement.width;
-                        canvas.width = MAX_WIDTH;
-                        canvas.height = imgElement.height * scaleSize;
-
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
-
-                        // Kompresi ke format JPEG kualitas 0.7
-                        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
-                        
-                        // Opsional: Tampilkan preview jika elemen ada
-                        if (previewContainer) {
-                            const previewImg = document.createElement('img');
-                            previewImg.src = compressedBase64;
-                            previewImg.style.width = "100px";
-                            previewImg.style.margin = "5px";
-                            previewImg.classList.add('preview-item');
-                            previewContainer.appendChild(previewImg);
-                        }
-                        
-                        uploadedImages.push(compressedBase64);
-                        console.log("Gambar berhasil dikompresi.");
-                    };
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-    }
 
     // Fungsi Format Link YouTube
     function formatYoutube(url) {
@@ -346,7 +304,6 @@
             if (ytEmbed) {
                 mediaContent = `<iframe src="${ytEmbed}" allowfullscreen></iframe>`;
             } else {
-                // Gunakan placeholder jika gambar rusak atau tidak ada
                 const img = (car.img && car.img.startsWith('data:image')) ? car.img : 'https://placehold.co/400x250?text=Gambar+Tidak+Tersedia';
                 mediaContent = `<img src="${img}" alt="${car.name}" onerror="this.src='https://placehold.co/400x250?text=Error+Loading+Image'">`;
             }
@@ -375,7 +332,7 @@
         const ytEmbed = formatYoutube(car.video);
 
         if (ytEmbed) {
-            lbMedia.innerHTML = `<iframe width="560" height="315" src="${ytEmbed}?autoplay=1" frameborder="0" allowfullscreen></iframe>`;
+            lbMedia.innerHTML = `<iframe width="100%" height="315" src="${ytEmbed}?autoplay=1" frameborder="0" allowfullscreen></iframe>`;
         } else {
             lbMedia.innerHTML = `<img src="${car.img}" style="width:100%" onerror="this.src='https://placehold.co/400x250?text=No+Image'">`;
         }
@@ -424,7 +381,6 @@
 
     window.onload = () => {
         loadKatalog();
-        // Hide Preloader
         const loader = document.getElementById('preloader');
         setTimeout(() => {
             loader.classList.add('loader-hidden');
