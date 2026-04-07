@@ -52,6 +52,24 @@
         .btn-edit { color: var(--gold); background: none; border: 1px solid var(--gold); padding: 6px 10px; border-radius: 6px; cursor: pointer; }
         .btn-delete { color: #ef4444; background: none; border: 1px solid #ef4444; padding: 6px 10px; border-radius: 6px; cursor: pointer; margin-left: 5px; }
 
+        /* --- MODAL EDIT --- */
+        .modal {
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); align-items: center; justify-content: center;
+        }
+        .modal-content {
+            background: var(--dark-card); padding: 30px; border-radius: 15px; width: 90%; max-width: 500px;
+            border: 1px solid var(--gold);
+        }
+        .modal-content h3 { color: var(--gold); margin-top: 0; }
+        .modal-content input {
+            width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px;
+            border: 1px solid #333; background: #0a0a0a; color: white;
+        }
+        .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-save { flex: 1; background: var(--gold); color: black; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .btn-cancel { flex: 1; background: #333; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; }
+
         /* Mobile */
         @media (max-width: 992px) {
             .sidebar { transform: translateX(-100%); }
@@ -68,6 +86,23 @@
         <input type="text" id="username" placeholder="Username">
         <input type="password" id="password" placeholder="Password">
         <button class="btn-login" onclick="checkLogin()">MASUK</button>
+    </div>
+</div>
+
+<div id="edit-modal" class="modal">
+    <div class="modal-content">
+        <h3>Edit Data Unit</h3>
+        <input type="hidden" id="edit-index">
+        <label>Nama Unit:</label>
+        <input type="text" id="edit-name">
+        <label>Tahun:</label>
+        <input type="number" id="edit-year">
+        <label>Harga:</label>
+        <input type="text" id="edit-price">
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeEditModal()">Batal</button>
+            <button class="btn-save" onclick="saveEdit()">Simpan Perubahan</button>
+        </div>
     </div>
 </div>
 
@@ -95,7 +130,7 @@
             <div class="admin-section">
                 <div class="header-action">
                     <h3 style="color: var(--gold); margin:0;">Katalog Stok Unit</h3>
-                    <a href="tambah-unit.html" class="btn-primary"><i class="fas fa-plus"></i> Tambah Unit Untuk Display Utama</a>
+                    <a href="tambah-unit.html" class="btn-primary"><i class="fas fa-plus"></i> Tambah Unit Baru</a>
                 </div>
 
                 <table class="custom-table">
@@ -116,7 +151,7 @@
             <h1>Pengaturan Robot AI</h1>
             <div class="admin-section">
                 <p>Kelola portal asisten pintar Jaya Mobil di sini.</p>
-                </div>
+            </div>
         </div>
     </main>
 </div>
@@ -130,6 +165,8 @@
             document.getElementById('dashboard').classList.add('active');
             sessionStorage.setItem("logged", "true");
             loadCars();
+        } else {
+            alert("Login Gagal!");
         }
     }
 
@@ -162,8 +199,8 @@
                     <td>${car.year || '-'}</td>
                     <td>Rp ${car.price}</td>
                     <td>
-                        <button class="btn-edit" onclick="alert('Gunakan halaman tambah unit untuk input baru.')">
-                            <i class="fas fa-info-circle"></i>
+                        <button class="btn-edit" onclick="openEditModal(${index})">
+                            <i class="fas fa-edit"></i>
                         </button>
                         <button class="btn-delete" onclick="deleteCar(${index})">
                             <i class="fas fa-trash"></i>
@@ -171,6 +208,37 @@
                     </td>
                 </tr>`;
         });
+    }
+
+    // FUNGSI EDIT
+    function openEditModal(index) {
+        let cars = JSON.parse(localStorage.getItem('car_stok'));
+        let car = cars[index];
+        
+        document.getElementById('edit-index').value = index;
+        document.getElementById('edit-name').value = car.name;
+        document.getElementById('edit-year').value = car.year || "";
+        document.getElementById('edit-price').value = car.price;
+        
+        document.getElementById('edit-modal').style.display = 'flex';
+    }
+
+    function closeEditModal() {
+        document.getElementById('edit-modal').style.display = 'none';
+    }
+
+    function saveEdit() {
+        const index = document.getElementById('edit-index').value;
+        let cars = JSON.parse(localStorage.getItem('car_stok'));
+        
+        cars[index].name = document.getElementById('edit-name').value;
+        cars[index].year = document.getElementById('edit-year').value;
+        cars[index].price = document.getElementById('edit-price').value;
+        
+        localStorage.setItem('car_stok', JSON.stringify(cars));
+        closeEditModal();
+        loadCars();
+        alert("Data berhasil diperbarui!");
     }
 
     function deleteCar(index) {
