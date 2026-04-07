@@ -34,7 +34,7 @@
 
         .loader-container {
             position: relative;
-            width: 200px; height: 200px; /* Ukuran container diperbesar */
+            width: 200px; height: 200px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -49,12 +49,11 @@
             animation: spin-circle 1.5s linear infinite;
         }
 
-        /* LOGO DIPERBESAR DI SINI */
         .loader-logo {
             width: 120px; 
             height: 120px;
             object-fit: contain;
-            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5)); /* Efek eksklusif */
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5));
             animation: spin-logo 3s ease-in-out infinite;
         }
 
@@ -65,7 +64,7 @@
 
         @keyframes spin-logo {
             0% { transform: rotate(0deg) scale(1); }
-            20% { transform: rotate(360deg) scale(1.1); } /* Sedikit efek zoom saat berputar */
+            20% { transform: rotate(360deg) scale(1.1); }
             100% { transform: rotate(360deg) scale(1); }
         }
 
@@ -195,7 +194,7 @@
             width: 100%; height: 100%; background: rgba(0,0,0,0.95);
             justify-content: center; align-items: center; flex-direction: column;
         }
-        #lightbox-media { max-width: 85%; max-height: 70%; border: 2px solid var(--gold); border-radius: 10px; overflow: hidden; }
+        #lightbox-media { width: 85%; max-width: 800px; max-height: 70%; border: 2px solid var(--gold); border-radius: 10px; overflow: hidden; background: #000; }
         .lb-info { margin-top: 20px; text-align: center; }
         .close-btn { position: absolute; top: 20px; right: 30px; font-size: 40px; color: white; cursor: pointer; }
 
@@ -229,13 +228,13 @@
 <section class="hero">
     <nav class="hero-nav">
         <a href="#">Beranda</a>
-        <a href="katalog.html">Katalog</a> 
+        <a href="#katalog">Katalog</a> 
         <a href="#">Tentang Kami</a> 
         <a href="#kontak">Kontak</a>
     </nav>
     <h1>EKSKLUSIVITAS</h1>
     <p>Temukan unit terbaik dengan kualitas terjamin. Kepuasan Anda adalah prioritas utama kami di JAYA MOBIL.</p>
-    <a href="katalog.html" class="btn-koleksi">LIHAT KOLEKSI</a>
+    <a href="#katalog" class="btn-koleksi">LIHAT KOLEKSI</a>
 </section>
 
 <section class="catalog" id="katalog">
@@ -279,7 +278,6 @@
 <script>
     let carsData = [];
 
-    // Fungsi Format Link YouTube
     function formatYoutube(url) {
         if (!url) return null;
         const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -288,7 +286,9 @@
     }
 
     function loadKatalog() {
-        carsData = JSON.parse(localStorage.getItem('car_stok')) || [];
+        const storedData = localStorage.getItem('car_stok');
+        carsData = JSON.parse(storedData) || [];
+        
         const container = document.getElementById('main-catalog');
         if (!container) return;
 
@@ -300,12 +300,25 @@
         container.innerHTML = carsData.map((car, index) => {
             const ytEmbed = formatYoutube(car.video);
             let mediaContent = "";
+            let displayImg = "";
 
+            // Prioritas Gambar: Base64 -> Link Foto -> Youtube Thumb -> Placeholder
+            if (car.img && car.img.startsWith("data:image")) {
+                displayImg = car.img;
+            } else if (car.foto) {
+                displayImg = car.foto;
+            } else if (ytEmbed) {
+                const videoId = ytEmbed.split('/').pop();
+                displayImg = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+            } else {
+                displayImg = 'https://via.placeholder.com/400x250.png?text=Foto+Tidak+Tersedia';
+            }
+
+            // Jika ada video YouTube, tampilkan iframe, jika tidak tampilkan gambar
             if (ytEmbed) {
                 mediaContent = `<iframe src="${ytEmbed}" allowfullscreen></iframe>`;
             } else {
-                const img = (car.img && car.img.startsWith('data:image')) ? car.img : 'https://placehold.co/400x250?text=Gambar+Tidak+Tersedia';
-                mediaContent = `<img src="${img}" alt="${car.name}" onerror="this.src='https://placehold.co/400x250?text=Error+Loading+Image'">`;
+                mediaContent = `<img src="${displayImg}" alt="${car.name}" onerror="this.src='https://via.placeholder.com/400x250.png?text=Gagal+Memuat+Gambar'">`;
             }
 
             return `
@@ -317,8 +330,8 @@
                         <h3>${car.name}</h3>
                         <div class="price">Rp ${car.price}</div>
                         <div class="spec">
-                            <span><i class="far fa-calendar-alt"></i> ${car.year || '2022'}</span>
-                            <span><i class="fas fa-gas-pump"></i> ${car.fuel || 'Bensin'}</span>
+                            <span><i class="far fa-calendar-alt"></i> ${car.year || '-'}</span>
+                            <span><i class="fas fa-gas-pump"></i> ${car.fuel || '-'}</span>
                         </div>
                     </div>
                 </div>
@@ -330,11 +343,14 @@
         const car = carsData[index];
         const lbMedia = document.getElementById('lightbox-media');
         const ytEmbed = formatYoutube(car.video);
+        
+        // Logika Gambar yang sama dengan Katalog
+        let displayImg = (car.img && car.img.startsWith('data:image')) ? car.img : (car.foto || 'https://via.placeholder.com/600x400.png?text=No+Image');
 
         if (ytEmbed) {
-            lbMedia.innerHTML = `<iframe width="100%" height="315" src="${ytEmbed}?autoplay=1" frameborder="0" allowfullscreen></iframe>`;
+            lbMedia.innerHTML = `<iframe width="100%" height="400" src="${ytEmbed}?autoplay=1" frameborder="0" allowfullscreen></iframe>`;
         } else {
-            lbMedia.innerHTML = `<img src="${car.img}" style="width:100%" onerror="this.src='https://placehold.co/400x250?text=No+Image'">`;
+            lbMedia.innerHTML = `<img src="${displayImg}" style="width:100%; display:block;" onerror="this.src='https://via.placeholder.com/600x400.png?text=Error'">`;
         }
 
         document.getElementById('lb-title').innerText = car.name;
@@ -384,7 +400,7 @@
         const loader = document.getElementById('preloader');
         setTimeout(() => {
             loader.classList.add('loader-hidden');
-        }, 3000); 
+        }, 2000); 
     };
 </script>
 
