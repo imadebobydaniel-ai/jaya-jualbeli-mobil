@@ -78,6 +78,8 @@
         </div>
         <div class="menu-item active" onclick="switchPage('main-stats', this)"><i class="fas fa-th-large"></i> Dashboard</div>
         <div class="menu-item" onclick="switchPage('stok-mobil', this)"><i class="fas fa-car"></i> Manajemen Stok</div>
+        <div class="menu-item" onclick="switchPage('ai-settings', this)"><i class="fas fa-robot"></i> Pengaturan AI</div>
+        
         <div class="menu-item" onclick="logout()" style="color: #ef4444; margin-top: auto;"><i class="fas fa-power-off"></i> Keluar</div>
     </nav>
 
@@ -105,16 +107,21 @@
                             <th>Aksi</th>
                         </tr>
                     </thead>
-                    <tbody id="car-table-body">
-                        </tbody>
+                    <tbody id="car-table-body"></tbody>
                 </table>
             </div>
+        </div>
+
+        <div id="ai-settings" class="page-section" style="display:none;">
+            <h1>Pengaturan Robot AI</h1>
+            <div class="admin-section">
+                <p>Kelola portal asisten pintar Jaya Mobil di sini.</p>
+                </div>
         </div>
     </main>
 </div>
 
 <script>
-    // Auth Logic
     function checkLogin() {
         const u = document.getElementById('username').value;
         const p = document.getElementById('password').value;
@@ -131,7 +138,6 @@
         location.reload();
     }
 
-    // Page Switching
     function switchPage(pageId, element) {
         document.querySelectorAll('.page-section').forEach(p => p.style.display = 'none');
         document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
@@ -139,10 +145,8 @@
         element.classList.add('active');
     }
 
-    // Load Data Mobil
     function loadCars() {
         const tbody = document.getElementById('car-table-body');
-        // Mengambil data dari 'car_stok' (kunci yang sama dengan halaman tambah-unit)
         let cars = JSON.parse(localStorage.getItem('car_stok')) || [];
         
         tbody.innerHTML = "";
@@ -158,7 +162,7 @@
                     <td>${car.year || '-'}</td>
                     <td>Rp ${car.price}</td>
                     <td>
-                        <button class="btn-edit" onclick="alert('Gunakan halaman tambah unit untuk input baru atau hubungi developer untuk edit database.')">
+                        <button class="btn-edit" onclick="alert('Gunakan halaman tambah unit untuk input baru.')">
                             <i class="fas fa-info-circle"></i>
                         </button>
                         <button class="btn-delete" onclick="deleteCar(${index})">
