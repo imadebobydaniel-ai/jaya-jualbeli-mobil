@@ -150,7 +150,7 @@
                 <div class="form-group">
                     <label>Tahun Mobil</label>
                     <select id="tahunMobil">
-                        </select>
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -168,6 +168,27 @@
 </div>
 
 <script>
+    // --- LOGIKA SESSION STORAGE (DITAMBAHKAN) ---
+    window.onload = function() {
+        const savedNama = sessionStorage.getItem('temp_nama');
+        const savedHarga = sessionStorage.getItem('temp_harga');
+
+        if (savedNama) {
+            console.log("Melanjutkan input untuk: " + savedNama);
+            
+            // Mengisi input harga jika ada data dari dashboard
+            if (savedHarga) {
+                const hInput = document.getElementById('hargaInput');
+                hInput.value = savedHarga;
+                formatRupiah(hInput);
+            }
+
+            // Opsional: Hapus setelah digunakan agar tidak muncul terus saat refresh
+            sessionStorage.removeItem('temp_nama');
+            sessionStorage.removeItem('temp_harga');
+        }
+    };
+
     // 1. DATA SIMULASI API (Katalog Data)
     const carData = {
         "Sedan": {
@@ -236,7 +257,7 @@
             style: 'currency',
             currency: 'IDR',
             minimumFractionDigits: 0
-        }).format(value);
+        }).format(value || 0);
         document.getElementById('formattedHarga').innerText = formatted;
     }
 
@@ -266,11 +287,8 @@
             return;
         }
 
-        // Ambil data lama
         let stokLama = JSON.parse(localStorage.getItem('car_stok')) || [];
         stokLama.push(unitBaru);
-        
-        // Simpan kembali
         localStorage.setItem('car_stok', JSON.stringify(stokLama));
         
         alert("Unit Berhasil Ditambahkan ke Katalog!");
