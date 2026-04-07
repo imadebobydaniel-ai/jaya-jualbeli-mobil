@@ -34,9 +34,46 @@
         .logo-container { display: flex; align-items: center; gap: 12px; }
         .logo-container img { height: 50px; border-radius: 5px; }
 
-        .nav-links { display: flex; gap: 25px; align-items: center; }
-        .nav-links a { color: var(--text-light); text-decoration: none; font-weight: 500; transition: 0.3s; }
-        .nav-links a:hover { color: var(--gold); }
+        /* --- Efek Menu Dinamis 3D --- */
+        .nav-links { 
+            display: flex; 
+            gap: 25px; 
+            align-items: center; 
+            perspective: 1000px; /* Memberikan kedalaman untuk efek 3D */
+        }
+
+        .nav-links a { 
+            color: var(--text-light); 
+            text-decoration: none; 
+            font-weight: 500; 
+            font-size: 15px;
+            position: relative;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s;
+            display: inline-block;
+        }
+
+        /* Animasi 3D saat Hover: teks maju dan sedikit miring */
+        .nav-links a:hover { 
+            color: var(--gold); 
+            transform: translateZ(20px) rotateX(10deg); 
+            text-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Garis bawah dinamis */
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--gold);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
 
         .btn-admin-login {
             background: transparent;
@@ -49,9 +86,17 @@
             transition: 0.3s;
             text-decoration: none;
             font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .btn-admin-login:hover { background: var(--gold); color: black; }
+        .btn-admin-login:hover { 
+            background: var(--gold); 
+            color: black; 
+            transform: scale(1.05) translateZ(10px);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
 
         /* Hero Section Dinamis */
         .hero {
@@ -126,7 +171,7 @@
     <nav class="nav-links">
         <a href="#">Beranda</a>
         <a href="#katalog">Katalog</a>
-        <a href="#kontak">Hubungi Kami</a>
+        <a href="#">Tentang Kami</a> <a href="#kontak">Hubungi Kami</a>
         <a href="admin-jaya.html" class="btn-admin-login"><i class="fas fa-user-shield"></i> LOGIN ADMIN</a>
     </nav>
 </header>
@@ -153,7 +198,7 @@
                 <a href="https://wa.me/628123456789" class="btn-buy">MINAT? HUBUNGI WA</a>
             </div>
         </div>
-        </div>
+    </div>
 </section>
 
 <footer>
