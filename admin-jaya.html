@@ -1,262 +1,28 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Admin Panel - JAYA MOBIL</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root { --gold: #D4AF37; --dark-card: #1e1e1e; --bg: #121212; --sidebar-w: 260px; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; overflow-x: hidden; }
+<div id="ai-settings" class="page-section" style="display:none;">
+    <h1><i class="fas fa-robot"></i> Pengaturan Robot AI</h1>
+    <div class="admin-section">
+        <h3 style="color: var(--gold);">Konfigurasi Chatbot</h3>
+        <p style="color: #999; font-size: 14px;">Atur bagaimana AI berinteraksi dengan calon pembeli di website Anda.</p>
+        
+        <div style="margin-top: 20px;">
+            <label style="display:block; margin-bottom: 8px;">API Key (Gemini/OpenAI):</label>
+            <input type="password" id="ai-api-key" placeholder="Masukkan API Key Anda..." 
+                   style="width: 100%; padding: 12px; background: #0a0a0a; border: 1px solid #333; color: white; border-radius: 8px;">
+        </div>
 
-        /* --- LOGIN OVERLAY --- */
-        #login-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.98); z-index: 10000;
-            display: flex; justify-content: center; align-items: center; padding: 20px;
-        }
-        .login-box {
-            background: var(--dark-card); padding: 30px; border-radius: 20px;
-            border: 1px solid rgba(212, 175, 55, 0.3); text-align: center; width: 100%; max-width: 380px;
-        }
-        .login-box input {
-            width: 100%; padding: 15px; margin: 10px 0; border-radius: 10px;
-            border: 1px solid #333; background: #080808; color: white; font-size: 16px;
-        }
-        .btn-login {
-            width: 100%; padding: 15px; background: var(--gold); border: none;
-            color: black; font-weight: bold; border-radius: 10px; cursor: pointer; transition: 0.3s;
-        }
+        <div style="margin-top: 20px;">
+            <label style="display:block; margin-bottom: 8px;">Instruksi Sistem (System Prompt):</label>
+            <textarea id="ai-prompt" rows="6" placeholder="Contoh: Anda adalah asisten penjualan Jaya Mobil yang ramah..." 
+                      style="width: 100%; padding: 12px; background: #0a0a0a; border: 1px solid #333; color: white; border-radius: 8px; font-family: inherit;"></textarea>
+        </div>
 
-        /* --- LAYOUT --- */
-        .admin-content { opacity: 0; display: none; transition: 0.5s; }
-        .admin-content.active { opacity: 1; display: block; }
-        .sidebar { 
-            width: var(--sidebar-w); background: #000; border-right: 1px solid #222; 
-            padding: 20px; display: flex; flex-direction: column; gap: 8px;
-            position: fixed; height: 100vh; z-index: 1000; transition: 0.4s;
-        }
-        .main-panel { margin-left: var(--sidebar-w); padding: 40px; transition: 0.4s; }
-        .menu-item { padding: 14px 18px; color: #999; text-decoration: none; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 12px; }
-        .menu-item.active { background: var(--gold); color: black; font-weight: bold; }
-
-        /* --- UI ELEMENTS --- */
-        .admin-section { background: var(--dark-card); padding: 25px; border-radius: 16px; border: 1px solid #222; }
-        .header-action { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .custom-table { width: 100%; border-collapse: collapse; }
-        .custom-table th { text-align: left; padding: 15px; color: var(--gold); border-bottom: 2px solid #222; }
-        .custom-table td { padding: 15px; border-bottom: 1px solid #222; color: #ccc; }
-
-        .btn-primary { background: var(--gold); color: black; padding: 12px 20px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; text-decoration: none; display: inline-block; }
-        .btn-edit { color: var(--gold); background: none; border: 1px solid var(--gold); padding: 6px 10px; border-radius: 6px; cursor: pointer; }
-        .btn-delete { color: #ef4444; background: none; border: 1px solid #ef4444; padding: 6px 10px; border-radius: 6px; cursor: pointer; margin-left: 5px; }
-
-        /* --- MODAL EDIT --- */
-        .modal {
-            display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); align-items: center; justify-content: center;
-        }
-        .modal-content {
-            background: var(--dark-card); padding: 30px; border-radius: 15px; width: 90%; max-width: 500px;
-            border: 1px solid var(--gold);
-        }
-        .modal-content h3 { color: var(--gold); margin-top: 0; }
-        .modal-content input {
-            width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px;
-            border: 1px solid #333; background: #0a0a0a; color: white;
-        }
-        .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
-        .btn-save { flex: 1; background: var(--gold); color: black; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .btn-cancel { flex: 1; background: #333; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; }
-
-        /* Mobile */
-        @media (max-width: 992px) {
-            .sidebar { transform: translateX(-100%); }
-            .main-panel { margin-left: 0; padding: 20px; }
-            .sidebar.open { transform: translateX(0); }
-        }
-    </style>
-</head>
-<body>
-
-<div id="login-overlay">
-    <div class="login-box">
-        <h2 style="color: var(--gold);">JAYA ADMIN</h2>
-        <input type="text" id="username" placeholder="Username">
-        <input type="password" id="password" placeholder="Password">
-        <button class="btn-login" onclick="checkLogin()">MASUK</button>
-    </div>
-</div>
-
-<div id="edit-modal" class="modal">
-    <div class="modal-content">
-        <h3>Edit Data Unit</h3>
-        <input type="hidden" id="edit-index">
-        <label>Nama Unit:</label>
-        <input type="text" id="edit-name">
-        <label>Tahun:</label>
-        <input type="number" id="edit-year">
-        <label>Harga:</label>
-        <input type="text" id="edit-price">
-        <div class="modal-actions">
-            <button class="btn-cancel" onclick="closeEditModal()">Batal</button>
-            <button class="btn-save" onclick="saveEdit()">Simpan Perubahan</button>
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+            <button class="btn-primary" onclick="saveAISettings()">
+                <i class="fas fa-save"></i> Simpan Konfigurasi
+            </button>
+            <button class="btn-cancel" onclick="resetAIPrompt()" style="background: #222; width: auto; padding: 0 20px;">
+                Reset ke Default
+            </button>
         </div>
     </div>
 </div>
-
-<div class="admin-content" id="dashboard">
-    <nav class="sidebar" id="sidebar">
-        <div style="padding: 20px 0; text-align: center;">
-            <h2 style="color: var(--gold);">JAYA MOBIL</h2>
-        </div>
-        <div class="menu-item active" onclick="switchPage('main-stats', this)"><i class="fas fa-th-large"></i> Dashboard</div>
-        <div class="menu-item" onclick="switchPage('stok-mobil', this)"><i class="fas fa-car"></i> Manajemen Stok</div>
-        <div class="menu-item" onclick="switchPage('ai-settings', this)"><i class="fas fa-robot"></i> Pengaturan AI</div>
-        
-        <div class="menu-item" onclick="logout()" style="color: #ef4444; margin-top: auto;"><i class="fas fa-power-off"></i> Keluar</div>
-    </nav>
-
-    <main class="main-panel">
-        <div id="main-stats" class="page-section active">
-            <h1>Ringkasan Dashboard</h1>
-            <div class="admin-section">
-                <p>Selamat datang di panel kendali Jaya Mobil Jayapura.</p>
-            </div>
-        </div>
-
-        <div id="stok-mobil" class="page-section" style="display:none;">
-            <div class="admin-section">
-                <div class="header-action">
-                    <h3 style="color: var(--gold); margin:0;">Katalog Stok Unit</h3>
-                    <a href="tambah-unit.html" class="btn-primary"><i class="fas fa-plus"></i> Tambah Unit Baru</a>
-                </div>
-
-                <table class="custom-table">
-                    <thead>
-                        <tr>
-                            <th>Unit Mobil</th>
-                            <th>Tahun</th>
-                            <th>Harga</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="car-table-body"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="ai-settings" class="page-section" style="display:none;">
-            <h1>Pengaturan Robot AI</h1>
-            <div class="admin-section">
-                <p>Kelola portal asisten pintar Jaya Mobil di sini.</p>
-            </div>
-        </div>
-    </main>
-</div>
-
-<script>
-    function checkLogin() {
-        const u = document.getElementById('username').value;
-        const p = document.getElementById('password').value;
-        if(u === "admin" && p === "jaya2026") {
-            document.getElementById('login-overlay').style.display = 'none';
-            document.getElementById('dashboard').classList.add('active');
-            sessionStorage.setItem("logged", "true");
-            loadCars();
-        } else {
-            alert("Login Gagal!");
-        }
-    }
-
-    function logout() {
-        sessionStorage.clear();
-        location.reload();
-    }
-
-    function switchPage(pageId, element) {
-        document.querySelectorAll('.page-section').forEach(p => p.style.display = 'none');
-        document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
-        document.getElementById(pageId).style.display = 'block';
-        element.classList.add('active');
-    }
-
-    function loadCars() {
-        const tbody = document.getElementById('car-table-body');
-        let cars = JSON.parse(localStorage.getItem('car_stok')) || [];
-        
-        tbody.innerHTML = "";
-        if(cars.length === 0) {
-            tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;'>Belum ada unit di katalog.</td></tr>";
-            return;
-        }
-
-        cars.forEach((car, index) => {
-            tbody.innerHTML += `
-                <tr>
-                    <td><strong>${car.name}</strong></td>
-                    <td>${car.year || '-'}</td>
-                    <td>Rp ${car.price}</td>
-                    <td>
-                        <button class="btn-edit" onclick="openEditModal(${index})">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn-delete" onclick="deleteCar(${index})">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>`;
-        });
-    }
-
-    // FUNGSI EDIT
-    function openEditModal(index) {
-        let cars = JSON.parse(localStorage.getItem('car_stok'));
-        let car = cars[index];
-        
-        document.getElementById('edit-index').value = index;
-        document.getElementById('edit-name').value = car.name;
-        document.getElementById('edit-year').value = car.year || "";
-        document.getElementById('edit-price').value = car.price;
-        
-        document.getElementById('edit-modal').style.display = 'flex';
-    }
-
-    function closeEditModal() {
-        document.getElementById('edit-modal').style.display = 'none';
-    }
-
-    function saveEdit() {
-        const index = document.getElementById('edit-index').value;
-        let cars = JSON.parse(localStorage.getItem('car_stok'));
-        
-        cars[index].name = document.getElementById('edit-name').value;
-        cars[index].year = document.getElementById('edit-year').value;
-        cars[index].price = document.getElementById('edit-price').value;
-        
-        localStorage.setItem('car_stok', JSON.stringify(cars));
-        closeEditModal();
-        loadCars();
-        alert("Data berhasil diperbarui!");
-    }
-
-    function deleteCar(index) {
-        if(confirm("Hapus unit ini dari katalog?")) {
-            let cars = JSON.parse(localStorage.getItem('car_stok'));
-            cars.splice(index, 1);
-            localStorage.setItem('car_stok', JSON.stringify(cars));
-            loadCars();
-        }
-    }
-
-    window.onload = () => {
-        if(sessionStorage.getItem("logged")) {
-            document.getElementById('login-overlay').style.display = 'none';
-            document.getElementById('dashboard').classList.add('active');
-            loadCars();
-        }
-    };
-</script>
-</body>
-</html>
