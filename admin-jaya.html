@@ -2,379 +2,281 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Admin Panel - JAYA MOBIL</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah Unit Baru - Administrator JAYA MOBIL</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --gold: #D4AF37; --dark-card: #1e1e1e; --bg: #121212; --sidebar-w: 260px; }
-        
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        body { 
-            background: var(--bg); color: white; font-family: 'Segoe UI', Roboto, sans-serif; 
-            margin: 0; overflow-x: hidden; 
+        :root {
+            --gold: #D4AF37;
+            --dark-bg: #0a0a0a;
+            --card-bg: #1a1a1a;
+            --input-bg: #222;
+            --text-light: #f4f4f4;
+            --green: #2ecc71;
         }
 
-        /* --- LOGIN OVERLAY --- */
-        #login-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.98); z-index: 10000;
-            display: flex; justify-content: center; align-items: center; padding: 20px;
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            display: flex;
         }
-        .login-box {
-            background: var(--dark-card); padding: 30px; border-radius: 20px;
-            border: 1px solid rgba(212, 175, 55, 0.3); text-align: center; width: 100%; max-width: 380px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+
+        /* Sidebar Styling Sederhana */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: #000;
+            padding: 20px;
+            border-right: 1px solid #222;
+            position: fixed;
         }
-        .login-box input {
-            width: 100%; padding: 15px; margin: 10px 0; border-radius: 10px;
-            border: 1px solid #333; background: #080808; color: white; font-size: 16px;
+
+        .main-content {
+            margin-left: 250px;
+            padding: 40px;
+            width: 100%;
         }
-        .btn-login {
-            width: 100%; padding: 15px; background: var(--gold); border: none;
-            color: black; font-weight: bold; border-radius: 10px; cursor: pointer; margin-top: 10px;
+
+        .form-container {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 800px;
+            border: 1px solid #333;
+        }
+
+        h2 { color: var(--gold); margin-bottom: 25px; }
+
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #bbb; font-size: 14px; }
+
+        select, input, textarea {
+            width: 100%;
+            padding: 12px;
+            background: var(--input-bg);
+            border: 1px solid #444;
+            color: white;
+            border-radius: 8px;
+            outline: none;
             transition: 0.3s;
         }
 
-        /* --- LAYOUT STRUCTURE --- */
-        .admin-content { opacity: 0; display: none; transition: 0.5s; }
-        .admin-content.active { opacity: 1; display: block; }
-        
-        .mobile-nav {
-            display: none; position: fixed; top: 0; width: 100%; height: 60px;
-            background: #000; border-bottom: 1px solid #333; z-index: 999;
-            padding: 0 20px; align-items: center; justify-content: space-between;
+        select:focus, input:focus { border-color: var(--gold); }
+
+        .preview-img {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+            border: 2px dashed #444;
         }
 
-        .sidebar { 
-            width: var(--sidebar-w); background: #000; border-right: 1px solid #222; 
-            padding: 20px; display: flex; flex-direction: column; gap: 8px;
-            position: fixed; height: 100vh; z-index: 1000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        .btn-simpan {
+            background: var(--green);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: 0.3s;
         }
 
-        .menu-item {
-            padding: 14px 18px; color: #999; text-decoration: none; border-radius: 12px;
-            cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 12px; font-weight: 500;
+        .btn-simpan:hover { opacity: 0.8; transform: translateY(-2px); }
+
+        .spec-box {
+            background: #111;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--gold);
+            font-size: 14px;
+            line-height: 1.6;
         }
-        .menu-item:hover { color: var(--gold); background: rgba(212, 175, 55, 0.05); }
-        .menu-item.active { background: var(--gold); color: black; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
-
-        .main-panel { margin-left: var(--sidebar-w); padding: 40px; transition: 0.4s; }
-
-        /* --- PAGE SECTIONS --- */
-        .page-section { display: none; }
-        .page-section.active { display: block; animation: slideUp 0.4s ease-out; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* --- UI ELEMENTS --- */
-        .stat-card { 
-            background: var(--dark-card); padding: 20px; border-radius: 16px; 
-            border: 1px solid #222; position: relative; overflow: hidden;
-        }
-        .stat-card::after { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 4px; background: var(--gold); }
-        .stat-card h3 { color: #666; font-size: 0.8rem; text-transform: uppercase; margin: 0; }
-        .stat-card p { font-size: 1.8rem; font-weight: bold; margin: 8px 0 0; color: #fff; }
-
-        .admin-section { background: var(--dark-card); padding: 20px; border-radius: 16px; border: 1px solid #222; }
-        
-        .form-row { 
-            display: flex; gap: 15px; margin-bottom: 20px; background: #161616; 
-            padding: 20px; border-radius: 12px; align-items: flex-end; 
-        }
-        .input-group { flex: 1; }
-        .input-group label { display: block; margin-bottom: 8px; color: var(--gold); font-size: 0.85rem; font-weight: bold; }
-        .input-group input { 
-            width: 100%; padding: 12px; background: #000; border: 1px solid #333; 
-            color: white; border-radius: 8px; outline: none; transition: 0.3s;
-        }
-
-        .custom-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .custom-table th { text-align: left; padding: 15px; color: var(--gold); border-bottom: 2px solid #222; font-size: 0.9rem; }
-        .custom-table td { padding: 15px; border-bottom: 1px solid #222; color: #ccc; }
-
-        .btn-add { background: #22c55e; color: white; padding: 12px 24px; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; }
-        .btn-delete { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444; padding: 8px; border-radius: 8px; cursor: pointer; }
-        .btn-edit { background: rgba(212, 175, 55, 0.1); color: var(--gold); border: 1px solid var(--gold); padding: 8px; border-radius: 8px; cursor: pointer; margin-right: 5px; }
-
-        /* --- MODAL EDIT --- */
-        .modal {
-            display: none; position: fixed; z-index: 10001; 
-            left: 0; top: 0; width: 100%; height: 100%; 
-            background-color: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
-        }
-        .modal-content {
-            background-color: var(--dark-card); margin: 10% auto; padding: 25px; 
-            border: 1px solid var(--gold); border-radius: 20px; width: 90%; max-width: 400px;
-            animation: slideDown 0.3s ease;
-        }
-        @keyframes slideDown { from {transform: translateY(-50px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
-
-        @media (max-width: 992px) {
-            .mobile-nav { display: flex; }
-            .sidebar { transform: translateX(-100%); width: 280px; }
-            .sidebar.open { transform: translateX(0); box-shadow: 20px 0 50px rgba(0,0,0,0.8); }
-            .main-panel { margin-left: 0; padding: 80px 20px 40px 20px; }
-            .form-row { flex-direction: column; align-items: stretch; }
-            .custom-table thead { display: none; }
-            .custom-table tr { display: block; background: #252525; margin-bottom: 15px; border-radius: 12px; padding: 10px; border: 1px solid #333; }
-            .custom-table td { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; border-bottom: 1px solid #333; }
-            .custom-table td::before { content: attr(data-label); font-weight: bold; color: var(--gold); }
-        }
-
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999; }
-        .overlay.active { display: block; }
     </style>
 </head>
 <body>
 
-<div id="login-overlay">
-    <div class="login-box">
-        <h2 style="color: var(--gold); margin: 0 0 10px 0;">JAYA ADMIN</h2>
-        <input type="text" id="username" placeholder="Username">
-        <input type="password" id="password" placeholder="Password">
-        <button class="btn-login" onclick="checkLogin()">MASUK KE PANEL</button>
-        <p id="error-msg" style="color: #ef4444; font-size: 0.8rem; margin-top: 15px; display: none;">Kredensial Salah!</p>
-    </div>
+<div class="sidebar">
+    <h3 style="color:var(--gold)">JAYA MOBIL</h3>
+    <p style="font-size: 12px; color: #666;">ADMINISTRATOR</p>
+    <hr border="0" style="border-top:1px solid #222; margin: 20px 0;">
+    <a href="admin-jaya.html" style="color:white; text-decoration:none;"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
 </div>
 
-<div id="modalEdit" class="modal">
-    <div class="modal-content">
-        <h3 style="color: var(--gold); margin-top: 0;">Edit Data Unit</h3>
-        <input type="hidden" id="edit-index">
-        <div class="input-group" style="margin-bottom: 15px;">
-            <label>Nama Mobil</label>
-            <input type="text" id="edit-nama">
-        </div>
-        <div class="input-group" style="margin-bottom: 20px;">
-            <label>Harga (Contoh: 2.45M)</label>
-            <input type="text" id="edit-harga">
-        </div>
-        <div style="display: flex; gap: 10px;">
-            <button class="btn-add" onclick="saveEdit()" style="flex: 1;">Simpan</button>
-            <button onclick="closeModal()" style="flex: 1; background: #333; color: white; border: none; border-radius: 10px; cursor: pointer;">Batal</button>
-        </div>
-    </div>
-</div>
-
-<div class="overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
-
-<div class="admin-content" id="dashboard">
-    <header class="mobile-nav">
-        <div onclick="toggleSidebar()" style="font-size: 1.5rem; color: var(--gold);"><i class="fas fa-bars"></i></div>
-        <div style="font-weight: bold; letter-spacing: 1px;">JAYA MOBIL</div>
-        <div style="color: var(--gold);"><i class="fas fa-user-circle"></i></div>
-    </header>
-
-    <div class="admin-wrapper">
-        <nav class="sidebar" id="sidebar">
-            <div style="padding: 20px 10px 40px 10px; text-align: center;">
-                <h2 style="color: var(--gold); margin: 0; font-size: 1.4rem;">JAYA MOBIL</h2>
-                <span style="font-size: 0.6rem; color: #444; letter-spacing: 2px;">ADMINISTRATOR</span>
+<div class="main-content">
+    <div class="form-container">
+        <h2><i class="fas fa-plus-circle"></i> Tambah Unit Mobil</h2>
+        
+        <form id="formTambahMobil">
+            <div class="form-group">
+                <label>Foto Mobil (JPG/PNG)</label>
+                <input type="file" id="fotoMobil" accept="image/jpeg, image/png" onchange="previewImage(event)">
+                <img id="imgPreview" class="preview-img">
             </div>
-            <div class="menu-item active" onclick="switchPage('main-stats', this)"><i class="fas fa-th-large"></i> Dashboard</div>
-            <div class="menu-item" onclick="switchPage('stok-mobil', this)"><i class="fas fa-car"></i> Manajemen Stok</div>
-            <div class="menu-item" onclick="switchPage('ai-setting', this)"><i class="fas fa-robot"></i> Pengaturan AI</div>
-            <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid #222;">
-                <div class="menu-item" onclick="logout()" style="color: #ef4444;"><i class="fas fa-power-off"></i> Keluar</div>
-            </div>
-        </nav>
 
-        <main class="main-panel">
-            <h1 id="page-title" style="margin: 0; font-size: 1.5rem;">Dashboard</h1>
-            
-            <div id="main-stats" class="page-section active">
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 25px;">
-                    <div class="stat-card"><h3>Unit Ready</h3><p id="count-ready">0</p></div>
-                    <div class="stat-card"><h3>Visit</h3><p id="count-visit">0</p></div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="form-group">
+                    <label>Jenis Mobil</label>
+                    <select id="jenisMobil" onchange="updateMerek()">
+                        <option value="">-- Pilih Jenis --</option>
+                        <option value="Sedan">Sedan</option>
+                        <option value="SUV">SUV</option>
+                        <option value="Sport">Sport</option>
+                        <option value="MPV">MPV</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Merek Mobil</label>
+                    <select id="merekMobil" onchange="updateSpecs()" disabled>
+                        <option value="">-- Pilih Merek --</option>
+                    </select>
                 </div>
             </div>
 
-            <div id="stok-mobil" class="page-section">
-                <div class="admin-section">
-                    <h3 style="color: var(--gold); margin-top:0;">Tambah Unit Baru</h3>
-                    <div class="form-row">
-                        <div class="input-group">
-                            <label>Nama Mobil</label>
-                            <input type="text" id="new-car-name" placeholder="Contoh: Porsche 911">
-                        </div>
-                        <div class="input-group">
-                            <label>Harga (M/Jt)</label>
-                            <input type="text" id="new-car-price" placeholder="Contoh: 2.45M">
-                        </div>
-                        <button class="btn-add" onclick="addCarUnit()">Tambah</button>
-                    </div>
-                    <table class="custom-table">
-                        <thead>
-                            <tr><th>Mobil</th><th>Harga</th><th>Aksi</th></tr>
-                        </thead>
-                        <tbody id="car-table-body"></tbody>
-                    </table>
+            <div class="form-group">
+                <label>Spesifikasi (Otomatis)</label>
+                <div id="specsOutput" class="spec-box">Pilih jenis dan merek untuk melihat spesifikasi standar.</div>
+                <input type="hidden" id="spesifikasiHidden">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="form-group">
+                    <label>Tahun Mobil</label>
+                    <select id="tahunMobil">
+                        </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Harga (Input angka saja)</label>
+                    <input type="text" id="hargaInput" placeholder="Contoh: 2500000000" oninput="formatRupiah(this)">
+                    <p id="formattedHarga" style="font-size: 12px; color: var(--gold); margin-top: 5px;">Rp 0</p>
                 </div>
             </div>
 
-            <div id="ai-setting" class="page-section">
-                <div class="admin-section">
-                    <h3 style="color: var(--gold); margin-top:0;">Asisten AI</h3>
-                    <div class="form-row">
-                        <div class="input-group"><label>Keyword</label><input type="text" id="bot-keyword"></div>
-                        <div class="input-group"><label>Jawaban</label><input type="text" id="bot-response"></div>
-                        <button class="btn-add" onclick="addBotKnowledge()">Simpan</button>
-                    </div>
-                    <table class="custom-table">
-                        <thead><tr><th>Keyword</th><th>Jawaban</th><th>Hapus</th></tr></thead>
-                        <tbody id="bot-table-body"></tbody>
-                    </table>
-                </div>
-            </div>
-        </main>
+            <button type="button" class="btn-simpan" onclick="simpanUnit()">
+                <i class="fas fa-save"></i> SIMPAN UNIT KE KATALOG
+            </button>
+        </form>
     </div>
 </div>
 
 <script>
-    // --- UI LOGIC ---
-    function toggleSidebar() {
-        document.getElementById('sidebar').classList.toggle('open');
-        document.getElementById('sidebar-overlay').classList.toggle('active');
-    }
-
-    function switchPage(pageId, element) {
-        document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
-        document.getElementById(pageId).classList.add('active');
-        element.classList.add('active');
-        if(window.innerWidth <= 992) toggleSidebar();
-        document.getElementById('page-title').innerText = element.innerText.trim();
-    }
-
-    // --- AUTH ---
-    function checkLogin() {
-        if(document.getElementById('username').value === "admin" && document.getElementById('password').value === "jaya2026") {
-            document.getElementById('login-overlay').style.display = 'none';
-            document.getElementById('dashboard').classList.add('active');
-            sessionStorage.setItem("logged", "true");
-            initData();
-        } else { document.getElementById('error-msg').style.display = 'block'; }
-    }
-
-    function logout() { sessionStorage.clear(); location.reload(); }
-
-    // --- DATA MANAGEMENT (CAR UNIT) ---
-    function addCarUnit() {
-        const name = document.getElementById('new-car-name').value;
-        const price = document.getElementById('new-car-price').value;
-        if(!name || !price) return;
-        let cars = JSON.parse(localStorage.getItem('car_stok')) || [];
-        cars.push({ name, price });
-        localStorage.setItem('car_stok', JSON.stringify(cars));
-        document.getElementById('new-car-name').value = "";
-        document.getElementById('new-car-price').value = "";
-        loadCars();
-    }
-
-    // FUNGSI LOAD CARS (DI UPDATE UNTUK DASHBOARD)
-    function loadCars() {
-        const tbody = document.getElementById('car-table-body');
-        let cars = JSON.parse(localStorage.getItem('car_stok')) || [];
-        tbody.innerHTML = "";
-        cars.forEach((car, i) => {
-            tbody.innerHTML += `<tr>
-                <td data-label="Mobil"><strong>${car.name}</strong></td>
-                <td data-label="Harga">Rp ${car.price}</td>
-                <td data-label="Aksi">
-                    <button class="btn-edit" onclick="openEditModal(${i}, '${car.name}', '${car.price}')"><i class="fas fa-edit"></i></button>
-                    <button class="btn-delete" onclick="deleteCar(${i})"><i class="fas fa-trash"></i></button>
-                </td>
-            </tr>`;
-        });
-        
-        // Update angka di Dashboard
-        const countElement = document.getElementById('count-ready');
-        if(countElement) countElement.innerText = cars.length;
-    }
-
-    function deleteCar(i) {
-        let cars = JSON.parse(localStorage.getItem('car_stok'));
-        cars.splice(i, 1);
-        localStorage.setItem('car_stok', JSON.stringify(cars));
-        loadCars();
-    }
-
-    // --- EDIT MODAL LOGIC ---
-    function openEditModal(index, name, price) {
-        document.getElementById('edit-index').value = index;
-        document.getElementById('edit-nama').value = name;
-        document.getElementById('edit-harga').value = price;
-        document.getElementById('modalEdit').style.display = 'block';
-    }
-
-    function closeModal() { document.getElementById('modalEdit').style.display = 'none'; }
-
-    function saveEdit() {
-        const i = document.getElementById('edit-index').value;
-        let cars = JSON.parse(localStorage.getItem('car_stok'));
-        cars[i].name = document.getElementById('edit-nama').value;
-        cars[i].price = document.getElementById('edit-harga').value;
-        localStorage.setItem('car_stok', JSON.stringify(cars));
-        closeModal();
-        loadCars();
-    }
-
-    // --- AI KNOWLEDGE ---
-    function addBotKnowledge() {
-        const kw = document.getElementById('bot-keyword').value.toLowerCase();
-        const rs = document.getElementById('bot-response').value;
-        if(!kw || !rs) return;
-        let data = JSON.parse(localStorage.getItem('bot_data')) || [];
-        data.push({ keyword: kw, response: rs });
-        localStorage.setItem('bot_data', JSON.stringify(data));
-        loadBotKnowledge();
-    }
-
-    function loadBotKnowledge() {
-        const tbody = document.getElementById('bot-table-body');
-        let data = JSON.parse(localStorage.getItem('bot_data')) || [{keyword: "halo", response: "Halo, selamat datang!"}];
-        tbody.innerHTML = "";
-        data.forEach((item, i) => {
-            tbody.innerHTML += `<tr>
-                <td data-label="Keyword"><code>${item.keyword}</code></td>
-                <td data-label="Jawaban">${item.response}</td>
-                <td data-label="Hapus"><button class="btn-delete" onclick="deleteKnowledge(${i})"><i class="fas fa-trash"></i></button></td>
-            </tr>`;
-        });
-    }
-
-    function deleteKnowledge(i) {
-        let data = JSON.parse(localStorage.getItem('bot_data'));
-        data.splice(i, 1);
-        localStorage.setItem('bot_data', JSON.stringify(data));
-        loadBotKnowledge();
-    }
-
-    // FUNGSI LOAD VISITS (TAMBAHAN BARU)
-    function loadVisits() {
-        let visits = localStorage.getItem('visitor_count') || "0";
-        const visitElement = document.getElementById('count-visit');
-        if(visitElement) {
-            let num = parseInt(visits);
-            let displayVisit = num >= 1000 ? (num/1000).toFixed(1) + 'k' : num;
-            visitElement.innerText = displayVisit;
-        }
-    }
-
-    // INIT DATA (DI UPDATE)
-    function initData() { 
-        loadCars(); 
-        loadBotKnowledge(); 
-        loadVisits(); 
-    }
-
-    window.onload = () => { 
-        if(sessionStorage.getItem("logged")) { 
-            document.getElementById('login-overlay').style.display = 'none'; 
-            document.getElementById('dashboard').classList.add('active'); 
-            initData(); 
+    // 1. DATA SIMULASI API (Katalog Data)
+    const carData = {
+        "Sedan": {
+            "Honda Civic RS": "Mesin 1.5L VTEC Turbo, 178 PS, Honda Sensing, Interior Leather.",
+            "Toyota Camry": "Mesin 2.5L A25A-FKS, Transmisi Otomatis 8-Speed, Mewah & Elegan.",
+            "BMW 320i": "Mesin 2.0L TwinPower Turbo, RWD, iDrive 7.0, Sporty Luxury."
+        },
+        "SUV": {
+            "Pajero Sport": "Mesin 2.4L MIVEC Turbo Diesel, 181 PS, 4x2/4x4, Tangguh di segala medan.",
+            "Toyota Fortuner": "Mesin 2.8L Diesel, Power 203 PS, Fitur Keamanan Lengkap.",
+            "Honda CR-V": "Mesin 1.5L Turbo, 7 Seater, Panoramic Sunroof."
+        },
+        "Sport": {
+            "Porsche 911": "Mesin 3.0L Flat-6 Twin-Turbo, Akselerasi 0-100 km/j dalam 3.4 detik.",
+            "Toyota GR Supra": "Mesin 3.0L Inline-6, 340 HP, Hasil kolaborasi legendaris.",
+            "BMW M4": "Mesin M TwinPower Turbo, 510 HP, Carbon Fiber Roof."
         }
     };
+
+    // 2. GENERATE TAHUN (20 Tahun Terakhir)
+    const selectTahun = document.getElementById('tahunMobil');
+    const currentYear = new Date().getFullYear();
+    for (let i = currentYear; i >= currentYear - 20; i--) {
+        let opt = document.createElement('option');
+        opt.value = i;
+        opt.innerHTML = i;
+        selectTahun.appendChild(opt);
+    }
+
+    // 3. LOGIKA DROPDOWN OTOMATIS
+    function updateMerek() {
+        const jenis = document.getElementById('jenisMobil').value;
+        const merekSelect = document.getElementById('merekMobil');
+        merekSelect.innerHTML = '<option value="">-- Pilih Merek --</option>';
+        
+        if (jenis && carData[jenis]) {
+            merekSelect.disabled = false;
+            Object.keys(carData[jenis]).forEach(merek => {
+                let opt = document.createElement('option');
+                opt.value = merek;
+                opt.innerHTML = merek;
+                merekSelect.appendChild(opt);
+            });
+        } else {
+            merekSelect.disabled = true;
+        }
+    }
+
+    function updateSpecs() {
+        const jenis = document.getElementById('jenisMobil').value;
+        const merek = document.getElementById('merekMobil').value;
+        const output = document.getElementById('specsOutput');
+        
+        if (merek && carData[jenis][merek]) {
+            const specText = carData[jenis][merek];
+            output.innerHTML = specText;
+            document.getElementById('spesifikasiHidden').value = specText;
+        }
+    }
+
+    // 4. FORMAT HARGA RUPIAH
+    function formatRupiah(input) {
+        let value = input.value.replace(/\D/g, "");
+        input.value = value;
+        let formatted = new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0
+        }).format(value);
+        document.getElementById('formattedHarga').innerText = formatted;
+    }
+
+    // 5. PREVIEW GAMBAR
+    function previewImage(event) {
+        const reader = new FileReader();
+        reader.onload = function(){
+            const output = document.getElementById('imgPreview');
+            output.src = reader.result;
+            output.style.display = 'block';
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+    // 6. SIMPAN DATA (Local Storage)
+    function simpanUnit() {
+        const unitBaru = {
+            name: document.getElementById('merekMobil').value,
+            price: document.getElementById('formattedHarga').innerText.replace("Rp", ""),
+            img: document.getElementById('imgPreview').src,
+            year: document.getElementById('tahunMobil').value,
+            spec: document.getElementById('spesifikasiHidden').value
+        };
+
+        if(!unitBaru.name || !unitBaru.price || unitBaru.price == " 0") {
+            alert("Harap lengkapi semua data!");
+            return;
+        }
+
+        // Ambil data lama
+        let stokLama = JSON.parse(localStorage.getItem('car_stok')) || [];
+        stokLama.push(unitBaru);
+        
+        // Simpan kembali
+        localStorage.setItem('car_stok', JSON.stringify(stokLama));
+        
+        alert("Unit Berhasil Ditambahkan ke Katalog!");
+        window.location.href = "admin-jaya.html";
+    }
 </script>
+
 </body>
 </html>
