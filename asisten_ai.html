@@ -1,0 +1,60 @@
+<style>
+    /* ... kode sebelumnya ... */
+
+    /* Update Styling Chatbot Launcher untuk Gambar */
+    .chat-launcher {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 70px; /* Ukuran sedikit diperbesar agar detail asisten terlihat */
+        height: 70px;
+        background: var(--gold);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+        z-index: 3000;
+        transition: 0.3s;
+        overflow: hidden; /* Agar gambar tetap bulat mengikuti kontainer */
+        border: 2px solid var(--gold);
+    }
+
+    .chat-launcher img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* ... kode lainnya tetap ... */
+
+    .chat-header img {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid black;
+    }
+</style>
+
+<div class="chat-launcher" onclick="toggleChat()">
+    <img src="asisten_ai.jpg" alt="Asisten AI">
+</div>
+
+<div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <img src="asisten_ai.jpg" alt="Avatar">
+            <span>JAYA Virtual Assistant</span>
+        </div>
+        <span onclick="toggleChat()" style="cursor:pointer; font-size: 20px;">&times;</span>
+    </div>
+    ```
+
+### Penjelasan Perubahan:
+1.  **`.chat-launcher`**: Saya menghapus ikon Font Awesome dan menggantinya dengan tag `<img>`. Saya juga menambahkan `overflow: hidden` dan `object-fit: cover` agar gambar avatar Anda masuk dengan rapi ke dalam lingkaran tanpa gepeng.
+2.  **`src="asisten_ai.jpg"`**: Pastikan file gambar avatar yang Anda simpan memiliki nama yang sama persis (`asisten_ai.jpg`) dan berada dalam satu folder dengan file HTML ini.
+3.  **Header Chat**: Saya juga mengganti ikon robot di bagian atas jendela chat dengan versi kecil dari gambar avatar tersebut agar terlihat lebih konsisten dan profesional.
+
+Silakan simpan kembali kode tersebut, dan tampilan asisten Anda sekarang akan berubah dari robot menjadi asisten wanita yang ramah!
