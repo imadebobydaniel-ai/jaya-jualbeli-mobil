@@ -60,6 +60,11 @@
             border-radius: 8px;
             outline: none;
             transition: 0.3s;
+            box-sizing: border-box;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--gold);
         }
 
         .preview-gallery {
@@ -88,6 +93,11 @@
             width: 100%;
             font-size: 16px;
             transition: 0.3s;
+            margin-top: 20px;
+        }
+
+        .btn-simpan:hover {
+            filter: brightness(1.1);
         }
 
         .spec-box {
@@ -96,6 +106,13 @@
             border-radius: 8px;
             border-left: 4px solid var(--gold);
             font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
         }
     </style>
 </head>
@@ -114,12 +131,23 @@
         
         <form id="formTambahMobil">
             <div class="form-group">
-                <label>Foto-foto Mobil (Pilih minimal satu)</label>
+                <label>Foto Mobil (Upload File)</label>
                 <input type="file" id="fotoMobil" accept="image/jpeg, image/png" multiple onchange="previewImages(event)">
                 <div id="galleryPreview" class="preview-gallery"></div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div class="row">
+                <div class="form-group">
+                    <label>Atau Gunakan Link Gambar (URL)</label>
+                    <input type="text" id="link-gambar" placeholder="https://link-foto-mobil.jpg">
+                </div>
+                <div class="form-group">
+                    <label>Link YouTube (Opsional)</label>
+                    <input type="text" id="link-youtube" placeholder="https://youtube.com/watch?v=...">
+                </div>
+            </div>
+
+            <div class="row">
                 <div class="form-group">
                     <label>Jenis Mobil</label>
                     <select id="jenisMobil" onchange="updateMerek()">
@@ -148,7 +176,12 @@
                 <input type="hidden" id="spesifikasiHidden">
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div class="form-group">
+                <label>Spesifikasi Manual (Ketik Manual)</label>
+                <textarea id="spesifikasi-manual" rows="4" placeholder="Contoh: Mesin 2400cc, Transmisi Matik, Pajak Hidup..."></textarea>
+            </div>
+
+            <div class="row">
                 <div class="form-group">
                     <label>Tahun Mobil</label>
                     <select id="tahunMobil"></select>
@@ -171,7 +204,7 @@
 <script>
     let uploadedImages = [];
 
-    // Fungsi Preview dan konversi ke Base64
+    // Preview File Upload
     function previewImages(event) {
         const previewContainer = document.getElementById('galleryPreview');
         previewContainer.innerHTML = ""; 
@@ -186,7 +219,6 @@
                     img.src = e.target.result;
                     img.classList.add('preview-item');
                     previewContainer.appendChild(img);
-                    // Simpan string Base64 ke array
                     uploadedImages.push(e.target.result);
                 };
                 reader.readAsDataURL(file);
@@ -194,7 +226,7 @@
         }
     }
 
-    // Load Pilihan Tahun
+    // Load Tahun
     const selectTahun = document.getElementById('tahunMobil');
     const currentYear = new Date().getFullYear();
     for (let i = currentYear; i >= currentYear - 20; i--) {
@@ -204,70 +236,36 @@
     }
 
     const carData = {
-        "MPV": [
-            {nama: "Toyota Avanza", deskripsi: "Mesin 1.5L Dual VVT-i, Kapasitas 7 Penumpang."},
-            {nama: "Toyota Innova", deskripsi: "Mesin 2.0L / 2.4L Diesel, Interior Mewah."},
-            {nama: "Daihatsu Xenia", deskripsi: "Mesin 1.3L / 1.5L, Irit bahan bakar."}
-        ],
-        "SUV": [
-            {nama: "Toyota Fortuner", deskripsi: "Mesin 2.8L Diesel, 4x2 / 4x4, Gagah & Tangguh."},
-            {nama: "Mitsubishi Pajero Sport", deskripsi: "Mesin 2.4L MIVEC Turbo Diesel, Fitur Canggih."},
-            {nama: "Honda HR-V", deskripsi: "Mesin 1.5L i-VTEC, Desain Sporty & Compact SUV."}
-        ],
-        "LCGC": [
-            {nama: "Toyota Agya", deskripsi: "Mesin 1.2L, Sangat Irit, Cocok untuk Perkotaan."},
-            {nama: "Daihatsu Ayla", deskripsi: "Mesin 1.0L / 1.2L, Harga Terjangkau."},
-            {nama: "Honda Brio Satya", deskripsi: "Mesin 1.2L i-VTEC, Performa Terbaik di Kelasnya."}
-        ],
-        "City Car": [
-            {nama: "Honda Brio RS", deskripsi: "Mesin 1.2L, Sporty Look, Handling Lincah."},
-            {nama: "Suzuki Ignis", deskripsi: "Urban SUV Style, Irit & Ground Clearance Tinggi."},
-            {nama: "Toyota Yaris", deskripsi: "Mesin 1.5L, Hatchback Premium, Fitur Keamanan Lengkap."},
-            {nama: "Suzuki Baleno", deskripsi: "Liquid Flow Design, Interior Luas & Nyaman."}
-        ],
-        "Sedan": [
-            {nama: "Toyota Camry", deskripsi: "Mesin 2.5L, Sedan Mewah & Elegan."},
-            {nama: "Honda Civic", deskripsi: "Mesin 1.5L VTEC Turbo, Performa Sporty."}
-        ],
-        "DCab": [
-            {nama: "Toyota Hilux", deskripsi: "Pickup Penumpang 4x4, Tangguh untuk Medan Berat."},
-            {nama: "Mitsubishi Triton", deskripsi: "Mesin 2.4L Turbo Diesel, Kombinasi Kerja & Gaya."}
-        ],
-        "EV": [
-            {nama: "Wuling Air EV", deskripsi: "Compact Electric Vehicle, Jarak Tempuh hingga 300km."},
-            {nama: "Hyundai Ioniq 5", deskripsi: "Electric Global Modular Platform (E-GMP), Ultra Fast Charging."},
-            {nama: "MG 4 EV", deskripsi: "Crossover Listrik, Desain Futuristik."},
-            {nama: "Chery Omoda E5", deskripsi: "Intelligent Electric SUV, Fitur ADAS Lengkap."}
-        ]
+        "MPV": [{nama: "Toyota Avanza", deskripsi: "Mesin 1.5L Dual VVT-i"}, {nama: "Toyota Innova", deskripsi: "Mesin 2.0L / 2.4L Diesel"}, {nama: "Daihatsu Xenia", deskripsi: "Mesin 1.3L / 1.5L"}],
+        "SUV": [{nama: "Toyota Fortuner", deskripsi: "Mesin 2.8L Diesel"}, {nama: "Mitsubishi Pajero Sport", deskripsi: "Mesin 2.4L MIVEC Turbo"}, {nama: "Honda HR-V", deskripsi: "Mesin 1.5L i-VTEC"}],
+        "LCGC": [{nama: "Toyota Agya", deskripsi: "Mesin 1.2L"}, {nama: "Daihatsu Ayla", deskripsi: "Mesin 1.0L / 1.2L"}, {nama: "Honda Brio Satya", deskripsi: "Mesin 1.2L i-VTEC"}],
+        "City Car": [{nama: "Honda Brio RS", deskripsi: "Mesin 1.2L RS"}, {nama: "Suzuki Ignis", deskripsi: "Urban SUV Style"}, {nama: "Toyota Yaris", deskripsi: "Mesin 1.5L Hatchback"}],
+        "Sedan": [{nama: "Toyota Camry", deskripsi: "Mesin 2.5L Luxury"}, {nama: "Honda Civic", deskripsi: "Mesin 1.5L Turbo"}],
+        "DCab": [{nama: "Toyota Hilux", deskripsi: "4x4 Double Cabin"}, {nama: "Mitsubishi Triton", deskripsi: "2.4L Turbo Diesel"}],
+        "EV": [{nama: "Wuling Air EV", deskripsi: "Compact EV"}, {nama: "Hyundai Ioniq 5", deskripsi: "E-GMP Platform"}]
     };
 
     function updateMerek() {
         const jenis = document.getElementById('jenisMobil').value;
         const merekSelect = document.getElementById('merekMobil');
         merekSelect.innerHTML = '<option value="">-- Pilih Merek --</option>';
-
         if (jenis && carData[jenis]) {
             merekSelect.disabled = false;
             carData[jenis].forEach(merek => {
                 let opt = document.createElement('option');
-                opt.value = merek.nama;
-                opt.innerHTML = merek.nama;
+                opt.value = merek.nama; opt.innerHTML = merek.nama;
                 opt.dataset.spec = merek.deskripsi;
                 merekSelect.appendChild(opt);
             });
-        } else {
-            merekSelect.disabled = true;
-        }
-        document.getElementById('specsOutput').innerHTML = "Pilih merek untuk melihat spesifikasi standar.";
+        } else { merekSelect.disabled = true; }
     }
 
     function updateSpecs() {
         const merekSelect = document.getElementById('merekMobil');
         const selectedOption = merekSelect.options[merekSelect.selectedIndex];
         if (selectedOption && selectedOption.dataset.spec) {
-            const specText = selectedOption.dataset.spec;
-            document.getElementById('specsOutput').innerHTML = specText;
-            document.getElementById('spesifikasiHidden').value = specText;
+            document.getElementById('specsOutput').innerHTML = selectedOption.dataset.spec;
+            document.getElementById('spesifikasiHidden').value = selectedOption.dataset.spec;
         }
     }
 
@@ -284,23 +282,39 @@
         const namaMobil = document.getElementById('merekMobil').value;
         const hargaTeks = document.getElementById('formattedHarga').innerText;
         const tahun = document.getElementById('tahunMobil').value;
-        const spek = document.getElementById('spesifikasiHidden').value;
         const jenis = document.getElementById('jenisMobil').value;
+        
+        // Ambil data baru
+        const linkGambar = document.getElementById('link-gambar').value;
+        const linkYoutube = document.getElementById('link-youtube').value;
+        const spekOtomatis = document.getElementById('spesifikasiHidden').value;
+        const spekManual = document.getElementById('spesifikasi-manual').value;
 
-        // Validasi minimal
-        if(!namaMobil || uploadedImages.length === 0) {
-            alert("Mohon lengkapi Merek Mobil dan pilih minimal satu foto!");
+        // Gabungkan spesifikasi (Otomatis + Manual jika ada)
+        const spesifikasiFinal = spekManual ? spekManual : spekOtomatis;
+
+        // Logika Gambar: Prioritaskan Upload, jika kosong pakai Link
+        let gambarFinal = "";
+        if (uploadedImages.length > 0) {
+            gambarFinal = uploadedImages[0];
+        } else if (linkGambar) {
+            gambarFinal = linkGambar;
+        } else {
+            alert("Mohon upload foto atau masukkan link gambar!");
             return;
         }
+
+        if(!namaMobil) { alert("Pilih Merek Mobil!"); return; }
 
         const unitBaru = {
             type: jenis,
             name: namaMobil,
             price: hargaTeks,
-            img: uploadedImages[0], // Foto utama
-            images: uploadedImages, // Semua foto
+            img: gambarFinal,
+            images: uploadedImages.length > 0 ? uploadedImages : [linkGambar],
+            video: linkYoutube,
             year: tahun,
-            spec: spek,
+            spec: spesifikasiFinal,
             fuel: "Bensin"
         };
 
@@ -308,12 +322,10 @@
             let stok = JSON.parse(localStorage.getItem('car_stok')) || [];
             stok.push(unitBaru);
             localStorage.setItem('car_stok', JSON.stringify(stok));
-            
-            alert("Berhasil! Unit " + namaMobil + " telah disimpan.");
+            alert("Berhasil disimpan!");
             window.location.href = "admin-jaya.html";
         } catch (e) {
-            alert("Gagal menyimpan! Ukuran foto mungkin terlalu besar untuk memori browser.");
-            console.error(e);
+            alert("Memori browser penuh! Kurangi ukuran foto.");
         }
     }
 </script>
