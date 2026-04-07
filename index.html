@@ -16,84 +16,52 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         
-        body { background-color: var(--dark-bg); color: var(--text-light); overflow-x: hidden; }
+        html { scroll-behavior: smooth; }
+        body { background-color: var(--dark-bg); color: var(--text-light); overflow-x: hidden; line-height: 1.6; }
 
-        /* Navbar Trendi */
+        /* Navbar Mobile Friendly */
         header {
-            background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 15px 5%;
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(15px);
+            padding: 10px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: fixed;
             top: 0; width: 100%; z-index: 1000;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
         }
 
-        .logo-container { display: flex; align-items: center; gap: 12px; }
-        .logo-container img { height: 50px; border-radius: 5px; }
+        .logo-container { display: flex; align-items: center; gap: 10px; }
+        .logo-container img { height: 40px; border-radius: 5px; }
+        .logo-container h2 { font-size: 1.2rem; font-weight: 800; letter-spacing: 1px; }
 
-        .nav-links { 
-            display: flex; 
-            gap: 25px; 
-            align-items: center; 
-            perspective: 1000px; 
-        }
-
+        .nav-links { display: none; gap: 20px; align-items: center; }
         .nav-links a { 
             color: var(--text-light); 
             text-decoration: none; 
             font-weight: 500; 
-            font-size: 15px;
-            position: relative;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s;
-            display: inline-block;
+            font-size: 14px;
+            transition: 0.3s;
         }
-
-        .nav-links a:hover { 
-            color: var(--gold); 
-            transform: translateZ(20px) rotateX(10deg); 
-            text-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--gold);
-            transition: width 0.3s;
-        }
-
-        .nav-links a:hover::after { width: 100%; }
+        .nav-links a:hover { color: var(--gold); }
 
         .btn-admin-login {
-            background: transparent;
-            border: 2px solid var(--gold);
+            border: 1.5px solid var(--gold);
             color: var(--gold);
-            padding: 8px 20px;
+            padding: 6px 15px;
             border-radius: 50px;
             font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-            text-decoration: none;
-            font-size: 14px;
+            font-size: 12px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 5px;
+            text-decoration: none;
+            transition: 0.3s ease;
         }
+        .btn-admin-login:hover { background: var(--gold); color: black; }
 
-        .btn-admin-login:hover { 
-            background: var(--gold); 
-            color: black; 
-            transform: scale(1.05) translateZ(10px);
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
-        }
-
-        /* Hero Section Dinamis */
+        /* Hero Section Responsive */
         .hero {
             height: 100vh;
             display: flex;
@@ -101,148 +69,111 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1500&q=80');
+            padding: 0 20px;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1500&q=80');
             background-size: cover;
             background-position: center;
         }
 
-        .hero h1 { font-size: 4rem; margin-bottom: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: 5px; }
-        .hero p { font-size: 1.2rem; color: #ccc; margin-bottom: 30px; }
+        .hero h1 { font-size: 2.5rem; color: var(--gold); text-transform: uppercase; margin-bottom: 15px; }
+        .hero p { font-size: 1rem; color: #ccc; max-width: 600px; margin-bottom: 30px; }
 
-        /* Katalog Preview */
-        .catalog { padding: 80px 5%; }
-        .section-title { text-align: center; margin-bottom: 50px; font-size: 2.5rem; }
+        /* Katalog Grid */
+        .catalog { padding: 60px 5%; }
+        .section-title { text-align: center; margin-bottom: 40px; font-size: 1.8rem; }
         .section-title span { color: var(--gold); }
 
         .car-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
         }
 
         .car-card {
             background: var(--card-bg);
-            border-radius: 20px;
+            border-radius: 15px;
             overflow: hidden;
             border: 1px solid rgba(255,255,255,0.05);
-            transition: 0.4s;
-            position: relative;
+            transition: transform 0.3s ease;
         }
+        .car-card:active { transform: scale(0.98); } /* Efek klik di HP */
 
-        .car-card:hover { transform: translateY(-10px); border-color: var(--gold); box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2); }
-        .car-img { width: 100%; height: 200px; object-fit: cover; }
-        .car-info { padding: 20px; }
-        .car-price { color: var(--gold); font-size: 1.5rem; font-weight: bold; margin: 10px 0; }
-        .car-specs { display: flex; gap: 15px; font-size: 0.9rem; color: #888; margin-bottom: 20px; }
+        .car-img { width: 100%; height: 180px; object-fit: cover; }
+        .car-info { padding: 15px; }
+        .car-info h3 { font-size: 1.1rem; margin-bottom: 5px; }
+        .car-price { color: var(--gold); font-size: 1.3rem; font-weight: bold; margin-bottom: 10px; }
+        .car-specs { display: flex; flex-wrap: wrap; gap: 10px; font-size: 0.8rem; color: #888; margin-bottom: 15px; }
 
-        .btn-collection {
-            display: inline-block;
-            text-align: center;
-            background: var(--gold);
-            color: black;
-            padding: 15px 40px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: 0.4s;
-            letter-spacing: 1px;
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
-        }
-
-        .btn-collection:hover {
-            transform: translateY(-3px) scale(1.05);
-            background: var(--accent);
-            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
-        }
-
-        /* --- Styling Chatbot --- */
+        /* Floating Chatbot - Optimized for Mobile */
         .chat-launcher {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
+            bottom: 20px;
+            right: 20px;
             width: 60px;
             height: 60px;
             background: var(--gold);
             border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             cursor: pointer;
-            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             z-index: 3000;
-            transition: 0.3s;
+            overflow: hidden;
+            border: 2px solid var(--gold);
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-
+        .chat-launcher img { width: 100%; height: 100%; object-fit: cover; }
         .chat-launcher:hover { transform: scale(1.1); }
 
         .chat-window {
             position: fixed;
-            bottom: 100px;
-            right: 30px;
-            width: 350px;
+            bottom: 90px;
+            right: 20px;
+            width: calc(100% - 40px);
+            max-width: 350px;
             height: 450px;
             background: #111;
-            border: 1px solid var(--gold);
-            border-radius: 20px;
+            border-radius: 15px;
             display: none;
             flex-direction: column;
-            overflow: hidden;
             z-index: 3000;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .chat-header {
             background: var(--gold);
-            padding: 15px;
+            padding: 12px 15px;
             color: black;
             font-weight: bold;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-radius: 15px 15px 0 0;
         }
 
-        .chat-body {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+        .chat-header div { display: flex; align-items: center; gap: 8px; }
+        .chat-header img { width: 30px; height: 30px; border-radius: 50%; border: 1px solid #000; }
 
-        .msg {
-            padding: 10px 15px;
-            border-radius: 15px;
-            max-width: 80%;
-            font-size: 14px;
-            line-height: 1.4;
-        }
-
+        .chat-body { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .msg { padding: 10px 14px; border-radius: 15px; max-width: 85%; font-size: 13px; }
         .bot-msg { background: #222; color: white; align-self: flex-start; border-bottom-left-radius: 2px; }
         .user-msg { background: var(--gold); color: black; align-self: flex-end; border-bottom-right-radius: 2px; }
 
-        .chat-footer {
-            padding: 15px;
-            border-top: 1px solid #333;
-            display: flex;
-            gap: 10px;
-        }
+        .chat-footer { padding: 10px; display: flex; gap: 8px; background: #1a1a1a; }
+        .chat-footer input { flex: 1; background: #222; border: none; padding: 10px; color: white; border-radius: 8px; outline: none; }
 
-        .chat-footer input {
-            flex: 1;
-            background: #222;
-            border: none;
-            padding: 10px;
-            color: white;
-            border-radius: 10px;
-            outline: none;
-        }
+        footer { padding: 40px 5%; background: #050505; text-align: center; font-size: 0.8rem; opacity: 0.7; }
 
-        footer {
-            padding: 50px 5%;
-            background: #050505;
-            text-align: center;
-            border-top: 1px solid rgba(212,175,55,0.2);
+        /* Media Queries untuk Tablet & Desktop */
+        @media (min-width: 768px) {
+            .nav-links { display: flex; }
+            .hero h1 { font-size: 4rem; }
+            .hero p { font-size: 1.2rem; }
+            .logo-container h2 { font-size: 1.5rem; }
         }
     </style>
 </head>
@@ -251,21 +182,21 @@
 <header>
     <div class="logo-container">
         <img src="logo-jaya.png" alt="Logo JAYA"> 
-        <h2 style="font-weight: 800; letter-spacing: 2px;">JAYA <span style="color:var(--gold)">MOBIL</span></h2>
+        <h2>JAYA <span style="color:var(--gold)">MOBIL</span></h2>
     </div>
     <nav class="nav-links">
         <a href="#">Beranda</a>
         <a href="katalog.html">Katalog</a> 
-        <a href="#">Tentang Kami</a> 
-        <a href="#kontak">Hubungi Kami</a>
-        <a href="admin-jaya.html" class="btn-admin-login"><i class="fas fa-user-shield"></i> LOGIN ADMIN</a>
+        <a href="#">Tentang</a> 
+        <a href="#kontak">Kontak</a>
     </nav>
+    <a href="admin-jaya.html" class="btn-admin-login"><i class="fas fa-user-shield"></i> LOGIN</a>
 </header>
 
 <section class="hero">
-    <h1>Eksklusivitas & Kualitas</h1>
-    <p>"Kepuasan Anda Prioritas Kami" — Jual Beli Mobil Second Terpercaya</p>
-    <a href="katalog.html" class="btn-collection">LIHAT KOLEKSI</a>
+    <h1>Eksklusivitas</h1>
+    <p>Temukan unit terbaik dengan kualitas terjamin. Kepuasan Anda adalah prioritas utama kami di JAYA MOBIL.</p>
+    <a href="#katalog" class="btn-collection" style="background:var(--gold); color:black; padding: 12px 30px; border-radius:50px; text-decoration:none; font-weight:bold;">LIHAT KOLEKSI</a>
 </section>
 
 <section class="catalog" id="katalog">
@@ -275,37 +206,53 @@
             <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80" class="car-img">
             <div class="car-info">
                 <h3>Porsche 911 Carrera</h3>
-                <p class="car-price">Rp 2.450.000.000</p>
+                <p class="car-price">Rp 2.450 JT</p>
                 <div class="car-specs">
                     <span><i class="fas fa-calendar-alt"></i> 2021</span>
-                    <span><i class="fas fa-tachometer-alt"></i> 5.000 KM</span>
+                    <span><i class="fas fa-tachometer-alt"></i> 5rb KM</span>
                     <span><i class="fas fa-gas-pump"></i> Bensin</span>
                 </div>
-                <a href="https://wa.me/628123456789" class="btn-admin-login" style="justify-content: center;">MINAT? HUBUNGI WA</a>
+                <a href="https://wa.me/628123456789" class="btn-admin-login" style="justify-content: center; width: 100%;">HUBUNGI WA</a>
+            </div>
+        </div>
+        <div class="car-card">
+            <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=800&q=80" class="car-img">
+            <div class="car-info">
+                <h3>BMW M4 Competition</h3>
+                <p class="car-price">Rp 1.850 JT</p>
+                <div class="car-specs">
+                    <span><i class="fas fa-calendar-alt"></i> 2022</span>
+                    <span><i class="fas fa-tachometer-alt"></i> 2rb KM</span>
+                    <span><i class="fas fa-gas-pump"></i> Bensin</span>
+                </div>
+                <a href="#" class="btn-admin-login" style="justify-content: center; width: 100%;">HUBUNGI WA</a>
             </div>
         </div>
     </div>
 </section>
 
 <footer>
-    <p>&copy; 2026 COPYRIGHT BY. IGEDE YASA JAYA Jual Beli Mobil Second. Kepuasan Anda Prioritas Kami.</p>
+    <p>&copy; 2026 JAYA MOBIL - Jayapura. All Rights Reserved.</p>
 </footer>
 
 <div class="chat-launcher" onclick="toggleChat()">
-    <i class="fas fa-robot" style="font-size: 24px; color: black;"></i>
+    <img src="asisten_ai.jpg" alt="Asisten AI">
 </div>
 
 <div class="chat-window" id="chatWindow">
     <div class="chat-header">
-        <span><i class="fas fa-robot"></i> JAYA AI Assistant</span>
+        <div>
+            <img src="asisten_ai.jpg" alt="Avatar">
+            <span>Asisten JAYA</span>
+        </div>
         <span onclick="toggleChat()" style="cursor:pointer; font-size: 20px;">&times;</span>
     </div>
     <div class="chat-body" id="chatBody">
-        <div class="msg bot-msg">Halo! Saya asisten virtual JAYA MOBIL. Ada yang bisa saya bantu terkait koleksi mobil kami?</div>
+        <div class="msg bot-msg">Halo! Saya asisten virtual JAYA MOBIL. Ada yang bisa saya bantu hari ini?</div>
     </div>
     <div class="chat-footer">
-        <input type="text" id="userInput" placeholder="Tanya sesuatu..." onkeypress="handleKeyPress(event)">
-        <button onclick="sendMessage()" style="background:var(--gold); border:none; padding:10px 15px; border-radius:10px; cursor:pointer;">
+        <input type="text" id="userInput" placeholder="Ketik pesan..." onkeypress="handleKeyPress(event)">
+        <button onclick="sendMessage()" style="background:var(--gold); border:none; padding:8px 12px; border-radius:8px; cursor:pointer;">
             <i class="fas fa-paper-plane"></i>
         </button>
     </div>
@@ -314,7 +261,9 @@
 <script>
     function toggleChat() {
         const chat = document.getElementById('chatWindow');
-        chat.style.display = chat.style.display === 'flex' ? 'none' : 'flex';
+        const isFlex = chat.style.display === 'flex';
+        chat.style.display = isFlex ? 'none' : 'flex';
+        if(!isFlex) document.getElementById('userInput').focus();
     }
 
     function handleKeyPress(e) {
@@ -324,39 +273,28 @@
     function sendMessage() {
         const input = document.getElementById('userInput');
         const chatBody = document.getElementById('chatBody');
-        
         if (input.value.trim() === "") return;
 
-        // Pesan User
         const userDiv = document.createElement('div');
         userDiv.className = 'msg user-msg';
         userDiv.innerText = input.value;
         chatBody.appendChild(userDiv);
 
-        const message = input.value.toLowerCase();
+        const msg = input.value.toLowerCase();
         input.value = "";
+        chatBody.scrollTop = chatBody.scrollHeight;
 
-        // Simulasi Berpikir Robot
         setTimeout(() => {
             const botDiv = document.createElement('div');
             botDiv.className = 'msg bot-msg';
             
-            // Logika Jawaban Sederhana
-            if (message.includes("harga")) {
-                botDiv.innerText = "Harga koleksi kami bervariasi mulai dari Rp 150 Juta hingga unit premium miliaran rupiah. Anda bisa cek di menu Katalog.";
-            } else if (message.includes("sedan")) {
-                botDiv.innerText = "Kami memiliki beberapa unit sedan mewah seperti Porsche 911 dan beberapa unit BMW. Cek kategori 'Sedan' ya!";
-            } else if (message.includes("lokasi") || message.includes("alamat")) {
-                botDiv.innerText = "Showroom kami berlokasi di Jayapura. Silakan hubungi WA kami untuk share lokasi tepatnya.";
-            } else if (message.includes("wa") || message.includes("kontak")) {
-                botDiv.innerText = "Anda bisa menghubungi admin kami di nomor WhatsApp yang tertera di menu 'Hubungi Kami'.";
-            } else {
-                botDiv.innerText = "Maaf, saya masih belajar. Bisa hubungi admin langsung untuk informasi lebih detail?";
-            }
+            if (msg.includes("harga")) botDiv.innerText = "Harga unit kami sangat bersaing, mulai dari 150 jutaan. Cek katalog untuk detailnya.";
+            else if (msg.includes("lokasi")) botDiv.innerText = "Kami berlokasi di Jayapura. Bisa kami kirimkan share location melalui WhatsApp?";
+            else botDiv.innerText = "Terima kasih informasinya. Saya akan hubungkan Anda dengan tim marketing kami.";
 
             chatBody.appendChild(botDiv);
             chatBody.scrollTop = chatBody.scrollHeight;
-        }, 800);
+        }, 600);
     }
 </script>
 
