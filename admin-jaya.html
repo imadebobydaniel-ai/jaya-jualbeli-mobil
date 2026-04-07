@@ -287,28 +287,37 @@
         location.reload();
     }
 
-    // --- CAR MANAGEMENT ---
+    // --- CAR MANAGEMENT (INTEGRATED) ---
     function saveCarUnit() {
         const nama = document.getElementById('mobil-nama').value.trim();
         const harga = document.getElementById('mobil-harga').value.trim();
         const editIdx = parseInt(document.getElementById('edit-index-car').value);
-        if(!nama || !harga) return;
-
-        let cars = JSON.parse(localStorage.getItem('car_data')) || [];
         
-        if(editIdx === -1) {
-            cars.push({ nama, harga });
-        } else {
+        if(!nama || !harga) {
+            alert("Mohon isi nama dan harga mobil");
+            return;
+        }
+
+        // Logika 1: Jika sedang mode EDIT, simpan langsung di tabel ini
+        if(editIdx !== -1) {
+            let cars = JSON.parse(localStorage.getItem('car_data')) || [];
             cars[editIdx] = { nama, harga };
+            localStorage.setItem('car_data', JSON.stringify(cars));
+            
+            // Reset Form
             document.getElementById('edit-index-car').value = "-1";
             document.getElementById('car-form-title').innerText = "Tambah Unit Baru";
             document.getElementById('btn-save-car').innerText = "Tambah";
+            document.getElementById('mobil-nama').value = "";
+            document.getElementById('mobil-harga').value = "";
+            loadCars();
+        } 
+        // Logika 2: Jika mode TAMBAH BARU, oper ke halaman tambah-unit.html
+        else {
+            let tempUnit = { nama, harga };
+            localStorage.setItem('pending_unit', JSON.stringify(tempUnit));
+            window.location.href = 'tambah-unit.html';
         }
-
-        localStorage.setItem('car_data', JSON.stringify(cars));
-        document.getElementById('mobil-nama').value = "";
-        document.getElementById('mobil-harga').value = "";
-        loadCars();
     }
 
     function editCar(i) {
