@@ -38,16 +38,14 @@
 
         /* --- LAYOUT STRUCTURE --- */
         .admin-content { opacity: 0; display: none; transition: 0.5s; }
-       .admin-content.active { opacity: 1; display: block; }
+        .admin-content.active { opacity: 1; display: block; }
         
-        /* Mobile Header / Navbar */
         .mobile-nav {
             display: none; position: fixed; top: 0; width: 100%; height: 60px;
             background: #000; border-bottom: 1px solid #333; z-index: 999;
             padding: 0 20px; align-items: center; justify-content: space-between;
         }
 
-        /* Sidebar Management */
         .sidebar { 
             width: var(--sidebar-w); background: #000; border-right: 1px solid #222; 
             padding: 20px; display: flex; flex-direction: column; gap: 8px;
@@ -58,25 +56,24 @@
             padding: 14px 18px; color: #999; text-decoration: none; border-radius: 12px;
             cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 12px; font-weight: 500;
         }
-       .menu-item:hover { color: var(--gold); background: rgba(212, 175, 55, 0.05); }
-       .menu-item.active { background: var(--gold); color: black; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
+        .menu-item:hover { color: var(--gold); background: rgba(212, 175, 55, 0.05); }
+        .menu-item.active { background: var(--gold); color: black; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
 
-        /* Content Area */
         .main-panel { margin-left: var(--sidebar-w); padding: 40px; transition: 0.4s; }
 
         /* --- PAGE SECTIONS --- */
         .page-section { display: none; }
-       .page-section.active { display: block; animation: slideUp 0.4s ease-out; }
+        .page-section.active { display: block; animation: slideUp 0.4s ease-out; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         /* --- UI ELEMENTS --- */
-       .dashboard-header { margin-bottom: 30px; }
-       .card-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .dashboard-header { margin-bottom: 30px; }
+        .card-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
         .stat-card { 
             background: var(--dark-card); padding: 20px; border-radius: 16px; 
             border: 1px solid #222; position: relative; overflow: hidden;
         }
-       .stat-card::after { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 4px; background: var(--gold); }
+        .stat-card::after { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 4px; background: var(--gold); }
         .stat-card h3 { color: #666; font-size: 0.8rem; text-transform: uppercase; margin: 0; }
         .stat-card p { font-size: 1.8rem; font-weight: bold; margin: 8px 0 0; color: #fff; }
 
@@ -100,35 +97,34 @@
         .custom-table td { padding: 15px; border-bottom: 1px solid #222; color: #ccc; }
 
         .btn-add { background: #22c55e; color: white; padding: 12px 24px; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; }
+        .btn-edit { background: rgba(212, 175, 55, 0.1); color: var(--gold); border: 1px solid var(--gold); padding: 8px; border-radius: 8px; cursor: pointer; margin-right: 5px; }
         .btn-delete { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444; padding: 8px; border-radius: 8px; cursor: pointer; }
 
         /* --- RESPONSIVE MOBILE --- */
         @media (max-width: 992px) {
-           .mobile-nav { display: flex; }
+            .mobile-nav { display: flex; }
             .sidebar { transform: translateX(-100%); width: 280px; }
-           .sidebar.open { transform: translateX(0); box-shadow: 20px 0 50px rgba(0,0,0,0.8); }
-           .main-panel { margin-left: 0; padding: 80px 20px 40px 20px; }
-            
+            .sidebar.open { transform: translateX(0); box-shadow: 20px 0 50px rgba(0,0,0,0.8); }
+            .main-panel { margin-left: 0; padding: 80px 20px 40px 20px; }
             .form-row { flex-direction: column; align-items: stretch; }
-            
-           .custom-table thead { display: none; }
-           .custom-table tr { 
-               display: block; background: #252525; margin-bottom: 15px; 
-               border-radius: 12px; padding: 10px; border: 1px solid #333;
+            .custom-table thead { display: none; }
+            .custom-table tr { 
+                display: block; background: #252525; margin-bottom: 15px; 
+                border-radius: 12px; padding: 10px; border: 1px solid #333;
             }
-           .custom-table td { 
-               display: flex; justify-content: space-between; align-items: center; 
-               padding: 10px 15px; border-bottom: 1px solid #333; text-align: right;
+            .custom-table td { 
+                display: flex; justify-content: space-between; align-items: center; 
+                padding: 10px 15px; border-bottom: 1px solid #333; text-align: right;
             }
-           .custom-table td::before { content: attr(data-label); font-weight: bold; color: var(--gold); text-align: left; }
-           .custom-table td:last-child { border-bottom: none; }
+            .custom-table td::before { content: attr(data-label); font-weight: bold; color: var(--gold); text-align: left; }
+            .custom-table td:last-child { border-bottom: none; }
         }
 
         .overlay { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-           background: rgba(0,0,0,0.7); z-index: 999; backdrop-filter: blur(4px);
+            background: rgba(0,0,0,0.7); z-index: 999; backdrop-filter: blur(4px);
         }
-       .overlay.active { display: block; }
+        .overlay.active { display: block; }
     </style>
 </head>
 <body>
@@ -157,94 +153,96 @@
         <nav class="sidebar" id="sidebar">
             <div style="padding: 20px 10px 40px 10px; text-align: center;">
                 <h2 style="color: var(--gold); margin: 0; font-size: 1.4rem;">JAYA MOBIL</h2>
-               <span style="font-size: 0.6rem; color: #444; letter-spacing: 2px;">ADMINISTRATOR</span>
-           </div>
+                <span style="font-size: 0.6rem; color: #444; letter-spacing: 2px;">ADMINISTRATOR</span>
+            </div>
             
             <div class="menu-item active" onclick="switchPage('main-stats', this)">
                 <i class="fas fa-th-large"></i> Dashboard
-           </div>
+            </div>
             <div class="menu-item" onclick="switchPage('stok-mobil', this)">
                 <i class="fas fa-car"></i> Manajemen Stok
-           </div>
+            </div>
             <div class="menu-item" onclick="switchPage('ai-setting', this)">
                 <i class="fas fa-robot"></i> Pengaturan AI
-           </div>
+            </div>
             
             <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid #222;">
-               <div class="menu-item" onclick="logout()" style="color: #ef4444;">
-                   <i class="fas fa-power-off"></i> Keluar
-               </div>
-           </div>
+                <div class="menu-item" onclick="logout()" style="color: #ef4444;">
+                    <i class="fas fa-power-off"></i> Keluar
+                </div>
+            </div>
         </nav>
 
         <main class="main-panel">
             <div class="dashboard-header">
                 <h1 id="page-title" style="margin: 0; font-size: 1.5rem;">Dashboard</h1>
                 <p style="color: #666; margin: 5px 0 0 0;">Ringkasan sistem Jaya Mobil hari ini.</p>
-           </div>
+            </div>
 
             <div id="main-stats" class="page-section active">
-               <div class="card-container">
-                   <div class="stat-card"><h3>Unit Ready</h3><p id="stat-unit-ready">0</p></div>
-                   <div class="stat-card"><h3>Terjual</h3><p>12</p></div>
-                   <div class="stat-card"><h3>Visit</h3><p>1.2k</p></div>
-               </div>
+                <div class="card-container">
+                    <div class="stat-card"><h3>Unit Ready</h3><p id="stat-unit-ready">0</p></div>
+                    <div class="stat-card"><h3>Terjual</h3><p>12</p></div>
+                    <div class="stat-card"><h3>Visit</h3><p>1.2k</p></div>
+                </div>
             </div>
 
             <div id="stok-mobil" class="page-section">
-               <div class="admin-section">
-                   <h3 style="color: var(--gold); margin-top:0;">Tambah Unit Baru</h3>
-                   <div class="form-row">
-                       <div class="input-group">
-                           <label>Nama Mobil</label>
-                           <input type="text" id="mobil-nama" placeholder="Contoh: Porsche 911">
-                       </div>
-                       <div class="input-group">
-                           <label>Harga (Rp)</label>
-                           <input type="text" id="mobil-harga" placeholder="Contoh: 2.45M">
-                       </div>
-                       <button class="btn-add" onclick="addCarUnit()">Tambah</button>
-                   </div>
+                <div class="admin-section">
+                    <h3 id="car-form-title" style="color: var(--gold); margin-top:0;">Tambah Unit Baru</h3>
+                    <div class="form-row">
+                        <input type="hidden" id="edit-index-car" value="-1">
+                        <div class="input-group">
+                            <label>Nama Mobil</label>
+                            <input type="text" id="mobil-nama" placeholder="Contoh: Porsche 911">
+                        </div>
+                        <div class="input-group">
+                            <label>Harga (Rp)</label>
+                            <input type="text" id="mobil-harga" placeholder="Contoh: 2.45M">
+                        </div>
+                        <button class="btn-add" id="btn-save-car" onclick="saveCarUnit()">Tambah</button>
+                    </div>
 
-                   <table class="custom-table">
-                       <thead>
-                           <tr>
-                               <th>Mobil</th>
-                               <th>Harga</th>
-                               <th>Aksi</th>
-                           </tr>
-                       </thead>
-                       <tbody id="car-table-body"></tbody>
-                   </table>
-               </div>
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Mobil</th>
+                                <th>Harga</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="car-table-body"></tbody>
+                    </table>
+                </div>
             </div>
 
             <div id="ai-setting" class="page-section">
-               <div class="admin-section">
-                   <h3 style="color: var(--gold); margin-top:0;">Asisten AI</h3>
-                   <div class="form-row">
-                       <div class="input-group">
-                           <label>Keyword</label>
-                           <input type="text" id="bot-keyword" placeholder="Contoh: harga">
-                       </div>
-                       <div class="input-group">
-                           <label>Jawaban</label>
-                           <input type="text" id="bot-response" placeholder="Respon bot...">
-                       </div>
-                       <button class="btn-add" onclick="addBotKnowledge()">Simpan</button>
-                   </div>
+                <div class="admin-section">
+                    <h3 id="bot-form-title" style="color: var(--gold); margin-top:0;">Asisten AI</h3>
+                    <div class="form-row">
+                        <input type="hidden" id="edit-index-bot" value="-1">
+                        <div class="input-group">
+                            <label>Keyword</label>
+                            <input type="text" id="bot-keyword" placeholder="Contoh: harga">
+                        </div>
+                        <div class="input-group">
+                            <label>Jawaban</label>
+                            <input type="text" id="bot-response" placeholder="Respon bot...">
+                        </div>
+                        <button class="btn-add" id="btn-save-bot" onclick="saveBotKnowledge()">Simpan</button>
+                    </div>
 
-                   <table class="custom-table">
-                       <thead>
-                           <tr>
-                               <th>Keyword</th>
-                               <th>Jawaban</th>
-                               <th>Hapus</th>
-                           </tr>
-                       </thead>
-                       <tbody id="bot-table-body"></tbody>
-                   </table>
-               </div>
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Keyword</th>
+                                <th>Jawaban</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bot-table-body"></tbody>
+                    </table>
+                </div>
             </div>
         </main>
     </div>
@@ -289,25 +287,42 @@
         location.reload();
     }
 
-    // --- CAR MANAGEMENT LOGIC ---
-    function addCarUnit() {
+    // --- CAR MANAGEMENT ---
+    function saveCarUnit() {
         const nama = document.getElementById('mobil-nama').value.trim();
         const harga = document.getElementById('mobil-harga').value.trim();
+        const editIdx = parseInt(document.getElementById('edit-index-car').value);
         if(!nama || !harga) return;
 
         let cars = JSON.parse(localStorage.getItem('car_data')) || [];
-        cars.push({ nama, harga });
-        localStorage.setItem('car_data', JSON.stringify(cars));
         
+        if(editIdx === -1) {
+            cars.push({ nama, harga });
+        } else {
+            cars[editIdx] = { nama, harga };
+            document.getElementById('edit-index-car').value = "-1";
+            document.getElementById('car-form-title').innerText = "Tambah Unit Baru";
+            document.getElementById('btn-save-car').innerText = "Tambah";
+        }
+
+        localStorage.setItem('car_data', JSON.stringify(cars));
         document.getElementById('mobil-nama').value = "";
         document.getElementById('mobil-harga').value = "";
         loadCars();
     }
 
+    function editCar(i) {
+        let cars = JSON.parse(localStorage.getItem('car_data'));
+        document.getElementById('mobil-nama').value = cars[i].nama;
+        document.getElementById('mobil-harga').value = cars[i].harga;
+        document.getElementById('edit-index-car').value = i;
+        document.getElementById('car-form-title').innerText = "Edit Unit Mobil";
+        document.getElementById('btn-save-car').innerText = "Update";
+    }
+
     function loadCars() {
         const tbody = document.getElementById('car-table-body');
         let cars = JSON.parse(localStorage.getItem('car_data')) || [{nama: "Porsche 911", harga: "Rp 2.45M"}];
-        
         tbody.innerHTML = "";
         cars.forEach((car, index) => {
             tbody.innerHTML += `
@@ -315,6 +330,7 @@
                     <td data-label="Mobil"><strong>${car.nama}</strong></td>
                     <td data-label="Harga">${car.harga}</td>
                     <td data-label="Aksi">
+                        <button class="btn-edit" onclick="editCar(${index})"><i class="fas fa-edit"></i></button>
                         <button class="btn-delete" onclick="deleteCar(${index})"><i class="fas fa-trash"></i></button>
                     </td>
                 </tr>`;
@@ -323,6 +339,7 @@
     }
 
     function deleteCar(i) {
+        if(!confirm("Hapus unit ini?")) return;
         let cars = JSON.parse(localStorage.getItem('car_data'));
         cars.splice(i, 1);
         localStorage.setItem('car_data', JSON.stringify(cars));
@@ -330,18 +347,36 @@
     }
 
     // --- AI LOGIC ---
-    function addBotKnowledge() {
+    function saveBotKnowledge() {
         const kw = document.getElementById('bot-keyword').value.toLowerCase().trim();
         const rs = document.getElementById('bot-response').value.trim();
+        const editIdx = parseInt(document.getElementById('edit-index-bot').value);
         if(!kw || !rs) return;
 
         let data = JSON.parse(localStorage.getItem('bot_data')) || [];
-        data.push({ keyword: kw, response: rs });
-        localStorage.setItem('bot_data', JSON.stringify(data));
         
+        if(editIdx === -1) {
+            data.push({ keyword: kw, response: rs });
+        } else {
+            data[editIdx] = { keyword: kw, response: rs };
+            document.getElementById('edit-index-bot').value = "-1";
+            document.getElementById('bot-form-title').innerText = "Asisten AI";
+            document.getElementById('btn-save-bot').innerText = "Simpan";
+        }
+
+        localStorage.setItem('bot_data', JSON.stringify(data));
         document.getElementById('bot-keyword').value = "";
         document.getElementById('bot-response').value = "";
         loadBotKnowledge();
+    }
+
+    function editKnowledge(i) {
+        let data = JSON.parse(localStorage.getItem('bot_data'));
+        document.getElementById('bot-keyword').value = data[i].keyword;
+        document.getElementById('bot-response').value = data[i].response;
+        document.getElementById('edit-index-bot').value = i;
+        document.getElementById('bot-form-title').innerText = "Edit Respon AI";
+        document.getElementById('btn-save-bot').innerText = "Update";
     }
 
     function loadBotKnowledge() {
@@ -350,14 +385,14 @@
             { keyword: "harga", response: "Harga unit kami sangat bersaing, mulai dari 150 jutaan." },
             { keyword: "lokasi", response: "Kami berlokasi di Jayapura, Papua." }
         ];
-        
         tbody.innerHTML = "";
         data.forEach((item, index) => {
             tbody.innerHTML += `
                 <tr>
                     <td data-label="Keyword"><code>${item.keyword}</code></td>
                     <td data-label="Jawaban">${item.response}</td>
-                    <td data-label="Hapus">
+                    <td data-label="Aksi">
+                        <button class="btn-edit" onclick="editKnowledge(${index})"><i class="fas fa-edit"></i></button>
                         <button class="btn-delete" onclick="deleteKnowledge(${index})"><i class="fas fa-trash"></i></button>
                     </td>
                 </tr>`;
@@ -365,6 +400,7 @@
     }
 
     function deleteKnowledge(i) {
+        if(!confirm("Hapus respon ini?")) return;
         let data = JSON.parse(localStorage.getItem('bot_data'));
         data.splice(i, 1);
         localStorage.setItem('bot_data', JSON.stringify(data));
