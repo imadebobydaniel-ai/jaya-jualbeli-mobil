@@ -39,7 +39,7 @@
             display: flex; 
             gap: 25px; 
             align-items: center; 
-            perspective: 1000px; /* Memberikan kedalaman untuk efek 3D */
+            perspective: 1000px; 
         }
 
         .nav-links a { 
@@ -52,14 +52,12 @@
             display: inline-block;
         }
 
-        /* Animasi 3D saat Hover: teks maju dan sedikit miring */
         .nav-links a:hover { 
             color: var(--gold); 
             transform: translateZ(20px) rotateX(10deg); 
             text-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
         }
 
-        /* Garis bawah dinamis */
         .nav-links a::after {
             content: '';
             position: absolute;
@@ -71,9 +69,7 @@
             transition: width 0.3s;
         }
 
-        .nav-links a:hover::after {
-            width: 100%;
-        }
+        .nav-links a:hover::after { width: 100%; }
 
         .btn-admin-login {
             background: transparent;
@@ -114,7 +110,7 @@
         .hero h1 { font-size: 4rem; margin-bottom: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: 5px; }
         .hero p { font-size: 1.2rem; color: #ccc; margin-bottom: 30px; }
 
-        /* Katalog Mobil */
+        /* Katalog Preview */
         .catalog { padding: 80px 5%; }
         .section-title { text-align: center; margin-bottom: 50px; font-size: 2.5rem; }
         .section-title span { color: var(--gold); }
@@ -135,22 +131,30 @@
         }
 
         .car-card:hover { transform: translateY(-10px); border-color: var(--gold); box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2); }
-
         .car-img { width: 100%; height: 200px; object-fit: cover; }
-        
         .car-info { padding: 20px; }
         .car-price { color: var(--gold); font-size: 1.5rem; font-weight: bold; margin: 10px 0; }
         .car-specs { display: flex; gap: 15px; font-size: 0.9rem; color: #888; margin-bottom: 20px; }
 
-        .btn-buy {
-            display: block;
+        /* Tombol Koleksi Hero */
+        .btn-collection {
+            display: inline-block;
             text-align: center;
             background: var(--gold);
             color: black;
-            padding: 12px;
-            border-radius: 10px;
+            padding: 15px 40px;
+            border-radius: 50px;
             text-decoration: none;
             font-weight: bold;
+            transition: 0.4s;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-collection:hover {
+            transform: translateY(-3px) scale(1.05);
+            background: var(--accent);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
         }
 
         footer {
@@ -170,8 +174,8 @@
     </div>
     <nav class="nav-links">
         <a href="#">Beranda</a>
-        <a href="#katalog">Katalog</a>
-        <a href="#">Tentang Kami</a> <a href="#kontak">Hubungi Kami</a>
+        <a href="katalog.html">Katalog</a> <a href="#">Tentang Kami</a> 
+        <a href="#kontak">Hubungi Kami</a>
         <a href="admin-jaya.html" class="btn-admin-login"><i class="fas fa-user-shield"></i> LOGIN ADMIN</a>
     </nav>
 </header>
@@ -179,7 +183,7 @@
 <section class="hero">
     <h1>Eksklusivitas & Kualitas</h1>
     <p>"Kepuasan Anda Prioritas Kami" — Jual Beli Mobil Second Terpercaya</p>
-    <a href="#katalog" class="btn-buy" style="width: 250px;">LIHAT KOLEKSI</a>
+    <a href="katalog.html" class="btn-collection">LIHAT KOLEKSI</a>
 </section>
 
 <section class="catalog" id="katalog">
@@ -195,7 +199,7 @@
                     <span><i class="fas fa-tachometer-alt"></i> 5.000 KM</span>
                     <span><i class="fas fa-gas-pump"></i> Bensin</span>
                 </div>
-                <a href="https://wa.me/628123456789" class="btn-buy">MINAT? HUBUNGI WA</a>
+                <a href="https://wa.me/628123456789" class="btn-admin-login" style="justify-content: center;">MINAT? HUBUNGI WA</a>
             </div>
         </div>
     </div>
